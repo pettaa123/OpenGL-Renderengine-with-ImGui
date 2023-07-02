@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\src">
+      <UniqueIdentifier>{9a0d7004-9408-4ad9-ac10-b3ef7d10f270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\src\event">
+      <UniqueIdentifier>{738c33b8-d5ee-4942-8be1-e467cb21e1a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\src\input">
+      <UniqueIdentifier>{842c028f-9ba7-43f6-8c78-e456f437a1dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\src\renderer">
+      <UniqueIdentifier>{95d1fcb7-a37f-42b9-81c4-0cc85a120647}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\log.cpp">
+      <Filter>Resource Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\monitor.cpp">
+      <Filter>Resource Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\terminalColor.cpp">
+      <Filter>Resource Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="application.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer\window.cpp">
+      <Filter>Resource Files\src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer\openGLContext.cpp">
+      <Filter>Resource Files\src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer\renderer.cpp">
+      <Filter>Resource Files\src\renderer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\log.h">
+      <Filter>Resource Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\monitor.h">
+      <Filter>Resource Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\terminalColor.h">
+      <Filter>Resource Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\event\event.h">
+      <Filter>Resource Files\src\event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\event\keyEvent.h">
+      <Filter>Resource Files\src\event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\event\mouseEvent.h">
+      <Filter>Resource Files\src\event</Filter>
+    </ClInclude>
+    <ClInclude Include="application.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\event\applicationEvent.h">
+      <Filter>Resource Files\src\event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\input\keyCodes.h">
+      <Filter>Resource Files\src\input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\input\mouseCodes.h">
+      <Filter>Resource Files\src\input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\window.h">
+      <Filter>Resource Files\src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\openGLContext.h">
+      <Filter>Resource Files\src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\renderer.h">
+      <Filter>Resource Files\src\renderer</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
