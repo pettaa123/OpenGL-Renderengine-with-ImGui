@@ -20,6 +20,9 @@
     <Filter Include="Resource Files\src\core">
       <UniqueIdentifier>{ae857925-e7fa-4097-859d-d11fc19ce78b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\src\imgui">
+      <UniqueIdentifier>{78af2970-5782-4bcf-b0e4-fdc723cac994}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -48,6 +51,9 @@
     </ClCompile>
     <ClCompile Include="src\window.cpp">
       <Filter>Resource Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imGuiLayer.cpp">
+      <Filter>Resource Files\src\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +104,9 @@
     </ClInclude>
     <ClInclude Include="src\core\timestep.h">
       <Filter>Resource Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imGuiLayer.h">
+      <Filter>Resource Files\src\imgui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

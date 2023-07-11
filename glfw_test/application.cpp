@@ -1,24 +1,26 @@
 #include "application.h"
 #include <memory>
 #include "renderer/renderer.h"
+#include "log.h"
 
 Application::Application() {
     m_window = std::unique_ptr<Engine::Window>(Engine::Window::create());
-	m_window->setEventCallback(std::bind(&Application::onEvent, this, std::placeholders::_1)); //std::bind(&Application::onEvent
+	m_window->setEventCallback(std::bind_front(&Application::onEvent,this)); //std::bind(&Application::onEvent
 
 	run();
 }
 
 void Application::onEvent(Engine::Event& e) {
     Engine::EventDispatcher dispatcher(e);
-	dispatcher.Dispatch<Engine::WindowCloseEvent>(std::bind(&Application::onWindowClose, this, std::placeholders::_1));
-	dispatcher.Dispatch<Engine::WindowResizeEvent>(std::bind(&Application::onWindowResize, this, std::placeholders::_1 ));
+	//bind_front c++20 instead of bind+placeholders
+	dispatcher.Dispatch<Engine::WindowCloseEvent>(std::bind_front(&Application::onWindowClose, this));
+	dispatcher.Dispatch<Engine::WindowResizeEvent>(std::bind_front(&Application::onWindowResize, this));
 
 	for (auto it = m_layerStack.rbegin(); it != m_layerStack.rend(); ++it)
 	{
-		if (e.Handled)
+		if (e.handled)
 			break;
-		(*it)->OnEvent(e);
+		(*it)->onEvent(e);
 	}
 }
 
@@ -30,7 +32,7 @@ bool Application::onWindowClose(Engine::WindowCloseEvent& e)
 
 bool Application::onWindowResize(Engine::WindowResizeEvent& e)
 {
-	if (e.GetWidth() == 0 || e.GetHeight() == 0)
+	if (e.getWidth() == 0 || e.getHeight() == 0)
 	{
 		m_minimized = true;
 		return false;
@@ -60,7 +62,7 @@ void Application::run()
 		{
 			{
 				for (Engine::Layer* layer : m_layerStack)
-					layer->OnUpdate(timestep);
+					layer->onUpdate(timestep);
 			}
 
 			//m_imGuiLayer->Begin();
