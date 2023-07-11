@@ -9,6 +9,11 @@
 
 namespace Engine {
 
+	std::unique_ptr<Window> Window::create(const WindowProps& props)
+	{
+		return std::make_unique<Window>(props);
+	}
+
 	static uint8_t s_GLFWWindowCount = 0;
 
 	static void GLFWErrorCallback(int error, const char* description)
@@ -34,7 +39,7 @@ namespace Engine {
 		m_data.width = props.width;
 		m_data.height = props.height;
 
-		Log::info("Creating window {0} ({1}, {2})", props.title, props.width, props.height);
+		Log::info(std::format("Creating window {0} ({1}, {2})", props.title, props.width, props.height));
 
 
 		// Setup Our GLFW error callback, we do this before Init so we know what goes wrong with init if it fails:

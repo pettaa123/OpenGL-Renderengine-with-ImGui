@@ -1,14 +1,12 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-// prevent glfw from including glad (opengl loading library)
-#define GLFW_INCLUDE_NONE
-
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <string>
 #include <functional>
 #include "event/event.h"
-#include "openGLContext.h"
+#include "renderer/openGLContext.h"
 
 namespace Engine {
 
@@ -45,6 +43,8 @@ namespace Engine {
 		bool isVSync() const;
 
 		void* getNativeWindow() const { return m_window; }
+
+		static std::unique_ptr<Window> create(const WindowProps& props = WindowProps());
 
 	private:
 

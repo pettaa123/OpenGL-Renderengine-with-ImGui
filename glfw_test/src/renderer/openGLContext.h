@@ -14,7 +14,7 @@ namespace Engine {
 		virtual void init();
 		virtual void swapBuffers();
 
-		static std::unique_ptr<OpenGLContext> create(GLFWwindow* window);
+		static std::unique_ptr<OpenGLContext> create(void* window);
 	private:
 		GLFWwindow* m_windowHandle;
 	};

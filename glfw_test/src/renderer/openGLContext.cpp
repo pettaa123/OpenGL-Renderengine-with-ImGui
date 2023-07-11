@@ -1,7 +1,7 @@
 #include "openGLContext.h"
 
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include "log.h"
 
 namespace Engine {
@@ -20,9 +20,9 @@ namespace Engine {
 			Log::error("Failed to initialize Glad!");
 
 		Log::info("OpenGL Info:");
-		Log::info("  Vendor: {0}", glGetString(GL_VENDOR));
-		Log::info("  Renderer: {0}", glGetString(GL_RENDERER));
-		Log::info("  Version: {0}", glGetString(GL_VERSION));
+		Log::info(std::format("  Vendor: {0}", (const char*)glGetString(GL_VENDOR)));
+		Log::info(std::format("  Renderer: {0}", (const char*)glGetString(GL_RENDERER)));
+		Log::info(std::format("  Version: {0}", (const char*)glGetString(GL_VERSION)));
 
 		if (GLVersion.major < 4 || (GLVersion.major == 4 && GLVersion.minor < 5))
 			Log::error("Engine requires at least OpenGL version 4.5!");
@@ -34,8 +34,8 @@ namespace Engine {
 		glfwSwapBuffers(m_windowHandle);
 	}
 
-	std::unique_ptr<OpenGLContext> OpenGLContext::create(GLFWwindow* window){
-		return std::make_unique<OpenGLContext>(window);
+	std::unique_ptr<OpenGLContext> OpenGLContext::create(void* window){
+		return std::make_unique<OpenGLContext>(static_cast<GLFWwindow*>(window));
 	}
 
 }

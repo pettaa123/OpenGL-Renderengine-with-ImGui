@@ -21,27 +21,31 @@
   <ItemGroup>
     <ClCompile Include="application.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\layer.cpp" />
+    <ClCompile Include="src\layerStack.cpp" />
     <ClCompile Include="src\log.cpp" />
-    <ClCompile Include="src\monitor.cpp" />
     <ClCompile Include="src\renderer\openGLContext.cpp" />
     <ClCompile Include="src\renderer\renderer.cpp" />
-    <ClCompile Include="src\renderer\window.cpp" />
     <ClCompile Include="src\terminalColor.cpp" />
+    <ClCompile Include="src\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
+    <ClInclude Include="src\core\timer.h" />
+    <ClInclude Include="src\core\timestep.h" />
     <ClInclude Include="src\event\applicationEvent.h" />
     <ClInclude Include="src\event\keyEvent.h" />
     <ClInclude Include="src\event\mouseEvent.h" />
     <ClInclude Include="src\input\keyCodes.h" />
     <ClInclude Include="src\input\mouseCodes.h" />
     <ClInclude Include="src\event\event.h" />
+    <ClInclude Include="src\layer.h" />
+    <ClInclude Include="src\layerStack.h" />
     <ClInclude Include="src\log.h" />
-    <ClInclude Include="src\monitor.h" />
     <ClInclude Include="src\renderer\openGLContext.h" />
     <ClInclude Include="src\renderer\renderer.h" />
-    <ClInclude Include="src\renderer\window.h" />
     <ClInclude Include="src\terminalColor.h" />
+    <ClInclude Include="src\window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

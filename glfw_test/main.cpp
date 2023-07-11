@@ -6,7 +6,7 @@
 int main(void)
 {
 	Application app;
-	if (app.run())
-		exit(EXIT_FAILURE);
+
+	exit(EXIT_SUCCESS);
 }
 
