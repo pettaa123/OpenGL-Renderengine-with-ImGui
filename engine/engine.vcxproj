@@ -19,19 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="application.cpp" />
     <ClCompile Include="main.cpp" />
+	<ClCompile Include="src\core\application.cpp" />
     <ClCompile Include="src\imgui\imGuiLayer.cpp" />
-    <ClCompile Include="src\layer.cpp" />
-    <ClCompile Include="src\layerStack.cpp" />
-    <ClCompile Include="src\log.cpp" />
+    <ClCompile Include="src\core\layer.cpp" />
+    <ClCompile Include="src\core\layerStack.cpp" />
+    <ClCompile Include="src\core\log.cpp" />
     <ClCompile Include="src\renderer\openGLContext.cpp" />
     <ClCompile Include="src\renderer\renderer.cpp" />
-    <ClCompile Include="src\terminalColor.cpp" />
-    <ClCompile Include="src\window.cpp" />
+    <ClCompile Include="src\core\terminalColor.cpp" />
+    <ClCompile Include="src\core\window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="application.h" />
+    <ClInclude Include="src\core\application.h" />
     <ClInclude Include="src\core\timer.h" />
     <ClInclude Include="src\core\timestep.h" />
     <ClInclude Include="src\event\applicationEvent.h" />
@@ -41,13 +41,13 @@
     <ClInclude Include="src\input\keyCodes.h" />
     <ClInclude Include="src\input\mouseCodes.h" />
     <ClInclude Include="src\event\event.h" />
-    <ClInclude Include="src\layer.h" />
-    <ClInclude Include="src\layerStack.h" />
-    <ClInclude Include="src\log.h" />
+    <ClInclude Include="src\core\layer.h" />
+    <ClInclude Include="src\core\layerStack.h" />
+    <ClInclude Include="src\core\log.h" />
     <ClInclude Include="src\renderer\openGLContext.h" />
     <ClInclude Include="src\renderer\renderer.h" />
     <ClInclude Include="src\terminalColor.h" />
-    <ClInclude Include="src\window.h" />
+    <ClInclude Include="src\core\window.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImGui\ImGui\ImGui.vcxproj">
@@ -156,7 +156,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)glfw_test\src;$(SolutionDir)vendor\imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)engine\src;$(SolutionDir)vendor\imgui</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -174,8 +174,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)glfw_test\src;$(SolutionDir)\vendor\imgui</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)engine\src;$(SolutionDir)vendor\imgui</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

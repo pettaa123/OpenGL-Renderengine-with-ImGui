@@ -1,13 +1,47 @@
 #include "application.h"
 #include <memory>
+#include <cassert>
 #include "renderer/renderer.h"
 #include "log.h"
+#include "imgui/imGuiLayer.h"
+
+class ExampleLayer : public Engine::Layer
+{
+public:
+	ExampleLayer() : Layer("Example")
+	{
+	}
+	void onUpdate(Engine::Timestep ts) override { Log::info("ExampleLayer::update"); };
+	void onEvent(Engine::Event& event) override { Log::debug(std::format("{0}", event.toString())); }
+
+};
+
+Application* Application::s_instance = nullptr;
 
 Application::Application() {
+	assert(s_instance == nullptr);
+	s_instance = this;
     m_window = std::unique_ptr<Engine::Window>(Engine::Window::create());
 	m_window->setEventCallback(std::bind_front(&Application::onEvent,this)); //std::bind(&Application::onEvent
+	
+	pushLayer(new ExampleLayer());
+	pushOverlay(new Engine::ImGuiLayer());
 
 	run();
+}
+
+void Application::pushLayer(Engine::Layer* layer){
+	m_layerStack.pushLayer(layer);
+	layer->onAttach();
+}
+
+void Application::pushOverlay(Engine::Layer* layer) {
+	m_layerStack.pushOverlay(layer);
+	layer->onAttach();
+}
+
+void Application::close(){
+	m_running = false;
 }
 
 void Application::onEvent(Engine::Event& e) {
@@ -65,13 +99,13 @@ void Application::run()
 					layer->onUpdate(timestep);
 			}
 
-			//m_imGuiLayer->Begin();
-			//{
-			//
-			//	for (Engine::Layer* layer : m_layerStack)
-			//		layer->OnImGuiRender();
-			//}
-			//m_imGuiLayer->End();
+			m_imGuiLayer->begin();
+			{
+			
+				for (Engine::Layer* layer : m_layerStack)
+					layer->onImGuiRender();
+			}
+			m_imGuiLayer->end();
 		}
 
 		m_window->onUpdate();

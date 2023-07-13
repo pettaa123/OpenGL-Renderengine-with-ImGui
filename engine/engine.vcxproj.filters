@@ -28,38 +28,35 @@
     <ClCompile Include="main.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\log.cpp">
-      <Filter>Resource Files\src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\terminalColor.cpp">
-      <Filter>Resource Files\src</Filter>
-    </ClCompile>
-    <ClCompile Include="application.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\renderer\openGLContext.cpp">
       <Filter>Resource Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\renderer.cpp">
       <Filter>Resource Files\src\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\layer.cpp">
-      <Filter>Resource Files\src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\layerStack.cpp">
-      <Filter>Resource Files\src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\window.cpp">
-      <Filter>Resource Files\src</Filter>
-    </ClCompile>
     <ClCompile Include="src\imgui\imGuiLayer.cpp">
       <Filter>Resource Files\src\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\application.cpp">
+      <Filter>Resource Files\src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\layer.cpp">
+      <Filter>Resource Files\src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\layerStack.cpp">
+      <Filter>Resource Files\src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\log.cpp">
+      <Filter>Resource Files\src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\terminalColor.cpp">
+      <Filter>Resource Files\src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\window.cpp">
+      <Filter>Resource Files\src\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\log.h">
-      <Filter>Resource Files\src</Filter>
-    </ClInclude>
     <ClInclude Include="src\terminalColor.h">
       <Filter>Resource Files\src</Filter>
     </ClInclude>
@@ -71,9 +68,6 @@
     </ClInclude>
     <ClInclude Include="src\event\mouseEvent.h">
       <Filter>Resource Files\src\event</Filter>
-    </ClInclude>
-    <ClInclude Include="application.h">
-      <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="src\event\applicationEvent.h">
       <Filter>Resource Files\src\event</Filter>
@@ -90,15 +84,6 @@
     <ClInclude Include="src\renderer\renderer.h">
       <Filter>Resource Files\src\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\layer.h">
-      <Filter>Resource Files\src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\layerStack.h">
-      <Filter>Resource Files\src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\window.h">
-      <Filter>Resource Files\src</Filter>
-    </ClInclude>
     <ClInclude Include="src\core\timer.h">
       <Filter>Resource Files\src\core</Filter>
     </ClInclude>
@@ -107,6 +92,21 @@
     </ClInclude>
     <ClInclude Include="src\imgui\imGuiLayer.h">
       <Filter>Resource Files\src\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\application.h">
+      <Filter>Resource Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\layer.h">
+      <Filter>Resource Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\layerStack.h">
+      <Filter>Resource Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\log.h">
+      <Filter>Resource Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\window.h">
+      <Filter>Resource Files\src\core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

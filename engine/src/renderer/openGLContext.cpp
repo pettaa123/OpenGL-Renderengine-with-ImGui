@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "log.h"
+#include "core/log.h"
 
 namespace Engine {
 
