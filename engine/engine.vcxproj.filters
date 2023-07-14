@@ -11,9 +11,6 @@
     <Filter Include="Resource Files\src\event">
       <UniqueIdentifier>{738c33b8-d5ee-4942-8be1-e467cb21e1a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\src\input">
-      <UniqueIdentifier>{842c028f-9ba7-43f6-8c78-e456f437a1dd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\src\renderer">
       <UniqueIdentifier>{95d1fcb7-a37f-42b9-81c4-0cc85a120647}</UniqueIdentifier>
     </Filter>
@@ -23,11 +20,11 @@
     <Filter Include="Resource Files\src\imgui">
       <UniqueIdentifier>{78af2970-5782-4bcf-b0e4-fdc723cac994}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\src\math">
+      <UniqueIdentifier>{fc1e0204-2b35-4491-bbb6-d4481b7b1c8f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\renderer\openGLContext.cpp">
       <Filter>Resource Files\src\renderer</Filter>
     </ClCompile>
@@ -55,11 +52,14 @@
     <ClCompile Include="src\core\window.cpp">
       <Filter>Resource Files\src\core</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\input.cpp">
+      <Filter>Resource Files\src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\math.cpp">
+      <Filter>Resource Files\src\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\terminalColor.h">
-      <Filter>Resource Files\src</Filter>
-    </ClInclude>
     <ClInclude Include="src\event\event.h">
       <Filter>Resource Files\src\event</Filter>
     </ClInclude>
@@ -71,12 +71,6 @@
     </ClInclude>
     <ClInclude Include="src\event\applicationEvent.h">
       <Filter>Resource Files\src\event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\input\keyCodes.h">
-      <Filter>Resource Files\src\input</Filter>
-    </ClInclude>
-    <ClInclude Include="src\input\mouseCodes.h">
-      <Filter>Resource Files\src\input</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\openGLContext.h">
       <Filter>Resource Files\src\renderer</Filter>
@@ -107,6 +101,27 @@
     </ClInclude>
     <ClInclude Include="src\core\window.h">
       <Filter>Resource Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\input.h">
+      <Filter>Resource Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\keyCodes.h">
+      <Filter>Resource Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\mouseCodes.h">
+      <Filter>Resource Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\math.h">
+      <Filter>Resource Files\src\math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\terminalColor.h">
+      <Filter>Resource Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\entryPoint.h">
+      <Filter>Resource Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine.h">
+      <Filter>Resource Files\src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

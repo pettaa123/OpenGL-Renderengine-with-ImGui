@@ -1,7 +1,7 @@
 #pragma once
 
 #include "event/Event.h"
-#include "input/keyCodes.h"
+#include "core/keyCodes.h"
 
 namespace Engine {
 

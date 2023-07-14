@@ -4,120 +4,145 @@
 #include "renderer/renderer.h"
 #include "log.h"
 #include "imgui/imGuiLayer.h"
+#include <filesystem>
 
-class ExampleLayer : public Engine::Layer
-{
-public:
-	ExampleLayer() : Layer("Example")
+namespace Engine {
+
+	class ExampleLayer : public Engine::Layer
 	{
+	public:
+		ExampleLayer() : Layer("Example")
+		{
+		}
+		void onUpdate(Engine::Timestep ts) override { Log::info("ExampleLayer::update"); };
+		void onEvent(Engine::Event& event) override { Log::debug(std::format("{0}", event.toString())); }
+
+	};
+
+
+	Application* Application::s_instance = nullptr;
+
+	Application::Application(const ApplicationSpecification& specification)
+		: m_specification(specification)
+	{
+		assert(s_instance == nullptr);
+		s_instance = this;
+
+		// Set working directory here
+		if (!m_specification.workingDirectory.empty())
+			std::filesystem::current_path(m_specification.workingDirectory);
+
+		m_window = std::unique_ptr<Engine::Window>(Engine::Window::create());
+		m_window->setEventCallback(std::bind_front(&Application::onEvent, this)); //std::bind(&Application::onEvent
+
+		Renderer::init();
+
+		m_imGuiLayer = new Engine::ImGuiLayer();
+		pushOverlay(m_imGuiLayer);
+
+		run();
 	}
-	void onUpdate(Engine::Timestep ts) override { Log::info("ExampleLayer::update"); };
-	void onEvent(Engine::Event& event) override { Log::debug(std::format("{0}", event.toString())); }
 
-};
-
-Application* Application::s_instance = nullptr;
-
-Application::Application() {
-	assert(s_instance == nullptr);
-	s_instance = this;
-    m_window = std::unique_ptr<Engine::Window>(Engine::Window::create());
-	m_window->setEventCallback(std::bind_front(&Application::onEvent,this)); //std::bind(&Application::onEvent
-	
-	pushLayer(new ExampleLayer());
-	pushOverlay(new Engine::ImGuiLayer());
-
-	run();
-}
-
-void Application::pushLayer(Engine::Layer* layer){
-	m_layerStack.pushLayer(layer);
-	layer->onAttach();
-}
-
-void Application::pushOverlay(Engine::Layer* layer) {
-	m_layerStack.pushOverlay(layer);
-	layer->onAttach();
-}
-
-void Application::close(){
-	m_running = false;
-}
-
-void Application::onEvent(Engine::Event& e) {
-    Engine::EventDispatcher dispatcher(e);
-	//bind_front c++20 instead of bind+placeholders
-	dispatcher.Dispatch<Engine::WindowCloseEvent>(std::bind_front(&Application::onWindowClose, this));
-	dispatcher.Dispatch<Engine::WindowResizeEvent>(std::bind_front(&Application::onWindowResize, this));
-
-	for (auto it = m_layerStack.rbegin(); it != m_layerStack.rend(); ++it)
-	{
-		if (e.handled)
-			break;
-		(*it)->onEvent(e);
+	void Application::pushLayer(Engine::Layer* layer) {
+		m_layerStack.pushLayer(layer);
+		layer->onAttach();
 	}
-}
 
-bool Application::onWindowClose(Engine::WindowCloseEvent& e)
-{
-	m_running = false;
-	return true;
-}
+	void Application::pushOverlay(Engine::Layer* layer) {
+		m_layerStack.pushOverlay(layer);
+		layer->onAttach();
+	}
 
-bool Application::onWindowResize(Engine::WindowResizeEvent& e)
-{
-	if (e.getWidth() == 0 || e.getHeight() == 0)
+	void Application::close() {
+		m_running = false;
+	}
+
+	void Application::onEvent(Engine::Event& e) {
+		Engine::EventDispatcher dispatcher(e);
+		//bind_front c++20 instead of bind+placeholders
+		dispatcher.Dispatch<Engine::WindowCloseEvent>(std::bind_front(&Application::onWindowClose, this));
+		dispatcher.Dispatch<Engine::WindowResizeEvent>(std::bind_front(&Application::onWindowResize, this));
+
+		for (auto it = m_layerStack.rbegin(); it != m_layerStack.rend(); ++it)
+		{
+			if (e.handled)
+				break;
+			(*it)->onEvent(e);
+		}
+	}
+
+	bool Application::onWindowClose(Engine::WindowCloseEvent& e)
 	{
-		m_minimized = true;
+		m_running = false;
+		return true;
+	}
+
+	bool Application::onWindowResize(Engine::WindowResizeEvent& e)
+	{
+		if (e.getWidth() == 0 || e.getHeight() == 0)
+		{
+			m_minimized = true;
+			return false;
+		}
+
+		m_minimized = false;
+		//Renderer::onWindowResize(e.GetWidth(), e.GetHeight());
+
 		return false;
 	}
 
-	m_minimized = false;
-	//Renderer::onWindowResize(e.GetWidth(), e.GetHeight());
-
-	return false;
-}
-
-Application::~Application() {
-
-}
-
-void Application::run()
-{
-	while (m_running)
+	Application::~Application()
 	{
-		float time = glfwGetTime();
-		Engine::Timestep timestep = time - m_lastFrameTime;
-		m_lastFrameTime = time;
-
-		executeMainThreadQueue();
-
-		if (!m_minimized)
-		{
-			{
-				for (Engine::Layer* layer : m_layerStack)
-					layer->onUpdate(timestep);
-			}
-
-			m_imGuiLayer->begin();
-			{
-			
-				for (Engine::Layer* layer : m_layerStack)
-					layer->onImGuiRender();
-			}
-			m_imGuiLayer->end();
-		}
-
-		m_window->onUpdate();
+		Renderer::shutdown();
 	}
-}
 
-void Application::executeMainThreadQueue()
-{
-	//std::scoped_lock<std::mutex> lock(m_mainThreadQueueMutex);
-	//
-	//for (auto& func : m_MainThreadQueue)
-	//	func();
-	//
-	//m_mainThreadQueue.clear();
+	void Application::run()
+	{
+		while (m_running)
+		{
+			float time = glfwGetTime();
+			Engine::Timestep timestep = time - m_lastFrameTime;
+			m_lastFrameTime = time;
+
+			glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			executeMainThreadQueue();
+
+			if (!m_minimized)
+			{
+				{
+					for (Engine::Layer* layer : m_layerStack)
+						layer->onUpdate(timestep);
+				}
+
+				m_imGuiLayer->begin();
+				{
+
+					for (Engine::Layer* layer : m_layerStack)
+						layer->onImGuiRender();
+				}
+				m_imGuiLayer->end();
+			}
+
+			m_window->onUpdate();
+		}
+	}
+
+	void Application::submitToMainThread(const std::function<void()>& function)
+	{
+		//std::scoped_lock<std::mutex> lock(m_mainThreadQueueMutex);
+		//
+		//m_mainThreadQueue.emplace_back(function);
+	}
+
+	void Application::executeMainThreadQueue()
+	{
+		//std::scoped_lock<std::mutex> lock(m_mainThreadQueueMutex);
+		//
+		//for (auto& func : m_MainThreadQueue)
+		//	func();
+		//
+		//m_mainThreadQueue.clear();
+	}
 }

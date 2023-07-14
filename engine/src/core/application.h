@@ -5,40 +5,79 @@
 #include "event/event.h"
 #include "event/applicationEvent.h"
 #include "imgui/imGuiLayer.h"
+#include <cassert>
+#include <mutex>
 
-class Application
-{
-public:
-	Application();
-	~Application();
+int main(int argc, char** argv);
 
-	void close();
+namespace Engine {
 
-	void onEvent(Engine::Event& e);
+	struct ApplicationCommandLineArgs
+	{
+		int count = 0;
+		char** args = nullptr;
 
-	void pushLayer(Engine::Layer* layer);
-	void pushOverlay(Engine::Layer* layer);
+		const char* operator[](int index) const
+		{
+			assert(index < count);
+			return args[index];
+		}
+	};
 
-	inline static Application& s_get() { return *s_instance; };
+	struct ApplicationSpecification
+	{
+		std::string name = "Engine Application";
+		std::string workingDirectory;
+		ApplicationCommandLineArgs commandLineArgs;
+	};
 
-	inline Engine::Window& getWindow() { return *m_window; };
+	class Application
+	{
+	public:
+		Application(const ApplicationSpecification& specification);
+		virtual ~Application();
 
-private:
+		void close();
 
-	static Application* s_instance;
+		void onEvent(Engine::Event& e);
 
-	void run();
-	bool onWindowClose(Engine::WindowCloseEvent& e);
-	bool onWindowResize(Engine::WindowResizeEvent& e);
+		void pushLayer(Engine::Layer* layer);
+		void pushOverlay(Engine::Layer* layer);
 
-	void executeMainThreadQueue();
-	std::unique_ptr<Engine::Window> m_window;
+		inline static Application& s_get() { return *s_instance; };
 
-	Engine::ImGuiLayer* m_imGuiLayer;
+		inline Engine::Window& getWindow() { return *m_window; };
 
-	bool m_running = true;
-	bool m_minimized = false;
-	Engine::LayerStack m_layerStack;
-	float m_lastFrameTime = 0.0f;
-};
+		const ApplicationSpecification& GetSpecification() const { return m_specification; }
+
+		void submitToMainThread(const std::function<void()>& function);
+
+	private:
+
+		static Application* s_instance;
+
+		void run();
+		bool onWindowClose(Engine::WindowCloseEvent& e);
+		bool onWindowResize(Engine::WindowResizeEvent& e);
+
+		void executeMainThreadQueue();
+
+		ApplicationSpecification m_specification;
+		std::unique_ptr<Engine::Window> m_window;
+		//layer stack decides when imguilayer gets destroyed and deleted
+		Engine::ImGuiLayer* m_imGuiLayer;
+
+		bool m_running = true;
+		bool m_minimized = false;
+		Engine::LayerStack m_layerStack;
+		float m_lastFrameTime = 0.0f;
+
+		std::vector<std::function<void()>> m_mainThreadQueue;
+		std::mutex m_mainThreadQueueMutex;
+
+		friend int ::main(int argc, char** argv);
+	};
+	// To be defined in CLIENT
+	Application* createApplication(ApplicationCommandLineArgs args);
+}
 

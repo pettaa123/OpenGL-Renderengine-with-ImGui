@@ -9,9 +9,11 @@ namespace Engine {
 	public:
 		ImGuiLayer();
 		~ImGuiLayer();
+
 		void onAttach() override;
 		void onDetach() override;
 		void onEvent(Event& e) override;
+		void onImGuiRender() override;
 
 		void begin();
 		void end();

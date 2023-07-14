@@ -1,7 +1,7 @@
 #pragma once
 
 #include "event/event.h"
-#include "input/mouseCodes.h"
+#include "core/mouseCodes.h"
 
 namespace Engine {
 
