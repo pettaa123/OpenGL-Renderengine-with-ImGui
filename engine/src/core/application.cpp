@@ -100,7 +100,7 @@ namespace Engine {
 	{
 		while (m_running)
 		{
-			float time = glfwGetTime();
+			float time = (float)glfwGetTime();
 			Engine::Timestep timestep = time - m_lastFrameTime;
 			m_lastFrameTime = time;
 

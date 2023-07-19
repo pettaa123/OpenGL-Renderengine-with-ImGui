@@ -4,17 +4,17 @@
 #include "src/texturemapping.h"
 #include "src/exampleLayer.h"
 
-class Texturemapping : public Engine::Application
+class TexturemappingApp : public Engine::Application
 {
 public:
-	Texturemapping(const Engine::ApplicationSpecification& specification)
+	TexturemappingApp(const Engine::ApplicationSpecification& specification)
 		: Engine::Application(specification)
 	{
 		// PushLayer(new ExampleLayer());
 		pushLayer(new Texturemapping());
 	}
 
-	~Texturemapping()
+	~TexturemappingApp()
 	{
 	}
 };
