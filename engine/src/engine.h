@@ -2,7 +2,7 @@
 
 // For use by Engine applications
 
-#include "core/Base.h"
+//#include "core/Base.h"
 
 #include "core/application.h"
 #include "core/layer.h"

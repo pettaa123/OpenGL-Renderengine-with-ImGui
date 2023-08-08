@@ -1,30 +1,30 @@
 #pragma once
 
-#include "Hazel.h"
+#include "core/layer.h"
 
-class ExampleLayer : public Hazel::Layer
+class ExampleLayer : public Engine::Layer
 {
 public:
 	ExampleLayer();
 	virtual ~ExampleLayer() = default;
 
-	virtual void OnAttach() override;
-	virtual void OnDetach() override;
+	virtual void onAttach() override;
+	virtual void onDetach() override;
 
-	void OnUpdate(Hazel::Timestep ts) override;
-	virtual void OnImGuiRender() override;
-	void OnEvent(Hazel::Event& e) override;
+	void onUpdate(Engine::Timestep ts) override;
+	virtual void onImGuiRender() override;
+	void onEvent(Engine::Event& e) override;
 private:
-	Hazel::ShaderLibrary m_ShaderLibrary;
-	Hazel::Ref<Hazel::Shader> m_Shader;
-	Hazel::Ref<Hazel::VertexArray> m_VertexArray;
+	Engine::ShaderLibrary m_ShaderLibrary;
+	std::shared_ptr<Engine::Shader> m_Shader;
+	std::shared_ptr<Engine::VertexArray> m_VertexArray;
 
-	Hazel::Ref<Hazel::Shader> m_FlatColorShader;
-	Hazel::Ref<Hazel::VertexArray> m_SquareVA;
+	std::shared_ptr<Engine::Shader> m_FlatColorShader;
+	std::shared_ptr<Engine::VertexArray> m_SquareVA;
 
-	Hazel::Ref<Hazel::Texture2D> m_Texture, m_ChernoLogoTexture;
+	std::shared_ptr<Engine::Texture2D> m_Texture, m_ChernoLogoTexture;
 
-	Hazel::OrthographicCameraController m_CameraController;
+	Engine::OrthographicCameraController m_CameraController;
 	glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
 };
 

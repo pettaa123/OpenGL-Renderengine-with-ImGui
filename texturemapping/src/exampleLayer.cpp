@@ -1,4 +1,4 @@
-#include "ExampleLayer.h"
+#include "exampleLayer.h"
 
 #include "imgui/imgui.h"
 
