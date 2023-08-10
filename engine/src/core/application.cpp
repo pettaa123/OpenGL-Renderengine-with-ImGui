@@ -60,8 +60,8 @@ namespace Engine {
 	void Application::onEvent(Engine::Event& e) {
 		Engine::EventDispatcher dispatcher(e);
 		//bind_front c++20 instead of bind+placeholders
-		dispatcher.Dispatch<Engine::WindowCloseEvent>(std::bind_front(&Application::onWindowClose, this));
-		dispatcher.Dispatch<Engine::WindowResizeEvent>(std::bind_front(&Application::onWindowResize, this));
+		dispatcher.dispatch<Engine::WindowCloseEvent>(std::bind_front(&Application::onWindowClose, this));
+		dispatcher.dispatch<Engine::WindowResizeEvent>(std::bind_front(&Application::onWindowResize, this));
 
 		for (auto it = m_layerStack.rbegin(); it != m_layerStack.rend(); ++it)
 		{
@@ -86,7 +86,7 @@ namespace Engine {
 		}
 
 		m_minimized = false;
-		//Renderer::onWindowResize(e.GetWidth(), e.GetHeight());
+		Renderer::onWindowResize(e.getWidth(), e.getHeight());
 
 		return false;
 	}
@@ -131,18 +131,18 @@ namespace Engine {
 
 	void Application::submitToMainThread(const std::function<void()>& function)
 	{
-		//std::scoped_lock<std::mutex> lock(m_mainThreadQueueMutex);
-		//
-		//m_mainThreadQueue.emplace_back(function);
+		std::scoped_lock<std::mutex> lock(m_mainThreadQueueMutex);
+		
+		m_mainThreadQueue.emplace_back(function);
 	}
 
 	void Application::executeMainThreadQueue()
 	{
-		//std::scoped_lock<std::mutex> lock(m_mainThreadQueueMutex);
-		//
-		//for (auto& func : m_MainThreadQueue)
-		//	func();
-		//
-		//m_mainThreadQueue.clear();
+		std::scoped_lock<std::mutex> lock(m_mainThreadQueueMutex);
+		
+		for (auto& func : m_mainThreadQueue)
+			func();
+		
+		m_mainThreadQueue.clear();
 	}
 }

@@ -10,11 +10,11 @@ namespace Engine {
 	class Input
 	{
 	public:
-		static bool s_isKeyPressed(KeyCode key);
+		static bool isKeyPressed(KeyCode key);
 
-		static bool s_isMouseButtonPressed(MouseCode button);
-		static glm::vec2 s_getMousePosition();
-		static float s_getMouseX();
-		static float s_getMouseY();
+		static bool isMouseButtonPressed(MouseCode button);
+		static glm::vec2 getMousePosition();
+		static float getMouseX();
+		static float getMouseY();
 	};
 }

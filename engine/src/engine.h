@@ -13,7 +13,7 @@
 #include "core/input.h"
 #include "core/keyCodes.h"
 #include "core/mouseCodes.h"
-//#include "renderer/OrthographicCameraController.h"
+#include "renderer/orthographicCameraController.h"
 
 #include "ImGui/imGuiLayer.h"
 
@@ -26,14 +26,14 @@
 
 // ---Renderer------------------------
 #include "renderer/renderer.h"
-//#include "renderer/renderer2D.h"
-//#include "renderer/renderCommand.h"
+#include "renderer/renderer2D.h"
+#include "renderer/renderCommand.h"
 
-//#include "renderer/buffer.h"
-//#include "renderer/shader.h"
+#include "renderer/buffer.h"
+#include "renderer/shader.h"
 //#include "renderer/framebuffer.h"
-//#include "renderer/texture.h"
-//#include "renderer/vertexArray.h"
+#include "renderer/texture.h"
+#include "renderer/vertexArray.h"
 
 //#include "renderer/OrthographicCamera.h"
 // -----------------------------------

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/layer.h"
+#include "engine.h"
 
 class ExampleLayer : public Engine::Layer
 {
@@ -15,16 +15,16 @@ public:
 	virtual void onImGuiRender() override;
 	void onEvent(Engine::Event& e) override;
 private:
-	Engine::ShaderLibrary m_ShaderLibrary;
-	std::shared_ptr<Engine::Shader> m_Shader;
-	std::shared_ptr<Engine::VertexArray> m_VertexArray;
+	Engine::ShaderLibrary m_shaderLibrary;
+	std::shared_ptr<Engine::Shader> m_shader;
+	std::shared_ptr<Engine::VertexArray> m_vertexArray;
 
-	std::shared_ptr<Engine::Shader> m_FlatColorShader;
-	std::shared_ptr<Engine::VertexArray> m_SquareVA;
+	std::shared_ptr<Engine::Shader> m_flatColorShader;
+	std::shared_ptr<Engine::VertexArray> m_squareVA;
 
-	std::shared_ptr<Engine::Texture2D> m_Texture, m_ChernoLogoTexture;
+	std::shared_ptr<Engine::Texture2D> m_texture, m_chernoLogoTexture;
 
-	Engine::OrthographicCameraController m_CameraController;
-	glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
+	Engine::OrthographicCameraController m_cameraController;
+	glm::vec3 m_squareColor = { 0.2f, 0.3f, 0.8f };
 };
 

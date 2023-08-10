@@ -6,9 +6,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 ExampleLayer::ExampleLayer() 
-	: Layer("ExampleLayer"), m_CameraController(1280.0f / 720.0f)
+	: Layer("ExampleLayer"), m_cameraController(1280.0f / 720.0f)
 {
-	m_VertexArray = Hazel::VertexArray::Create();
+	m_vertexArray = Engine::OpenGLVertexArray::create();
 
 	float vertices[3 * 7] = {
 		-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
@@ -16,19 +16,19 @@ ExampleLayer::ExampleLayer()
 		 0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
 	};
 
-	Hazel::Ref<Hazel::VertexBuffer> vertexBuffer = Hazel::VertexBuffer::Create(vertices, sizeof(vertices));
-	Hazel::BufferLayout layout = {
-		{ Hazel::ShaderDataType::Float3, "a_Position" },
-		{ Hazel::ShaderDataType::Float4, "a_Color" }
+	std::shared_ptr<Engine::VertexBuffer> vertexBuffer = Engine::VertexBuffer::create(vertices, sizeof(vertices));
+	Engine::BufferLayout layout = {
+		{ Engine::ShaderDataType::Float3, "a_Position" },
+		{ Engine::ShaderDataType::Float4, "a_Color" }
 	};
-	vertexBuffer->SetLayout(layout);
-	m_VertexArray->AddVertexBuffer(vertexBuffer);
+	vertexBuffer->setLayout(layout);
+	m_vertexArray->addVertexBuffer(vertexBuffer);
 
 	uint32_t indices[3] = { 0, 1, 2 };
-	Hazel::Ref<Hazel::IndexBuffer> indexBuffer = Hazel::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
-	m_VertexArray->SetIndexBuffer(indexBuffer);
+	std::shared_ptr<Engine::IndexBuffer> indexBuffer = Engine::IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t));
+	m_vertexArray->setIndexBuffer(indexBuffer);
 
-	m_SquareVA = Hazel::VertexArray::Create();
+	m_squareVA = Engine::OpenGLVertexArray::create();
 
 	float squareVertices[5 * 4] = {
 		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -37,16 +37,16 @@ ExampleLayer::ExampleLayer()
 		-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 	};
 
-	Hazel::Ref<Hazel::VertexBuffer> squareVB = Hazel::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
-	squareVB->SetLayout({
-		{ Hazel::ShaderDataType::Float3, "a_Position" },
-		{ Hazel::ShaderDataType::Float2, "a_TexCoord" }
+	std::shared_ptr<Engine::VertexBuffer> squareVB = Engine::VertexBuffer::create(squareVertices, sizeof(squareVertices));
+	squareVB->setLayout({
+		{ Engine::ShaderDataType::Float3, "a_Position" },
+		{ Engine::ShaderDataType::Float2, "a_TexCoord" }
 		});
-	m_SquareVA->AddVertexBuffer(squareVB);
+	m_squareVA->addVertexBuffer(squareVB);
 
 	uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-	Hazel::Ref<Hazel::IndexBuffer> squareIB = Hazel::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
-	m_SquareVA->SetIndexBuffer(squareIB);
+	std::shared_ptr<Engine::IndexBuffer> squareIB = Engine::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
+	m_squareVA->setIndexBuffer(squareIB);
 
 	std::string vertexSrc = R"(
 			#version 330 core
@@ -83,7 +83,7 @@ ExampleLayer::ExampleLayer()
 			}
 		)";
 
-	m_Shader = Hazel::Shader::Create("VertexPosColor", vertexSrc, fragmentSrc);
+	m_shader = Engine::Shader::create("VertexPosColor", vertexSrc, fragmentSrc);
 
 	std::string flatColorShaderVertexSrc = R"(
 			#version 330 core
@@ -117,40 +117,40 @@ ExampleLayer::ExampleLayer()
 			}
 		)";
 
-	m_FlatColorShader = Hazel::Shader::Create("FlatColor", flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
+	m_flatColorShader = Engine::Shader::create("FlatColor", flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
 
-	auto textureShader = m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
+	auto textureShader = m_shaderLibrary.load("assets/shaders/Texture.glsl");
 
-	m_Texture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
-	m_ChernoLogoTexture = Hazel::Texture2D::Create("assets/textures/ChernoLogo.png");
+	m_texture = Engine::Texture2D::create("assets/textures/Checkerboard.png");
+	m_chernoLogoTexture = Engine::Texture2D::create("assets/textures/ChernoLogo.png");
 
-	textureShader->Bind();
-	textureShader->SetInt("u_Texture", 0);
+	textureShader->bind();
+	textureShader->setInt("u_Texture", 0);
 }
 
-void ExampleLayer::OnAttach()
+void ExampleLayer::onAttach()
 {
 }
 
-void ExampleLayer::OnDetach()
+void ExampleLayer::onDetach()
 {
 }
 
-void ExampleLayer::OnUpdate(Hazel::Timestep ts) 
+void ExampleLayer::onUpdate(Engine::Timestep ts) 
 {
 	// Update
-	m_CameraController.OnUpdate(ts);
+	m_cameraController.onUpdate(ts);
 
 	// Render
-	Hazel::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-	Hazel::RenderCommand::Clear();
+	Engine::RenderCommand::setClearColor({ 0.5f, 0.1f, 0.1f, 1 });
+	Engine::RenderCommand::clear();
 
-	Hazel::Renderer::BeginScene(m_CameraController.GetCamera());
+	Engine::Renderer::beginScene(m_cameraController.getCamera());
 
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-	m_FlatColorShader->Bind();
-	m_FlatColorShader->SetFloat3("u_Color", m_SquareColor);
+	m_flatColorShader->bind();
+	m_flatColorShader->setFloat3("u_Color", m_squareColor);
 
 	for (int y = 0; y < 20; y++)
 	{
@@ -158,31 +158,31 @@ void ExampleLayer::OnUpdate(Hazel::Timestep ts)
 		{
 			glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 			glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-			Hazel::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
+			Engine::Renderer::submit(m_flatColorShader, m_squareVA, transform);
 		}
 	}
 
-	auto textureShader = m_ShaderLibrary.Get("Texture");
+	auto textureShader = m_shaderLibrary.get("Texture");
 
-	m_Texture->Bind();
-	Hazel::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
-	m_ChernoLogoTexture->Bind();
-	Hazel::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+	m_texture->bind();
+	Engine::Renderer::submit(textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+	m_chernoLogoTexture->bind();
+	Engine::Renderer::submit(textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 	// Triangle
 	// Hazel::Renderer::Submit(m_Shader, m_VertexArray);
 
-	Hazel::Renderer::EndScene();
+	Engine::Renderer::endScene();
 }
 
-void ExampleLayer::OnImGuiRender() 
+void ExampleLayer::onImGuiRender() 
 {
 	ImGui::Begin("Settings");
-	ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+	ImGui::ColorEdit3("Square Color", glm::value_ptr(m_squareColor));
 	ImGui::End();
 }
 
-void ExampleLayer::OnEvent(Hazel::Event& e) 
+void ExampleLayer::onEvent(Engine::Event& e) 
 {
-	m_CameraController.OnEvent(e);
+	m_cameraController.onEvent(e);
 }

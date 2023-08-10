@@ -5,21 +5,21 @@
 
 namespace Engine {
 
-	bool Input::s_isKeyPressed(const KeyCode key)
+	bool Input::isKeyPressed(const KeyCode key)
 	{
 		auto* window = static_cast<GLFWwindow*>(Application::s_get().getWindow().getNativeWindow());
 		auto state = glfwGetKey(window, static_cast<int32_t>(key));
 		return state == GLFW_PRESS;
 	}
 
-	bool Input::s_isMouseButtonPressed(const MouseCode button)
+	bool Input::isMouseButtonPressed(const MouseCode button)
 	{
 		auto* window = static_cast<GLFWwindow*>(Application::s_get().getWindow().getNativeWindow());
 		auto state = glfwGetMouseButton(window, static_cast<int32_t>(button));
 		return state == GLFW_PRESS;
 	}
 
-	glm::vec2 Input::s_getMousePosition()
+	glm::vec2 Input::getMousePosition()
 	{
 		auto* window = static_cast<GLFWwindow*>(Application::s_get().getWindow().getNativeWindow());
 		double xpos, ypos;
@@ -28,14 +28,14 @@ namespace Engine {
 		return { (float)xpos, (float)ypos };
 	}
 
-	float Input::s_getMouseX()
+	float Input::getMouseX()
 	{
-		return s_getMousePosition().x;
+		return getMousePosition().x;
 	}
 
-	float Input::s_getMouseY()
+	float Input::getMouseY()
 	{
-		return s_getMousePosition().y;
+		return getMousePosition().y;
 	}
 
 }

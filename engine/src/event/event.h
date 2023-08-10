@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <functional>
+//#include <functional>
 
 namespace Engine {
 
@@ -65,7 +65,7 @@ namespace Engine {
 		
 		// F will be deduced by the compiler
 		template<typename T, typename F>
-		bool Dispatch(const F& func)
+		bool dispatch(const F& func)
 		{
 			if (m_event.getEventType() == T::getStaticType())
 			{

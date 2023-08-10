@@ -9,7 +9,7 @@ extern Engine::Application* Engine::createApplication(Engine::ApplicationCommand
 int main(int argc, char** argv)
 {
 	auto app = Engine::createApplication({ argc, argv });
-	app->Run();
+	app->run();
 	delete app;
 }
 

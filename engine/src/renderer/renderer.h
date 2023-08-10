@@ -1,7 +1,8 @@
 #pragma once
 
-#include <memory>
-#include <glm/glm.hpp>
+#include "renderer/renderCommand.h"
+#include "renderer/orthographicCamera.h"
+#include "renderer/shader.h"
 
 namespace Engine {
 
@@ -14,6 +15,10 @@ namespace Engine {
 
 		static void onWindowResize(uint32_t width, uint32_t height);
 
+		static void beginScene(OrthographicCamera& camera);
+		static void endScene();
+
+		static void submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f));
 
 	private:
 
