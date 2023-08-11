@@ -8,7 +8,7 @@ namespace Engine {
 
 	void Renderer::init()
 	{
-		Renderer2D::init();
+		//Renderer2D::init();
 		RenderCommand::init();
 	}
 

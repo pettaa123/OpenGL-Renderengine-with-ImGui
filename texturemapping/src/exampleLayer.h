@@ -20,6 +20,7 @@ private:
 	std::shared_ptr<Engine::VertexArray> m_vertexArray;
 
 	std::shared_ptr<Engine::Shader> m_flatColorShader;
+	std::shared_ptr<Engine::Shader> m_textureShader;
 	std::shared_ptr<Engine::VertexArray> m_squareVA;
 
 	std::shared_ptr<Engine::Texture2D> m_texture, m_chernoLogoTexture;

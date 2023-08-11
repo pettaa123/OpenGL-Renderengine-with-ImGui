@@ -6,7 +6,7 @@ namespace Engine {
 
 	namespace Utils {
 
-		static GLenum HazelImageFormatToGLDataFormat(ImageFormat format)
+		static GLenum EngineImageFormatToGLDataFormat(ImageFormat format)
 		{
 			switch (format)
 			{
@@ -18,7 +18,7 @@ namespace Engine {
 			return 0;
 		}
 		
-		static GLenum HazelImageFormatToGLInternalFormat(ImageFormat format)
+		static GLenum EngineImageFormatToGLInternalFormat(ImageFormat format)
 		{
 			switch (format)
 			{
@@ -35,8 +35,8 @@ namespace Engine {
 	OpenGLTexture2D::OpenGLTexture2D(const TextureSpecification& specification)
 		: m_specification(specification), m_width(m_specification.width), m_height(m_specification.height)
 	{
-		m_internalFormat = Utils::HazelImageFormatToGLInternalFormat(m_specification.format);
-		m_dataFormat = Utils::HazelImageFormatToGLDataFormat(m_specification.format);
+		m_internalFormat = Utils::EngineImageFormatToGLInternalFormat(m_specification.format);
+		m_dataFormat = Utils::EngineImageFormatToGLDataFormat(m_specification.format);
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererID);
 		glTextureStorage2D(m_rendererID, 1, m_internalFormat, m_width, m_height);

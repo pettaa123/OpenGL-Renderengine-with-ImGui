@@ -10,8 +10,8 @@ public:
 	TexturemappingApp(const Engine::ApplicationSpecification& specification)
 		: Engine::Application(specification)
 	{
-		//pushLayer(new ExampleLayer());
-		pushLayer(new Texturemapping2D());
+		pushLayer(new ExampleLayer());
+		//pushLayer(new Texturemapping2D());
 	}
 
 	~TexturemappingApp()

@@ -8,23 +8,13 @@
 
 namespace Engine {
 
-	class ExampleLayer : public Engine::Layer
-	{
-	public:
-		ExampleLayer() : Layer("Example")
-		{
-		}
-		void onUpdate(Engine::Timestep ts) override { Log::info("ExampleLayer::update"); };
-		void onEvent(Engine::Event& event) override { Log::debug(std::format("{0}", event.toString())); }
-
-	};
-
 
 	Application* Application::s_instance = nullptr;
 
 	Application::Application(const ApplicationSpecification& specification)
 		: m_specification(specification)
 	{
+
 		assert(s_instance == nullptr);
 		s_instance = this;
 
@@ -39,8 +29,6 @@ namespace Engine {
 
 		m_imGuiLayer = new Engine::ImGuiLayer();
 		pushOverlay(m_imGuiLayer);
-
-		run();
 	}
 
 	void Application::pushLayer(Engine::Layer* layer) {
@@ -103,9 +91,6 @@ namespace Engine {
 			float time = (float)glfwGetTime();
 			Engine::Timestep timestep = time - m_lastFrameTime;
 			m_lastFrameTime = time;
-
-			glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
 
 			executeMainThreadQueue();
 
