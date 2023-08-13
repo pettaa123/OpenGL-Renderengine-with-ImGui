@@ -9,6 +9,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <filesystem>
+#include <array>
 
 //#include <shaderc/shaderc.hpp>
 //#include <spirv_cross/spirv_cross.hpp>
@@ -106,8 +107,9 @@ namespace Engine {
 	void OpenGLShader::compile(const std::unordered_map<GLenum, std::string>& shaderSources) {
 		
 		GLuint program = glCreateProgram();
-
-		std::vector<GLenum> shaderIDs;
+		assert(shaderSources.size() <= 2 && "Change me if you want to use more than 2 shaders");
+		std::array<GLenum,2> shaderIDs;
+		int shaderIDIndex = 0;
 
 		for (auto& kv : shaderSources) {
 			GLenum type = kv.first;
@@ -139,7 +141,7 @@ namespace Engine {
 				break;
 			}
 			glAttachShader(program, shader);
-			shaderIDs.push_back(shader);
+			shaderIDs[shaderIDIndex++] = shader;
 		}
 
 		glLinkProgram(program);

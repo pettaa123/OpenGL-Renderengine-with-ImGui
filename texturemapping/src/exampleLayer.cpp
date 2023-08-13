@@ -148,10 +148,10 @@ ExampleLayer::ExampleLayer()
 	//auto textureShader = m_shaderLibrary.load("assets/shaders/Texture.glsl");
 	//
 	m_texture = Engine::Texture2D::create("assets/textures/Checkerboard.png");
-	//m_chernoLogoTexture = Engine::Texture2D::create("assets/textures/ChernoLogo.png");
+	m_chernoLogoTexture = Engine::Texture2D::create("assets/textures/ChernoLogo.png");
 	//
-	//textureShader->bind();
-	//textureShader->setInt("u_Texture", 0);
+	m_textureShader->bind();
+	m_textureShader->setInt("u_Texture", 0);
 	
 }
 
@@ -174,11 +174,11 @@ void ExampleLayer::onUpdate(Engine::Timestep ts)
 
 	Engine::Renderer::beginScene(m_cameraController.getCamera());
 
-	//glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
+	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 	
-	//m_flatColorShader->bind();
-	//m_flatColorShader->setFloat3("u_Color", m_squareColor);
-	/*
+	m_flatColorShader->bind();
+	m_flatColorShader->setFloat3("u_Color", m_squareColor);
+	
 	for (int y = 0; y < 20; y++)
 	{
 		for (int x = 0; x < 20; x++)
@@ -190,13 +190,14 @@ void ExampleLayer::onUpdate(Engine::Timestep ts)
 	}
 
 	
-	*/
-	//auto textureShader = m_shaderLibrary.get("Texture");
 	
+	//auto textureShader = m_shaderLibrary.get("Texture");
+
 	m_texture->bind();
-	Engine::Renderer::submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
-	//m_chernoLogoTexture->bind();
-	//Engine::Renderer::submit(textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+	Engine::Renderer::submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(0.5f)));
+
+	m_chernoLogoTexture->bind();
+	Engine::Renderer::submit(m_textureShader, m_squareVA, glm::translate(glm::mat4(1.0f), glm::vec3(0.4f,-0.25f,0)));
 	
 	// Triangle
 	//Engine::Renderer::submit(m_shader, m_vertexArray);

@@ -5,7 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Texturemapping2D::Texturemapping2D()
-	: Layer("Texturemapping"), m_cameraController(1280.0f / 720.0f), m_squareColor({ 0.2f, 0.3f, 0.8f, 1.0f })
+	: Layer("Texturemapping2D"), m_cameraController(1280.0f / 720.0f), m_squareColor({ 0.2f, 0.3f, 0.8f, 1.0f })
 {
 }
 
