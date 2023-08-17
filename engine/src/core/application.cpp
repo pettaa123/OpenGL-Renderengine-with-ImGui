@@ -81,7 +81,6 @@ namespace Engine {
 
 	Application::~Application()
 	{
-		Renderer::shutdown();
 	}
 
 	void Application::run()
@@ -91,8 +90,6 @@ namespace Engine {
 			float time = (float)glfwGetTime();
 			Engine::Timestep timestep = time - m_lastFrameTime;
 			m_lastFrameTime = time;
-
-			executeMainThreadQueue();
 
 			if (!m_minimized)
 			{
@@ -112,22 +109,5 @@ namespace Engine {
 
 			m_window->onUpdate();
 		}
-	}
-
-	void Application::submitToMainThread(const std::function<void()>& function)
-	{
-		std::scoped_lock<std::mutex> lock(m_mainThreadQueueMutex);
-		
-		m_mainThreadQueue.emplace_back(function);
-	}
-
-	void Application::executeMainThreadQueue()
-	{
-		std::scoped_lock<std::mutex> lock(m_mainThreadQueueMutex);
-		
-		for (auto& func : m_mainThreadQueue)
-			func();
-		
-		m_mainThreadQueue.clear();
 	}
 }

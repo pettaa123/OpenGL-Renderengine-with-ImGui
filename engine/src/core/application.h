@@ -50,7 +50,6 @@ namespace Engine {
 
 		const ApplicationSpecification& GetSpecification() const { return m_specification; }
 
-		void submitToMainThread(const std::function<void()>& function);
 
 	private:
 
@@ -59,8 +58,6 @@ namespace Engine {
 		void run();
 		bool onWindowClose(Engine::WindowCloseEvent& e);
 		bool onWindowResize(Engine::WindowResizeEvent& e);
-
-		void executeMainThreadQueue();
 
 		ApplicationSpecification m_specification;
 		std::unique_ptr<Engine::Window> m_window;

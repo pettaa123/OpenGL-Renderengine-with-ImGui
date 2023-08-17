@@ -157,6 +157,7 @@ ExampleLayer::ExampleLayer()
 
 void ExampleLayer::onAttach()
 {
+	m_quadShader.reset(Engine::Shader::create("assets/shaders/quad.glsl"));
 }
 
 void ExampleLayer::onDetach()
@@ -175,7 +176,7 @@ void ExampleLayer::onUpdate(Engine::Timestep ts)
 	Engine::Renderer::beginScene(m_cameraController.getCamera());
 
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
-	
+
 	m_flatColorShader->bind();
 	m_flatColorShader->setFloat3("u_Color", m_squareColor);
 	

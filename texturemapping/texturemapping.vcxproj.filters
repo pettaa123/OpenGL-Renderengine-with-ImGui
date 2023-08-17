@@ -21,18 +21,12 @@
     <ClCompile Include="src\exampleLayer.cpp">
       <Filter>Source Files\src</Filter>
     </ClCompile>
-    <ClCompile Include="src\texturemapping2D.cpp">
-      <Filter>Source Files\src</Filter>
-    </ClCompile>
     <ClCompile Include="src\texturemappingApp.cpp">
       <Filter>Source Files\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\exampleLayer.h">
-      <Filter>Source Files\src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\texturemapping2D.h">
       <Filter>Source Files\src</Filter>
     </ClInclude>
   </ItemGroup>

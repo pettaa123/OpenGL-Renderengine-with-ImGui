@@ -9,24 +9,24 @@
 
 namespace Engine {
 
-	std::unique_ptr<Window> Window::create(const WindowProps& props)
+	Window* Window::create(const WindowSpecification& specification)
 	{
-		return std::make_unique<Window>(props);
+		return new Window(specification);
 	}
 
-	static uint8_t s_GLFWWindowCount = 0;
+	static bool s_GLFWInitialized = false;
 
 	static void GLFWErrorCallback(int error, const char* description)
 	{
-		fprintf(stderr, "Error: %s\n", description);
+		Log::error(std::format("Error: {0}", description));
 	}
 
 
 	/* Create window & initilialize its OpenGL context */
-	Window::Window(const WindowProps& props) :
-		m_fps(0)
+	Window::Window(const WindowSpecification& specification) :
+		m_specification(specification)
 	{
-		init(props);
+		init();
 	}
 
 
@@ -34,12 +34,12 @@ namespace Engine {
 		shutdown();
 	}
 
-	void Window::init(const WindowProps& props) {
-		m_data.title = props.title;
-		m_data.width = props.width;
-		m_data.height = props.height;
+	void Window::init() {
+		m_data.title = m_specification.title;
+		m_data.width = m_specification.width;
+		m_data.height = m_specification.height;
 
-		Log::info(std::format("Creating window {0} ({1}, {2})", props.title, props.width, props.height));
+		Log::info(std::format("Creating window {0} ({1}, {2})", m_specification.title, m_specification.width, m_specification.height));
 
 
 		// Setup Our GLFW error callback, we do this before Init so we know what goes wrong with init if it fails:
@@ -47,21 +47,44 @@ namespace Engine {
 
 
 		// initialize glfw library
-		if (s_GLFWWindowCount == 0)
+		if (!s_GLFWInitialized)
 		{
 			if (!glfwInit()) {
 				m_window = NULL;
 				Log::error("Failed to initialize GLFW");
 				return;
 			}
+			s_GLFWInitialized = true;
+		}
+
+		if (!m_specification.decorated)
+		{
+			// This removes titlebar on all platforms
+			// and all of the native window effects on non-Windows platforms
+			glfwWindowHint(GLFW_DECORATED, false);
+		}
+
+		if (m_specification.fullscreen)
+		{
+			GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+			const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
+
+			glfwWindowHint(GLFW_DECORATED, false);
+			glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+			glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+			glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+			m_window = glfwCreateWindow(mode->width, mode->height, m_data.title.c_str(), primaryMonitor, nullptr);
+		}
+		else
+		{
+			m_window = glfwCreateWindow((int)m_specification.width, (int)m_specification.height, m_data.title.c_str(), nullptr, nullptr);
 		}
 
 #if defined(_DEBUG)
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
-
-		m_window = glfwCreateWindow((int)props.width, (int)props.height, m_data.title.c_str(), nullptr, nullptr);
-		++s_GLFWWindowCount;
 
 		m_context = OpenGLContext::create(m_window);
 		m_context->init();
@@ -161,12 +184,8 @@ namespace Engine {
 	{
 
 		glfwDestroyWindow(m_window);
-		--s_GLFWWindowCount;
-
-		if (s_GLFWWindowCount == 0)
-		{
-			glfwTerminate();
-		}
+		s_GLFWInitialized = false;
+		glfwTerminate();
 	}
 
 	void Window::onUpdate()

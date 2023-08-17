@@ -2,6 +2,6 @@
 
 namespace Engine {
 
-	std::unique_ptr<OpenGLRendererAPI> RenderCommand::s_rendererAPI = std::make_unique<OpenGLRendererAPI>();
+	std::unique_ptr<OpenGLRenderer> RenderCommand::s_renderer = std::make_unique<OpenGLRenderer>();
 
 }

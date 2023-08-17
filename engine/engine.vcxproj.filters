@@ -23,9 +23,6 @@
     <Filter Include="Resource Files\src\math">
       <UniqueIdentifier>{fc1e0204-2b35-4491-bbb6-d4481b7b1c8f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\src\scene">
-      <UniqueIdentifier>{21bc7f2d-aac0-483d-aae7-2ae70a1d081c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\vendor">
       <UniqueIdentifier>{c000e318-de60-4f15-9a8b-cc4ec4aa0b30}</UniqueIdentifier>
     </Filter>
@@ -85,13 +82,7 @@
     <ClCompile Include="src\renderer\orthographicCameraController.cpp">
       <Filter>Resource Files\src\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\openGLRendererAPI.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\renderer\renderer2D.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\renderer\editorCamera.cpp">
+    <ClCompile Include="src\renderer\openGLRenderer.cpp">
       <Filter>Resource Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\texture.cpp">
@@ -100,14 +91,8 @@
     <ClCompile Include="src\renderer\openGLTexture.cpp">
       <Filter>Resource Files\src\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\UUID.cpp">
-      <Filter>Resource Files\src\core</Filter>
-    </ClCompile>
     <ClCompile Include="..\vendor\stb_image\stb_image.cpp">
       <Filter>Resource Files\vendor\stb_image</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scene\sceneCamera.cpp">
-      <Filter>Resource Files\src\scene</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\uniformBuffer.cpp">
       <Filter>Resource Files\src\renderer</Filter>
@@ -122,6 +107,9 @@
       <Filter>Resource Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\openGLUniformBuffer.cpp">
+      <Filter>Resource Files\src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer\camera.cpp">
       <Filter>Resource Files\src\renderer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -210,16 +198,10 @@
     <ClInclude Include="src\renderer\orthographicCameraController.h">
       <Filter>Resource Files\src\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\openGLRendererAPI.h">
-      <Filter>Resource Files\src\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderer\renderer2D.h">
+    <ClInclude Include="src\renderer\openGLRenderer.h">
       <Filter>Resource Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\camera.h">
-      <Filter>Resource Files\src\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderer\editorCamera.h">
       <Filter>Resource Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\texture.h">
@@ -228,17 +210,8 @@
     <ClInclude Include="src\renderer\openGLTexture.h">
       <Filter>Resource Files\src\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\scene\components.h">
-      <Filter>Resource Files\src\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\UUID.h">
-      <Filter>Resource Files\src\core</Filter>
-    </ClInclude>
     <ClInclude Include="..\vendor\stb_image\stb_image.h">
       <Filter>Resource Files\vendor\stb_image</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scene\sceneCamera.h">
-      <Filter>Resource Files\src\scene</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\uniformBuffer.h">
       <Filter>Resource Files\src\renderer</Filter>

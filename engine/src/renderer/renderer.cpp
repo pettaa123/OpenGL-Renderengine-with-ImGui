@@ -1,5 +1,4 @@
 ﻿#include "renderer.h"
-#include "renderer2D.h"
 #include "core/log.h"
 
 namespace Engine {
@@ -12,11 +11,6 @@ namespace Engine {
 		RenderCommand::init();
 	}
 
-
-	void Renderer::shutdown()
-	{
-		Renderer2D::shutdown();
-	}
 
 	void Renderer::onWindowResize(uint32_t width, uint32_t height)
 	{

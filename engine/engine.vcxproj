@@ -22,17 +22,16 @@
     <ClCompile Include="..\vendor\stb_image\stb_image.cpp" />
     <ClCompile Include="src\core\application.cpp" />
     <ClCompile Include="src\core\input.cpp" />
-    <ClCompile Include="src\core\UUID.cpp" />
     <ClCompile Include="src\imgui\imGuiLayer.cpp" />
     <ClCompile Include="src\core\layer.cpp" />
     <ClCompile Include="src\core\layerStack.cpp" />
     <ClCompile Include="src\core\log.cpp" />
     <ClCompile Include="src\math\math.cpp" />
     <ClCompile Include="src\renderer\buffer.cpp" />
-    <ClCompile Include="src\renderer\editorCamera.cpp" />
+    <ClCompile Include="src\renderer\camera.cpp" />
     <ClCompile Include="src\renderer\openGLBuffer.cpp" />
     <ClCompile Include="src\renderer\openGLContext.cpp" />
-    <ClCompile Include="src\renderer\openGLRendererAPI.cpp" />
+    <ClCompile Include="src\renderer\openGLRenderer.cpp" />
     <ClCompile Include="src\renderer\openGLShader.cpp" />
     <ClCompile Include="src\renderer\openGLTexture.cpp" />
     <ClCompile Include="src\renderer\openGLUniformBuffer.cpp" />
@@ -43,12 +42,10 @@
     <ClCompile Include="src\renderer\renderer.cpp" />
     <ClCompile Include="src\core\terminalColor.cpp" />
     <ClCompile Include="src\core\window.cpp" />
-    <ClCompile Include="src\renderer\renderer2D.cpp" />
     <ClCompile Include="src\renderer\shader.cpp" />
     <ClCompile Include="src\renderer\texture.cpp" />
     <ClCompile Include="src\renderer\uniformBuffer.cpp" />
     <ClCompile Include="src\renderer\vertexArray.cpp" />
-    <ClCompile Include="src\scene\sceneCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\vendor\stb_image\stb_image.h" />
@@ -60,7 +57,6 @@
     <ClInclude Include="src\core\mouseCodes.h" />
     <ClInclude Include="src\core\timer.h" />
     <ClInclude Include="src\core\timestep.h" />
-    <ClInclude Include="src\core\UUID.h" />
     <ClInclude Include="src\engine.h" />
     <ClInclude Include="src\event\applicationEvent.h" />
     <ClInclude Include="src\event\keyEvent.h" />
@@ -73,10 +69,9 @@
     <ClInclude Include="src\math\math.h" />
     <ClInclude Include="src\renderer\buffer.h" />
     <ClInclude Include="src\renderer\camera.h" />
-    <ClInclude Include="src\renderer\editorCamera.h" />
     <ClInclude Include="src\renderer\openGLBuffer.h" />
     <ClInclude Include="src\renderer\openGLContext.h" />
-    <ClInclude Include="src\renderer\openGLRendererAPI.h" />
+    <ClInclude Include="src\renderer\openGLRenderer.h" />
     <ClInclude Include="src\renderer\openGLShader.h" />
     <ClInclude Include="src\renderer\openGLTexture.h" />
     <ClInclude Include="src\renderer\openGLUniformBuffer.h" />
@@ -85,13 +80,10 @@
     <ClInclude Include="src\renderer\orthographicCameraController.h" />
     <ClInclude Include="src\renderer\renderCommand.h" />
     <ClInclude Include="src\renderer\renderer.h" />
-    <ClInclude Include="src\renderer\renderer2D.h" />
     <ClInclude Include="src\renderer\shader.h" />
     <ClInclude Include="src\renderer\texture.h" />
     <ClInclude Include="src\renderer\uniformBuffer.h" />
     <ClInclude Include="src\renderer\vertexArray.h" />
-    <ClInclude Include="src\scene\components.h" />
-    <ClInclude Include="src\scene\sceneCamera.h" />
     <ClInclude Include="src\terminalColor.h" />
     <ClInclude Include="src\core\window.h" />
   </ItemGroup>
@@ -200,7 +192,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)engine\src;$(SolutionDir)vendor\stb_image;$(SolutionDir)vendor\imgui;$(SolutionDir)vendor\glm\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)engine\src;$(SolutionDir)vendor\stb_image;$(SolutionDir)vendor\imgui;$(SolutionDir)vendor\assimp\include;$(SolutionDir)vendor\glm\glm</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -218,7 +210,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)engine\src;$(SolutionDir)vendor\stb_image;$(SolutionDir)vendor\imgui;$(SolutionDir)vendor\glm\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)engine\src;$(SolutionDir)vendor\stb_image;$(SolutionDir)vendor\imgui;$(SolutionDir)vendor\assimp\include;$(SolutionDir)vendor\glm\glm</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
