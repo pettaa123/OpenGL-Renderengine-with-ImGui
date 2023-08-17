@@ -39,8 +39,10 @@ namespace Engine {
 
 	void OpenGLVertexBuffer::setData(const void* data, uint32_t size)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+		//glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
+		//glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -58,9 +60,22 @@ namespace Engine {
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 	}
 
+	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t count)
+		: m_rendererID(0), m_count(count)
+	{
+		glCreateBuffers(1, &m_rendererID);
+	}
+
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
 		glDeleteBuffers(1, &m_rendererID);
+	}
+
+	void OpenGLIndexBuffer::setData(void* buffer, uint32_t count, uint32_t offset)
+	{
+		m_count = count;
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count, buffer, GL_STATIC_DRAW);
 	}
 
 	void OpenGLIndexBuffer::bind() const

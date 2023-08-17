@@ -1,5 +1,4 @@
-#include "hzpch.h" 
-#include "Mesh.h"
+#include "mesh.h"
 
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -9,7 +8,11 @@
 
 #include <glad/glad.h>
 
-namespace Hazel {
+#include "core/log.h"
+#include "renderCommand.h"
+
+
+namespace Engine {
 
 	namespace {
 		const unsigned int ImportFlags =
@@ -26,7 +29,7 @@ namespace Hazel {
 
 	struct LogStream : public Assimp::LogStream
 	{
-		static void Initialize()
+		static void initialize()
 		{
 			if (Assimp::DefaultLogger::isNullLogger())
 			{
@@ -37,89 +40,88 @@ namespace Hazel {
 
 		void write(const char* message) override
 		{
-			HZ_CORE_ERROR("Assimp error: {0}", message);
+			Log::error(std::format("Assimp error: {0}", message));
 		}
 	};
 
 	Mesh::Mesh(const std::string& filename)
-		: m_FilePath(filename)
+		: m_filePath(filename)
 	{
-		LogStream::Initialize();
+		LogStream::initialize();
 
-		HZ_CORE_INFO("Loading mesh: {0}", filename.c_str());
+		Log::info(std::format("Loading mesh: {0}", filename.c_str()));
 
 		Assimp::Importer importer;
-		
+
 		const aiScene* scene = importer.ReadFile(filename, ImportFlags);
 		if (!scene || !scene->HasMeshes())
-			HZ_CORE_ERROR("Failed to load mesh file: {0}", filename);
+			Log::error(std::format("Failed to load mesh file: {0}", filename));
 
 		aiMesh* mesh = scene->mMeshes[0];
 
-		HZ_CORE_ASSERT(mesh->HasPositions(), "Meshes require positions.");
-		HZ_CORE_ASSERT(mesh->HasNormals(), "Meshes require normals.");
+		assert(mesh->HasPositions() && "Meshes require positions.");
+		assert(mesh->HasNormals() && "Meshes require normals.");
 
-		m_Vertices.reserve(mesh->mNumVertices);
+		m_vertices.reserve(mesh->mNumVertices);
 
 		// Extract vertices from model
-		for (size_t i = 0; i < m_Vertices.capacity(); i++) 
+		for (size_t i = 0; i < m_vertices.capacity(); i++)
 		{
 			Vertex vertex;
-			vertex.Position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
-			vertex.Normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
+			vertex.position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
+			vertex.normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
 
 			if (mesh->HasTangentsAndBitangents())
 			{
-				vertex.Tangent = { mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z };
-				vertex.Binormal = { mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z };
+				vertex.tangent = { mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z };
+				vertex.binormal = { mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z };
 			}
 
 			if (mesh->HasTextureCoords(0))
-				vertex.Texcoord = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
-			m_Vertices.push_back(vertex);
+				vertex.texcoord = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
+			m_vertices.push_back(vertex);
 		}
 
-		m_VertexBuffer.reset(VertexBuffer::Create());
-		m_VertexBuffer->SetData(m_Vertices.data(), m_Vertices.size() * sizeof(Vertex));
+		m_vertexBuffer.reset(VertexBuffer::create());
+		m_vertexBuffer->setData(m_vertices.data(), m_vertices.size() * sizeof(Vertex));
 
 		// Extract indices from model
-		m_Indices.reserve(mesh->mNumFaces);
-		for (size_t i = 0; i < m_Indices.capacity(); i++)
+		m_indices.reserve(mesh->mNumFaces);
+		for (size_t i = 0; i < m_indices.capacity(); i++)
 		{
-			HZ_CORE_ASSERT(mesh->mFaces[i].mNumIndices == 3, "Must have 3 indices.");
-			m_Indices.push_back({ mesh->mFaces[i].mIndices[0], mesh->mFaces[i].mIndices[1], mesh->mFaces[i].mIndices[2] });
+			assert(mesh->mFaces[i].mNumIndices == 3 && "Must have 3 indices.");
+			m_indices.push_back({ mesh->mFaces[i].mIndices[0], mesh->mFaces[i].mIndices[1], mesh->mFaces[i].mIndices[2] });
 		}
 
-		m_IndexBuffer.reset(IndexBuffer::Create());
-		m_IndexBuffer->SetData(m_Indices.data(), m_Indices.size() * sizeof(Index));
+		m_indexBuffer.reset(IndexBuffer::create());
+		m_indexBuffer->setData(m_indices.data(), m_indices.size() * sizeof(Index));
 	}
 
 	Mesh::~Mesh()
 	{
 	}
 
-	void Mesh::Render()
+	void Mesh::render()
 	{
 		// TODO: Sort this out
-		m_VertexBuffer->Bind();
-		m_IndexBuffer->Bind();
-		HZ_RENDER_S({
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
+		m_vertexBuffer->bind();
+		m_indexBuffer->bind();
 
-			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Normal));
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, position));
 
-			glEnableVertexAttribArray(2);
-			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Tangent));
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, normal));
 
-			glEnableVertexAttribArray(3);
-			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Binormal));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, tangent));
 
-			glEnableVertexAttribArray(4);
-			glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Texcoord));
-		});
-		Renderer::DrawIndexed(m_IndexBuffer->GetCount());
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, binormal));
+
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, texcoord));
+		RenderCommand::drawMesh(m_indexBuffer->getCount());
 	}
 
 }

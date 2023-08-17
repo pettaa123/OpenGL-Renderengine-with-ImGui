@@ -1,9 +1,11 @@
 #include "camera.h"
 
 #include "core/Input.h"
-
+#include "core/log.h"
 #include <glfw/glfw3.h>
 #include <glm/gtc/quaternion.hpp>
+
+#include <functional>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
@@ -34,7 +36,7 @@ namespace Engine {
 	{
 	}
 
-	void Camera::update()
+	void Camera::onUpdate(Timestep ts)
 	{
 		if (Input::isKeyPressed(GLFW_KEY_LEFT_ALT))
 		{
@@ -56,6 +58,30 @@ namespace Engine {
 		m_rotation = glm::eulerAngles(orientation) * (180.0f / (float)M_PI);
 		m_viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 1)) * glm::toMat4(glm::conjugate(orientation)) * glm::translate(glm::mat4(1.0f), -m_position);
 	}
+	void Camera::onEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		dispatcher.dispatch<MouseScrolledEvent>(std::bind_front(&Camera::onMouseScrolled, this));
+		dispatcher.dispatch<WindowResizeEvent>(std::bind_front(&Camera::onWindowResized, this));
+	}
+
+	void Camera::onResize(float width, float height)
+	{
+		setProjectionMatrix(glm::mat4(glm::perspectiveFov(glm::radians(45.0f), width, height, 0.1f, 10000.0f)));
+	}
+
+	bool Camera::onMouseScrolled(MouseScrolledEvent& e)
+	{
+		Log::info("MouseScrolledEvent");
+		return true;
+	}
+
+	bool Camera::onWindowResized(WindowResizeEvent& e)
+	{
+		onResize((float)e.getWidth(), (float)e.getHeight());
+		return false;
+	}
+
 
 	void Camera::mousePan(const glm::vec2& delta)
 	{

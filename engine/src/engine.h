@@ -33,6 +33,6 @@
 //#include "renderer/framebuffer.h"
 #include "renderer/texture.h"
 #include "renderer/vertexArray.h"
-
-//#include "renderer/OrthographicCamera.h"
+#include "renderer/mesh.h"
+#include "renderer/camera.h"
 // -----------------------------------

@@ -29,6 +29,7 @@
     <ClCompile Include="src\math\math.cpp" />
     <ClCompile Include="src\renderer\buffer.cpp" />
     <ClCompile Include="src\renderer\camera.cpp" />
+    <ClCompile Include="src\renderer\mesh.cpp" />
     <ClCompile Include="src\renderer\openGLBuffer.cpp" />
     <ClCompile Include="src\renderer\openGLContext.cpp" />
     <ClCompile Include="src\renderer\openGLRenderer.cpp" />
@@ -69,6 +70,7 @@
     <ClInclude Include="src\math\math.h" />
     <ClInclude Include="src\renderer\buffer.h" />
     <ClInclude Include="src\renderer\camera.h" />
+    <ClInclude Include="src\renderer\mesh.h" />
     <ClInclude Include="src\renderer\openGLBuffer.h" />
     <ClInclude Include="src\renderer\openGLContext.h" />
     <ClInclude Include="src\renderer\openGLRenderer.h" />

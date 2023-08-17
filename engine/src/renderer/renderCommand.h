@@ -30,6 +30,11 @@ namespace Engine {
 			s_renderer->clear();
 		}
 
+		inline static void drawMesh( uint32_t indexCount)
+		{
+			s_renderer->drawMesh(indexCount);
+		}
+
 		inline static void drawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t indexCount = 0)
 		{
 			s_renderer->drawIndexed(vertexArray, indexCount);

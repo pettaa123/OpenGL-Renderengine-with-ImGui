@@ -1,8 +1,9 @@
 ﻿#include "renderer.h"
 #include "core/log.h"
 
-namespace Engine {
 
+
+namespace Engine {
 	std::unique_ptr<Renderer::SceneData> Renderer::s_sceneData = std::make_unique<Renderer::SceneData>();
 
 	void Renderer::init()
@@ -20,6 +21,11 @@ namespace Engine {
 	void Renderer::beginScene(OrthographicCamera& camera)
 	{
 		s_sceneData->viewProjectionMatrix = camera.getViewProjectionMatrix();
+	}
+
+	void Renderer::beginScene(Camera& camera)
+	{
+		s_sceneData->viewProjectionMatrix = camera.getProjectionMatrix() * camera.getViewMatrix();
 	}
 
 	void Renderer::endScene()

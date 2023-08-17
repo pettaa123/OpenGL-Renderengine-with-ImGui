@@ -118,21 +118,25 @@ namespace Engine {
 		virtual const BufferLayout& getLayout() const = 0;
 		virtual void setLayout(const BufferLayout& layout) = 0;
 
-		static std::shared_ptr<VertexBuffer> create(uint32_t size);
+		static VertexBuffer* create(uint32_t size = 0);
+		//static std::shared_ptr<VertexBuffer> create(uint32_t size);
 		static std::shared_ptr<VertexBuffer> create(float* vertices, uint32_t size);
 	};
 
-	// Currently Hazel only supports 32-bit index buffers
+	// Currently Engine only supports 32-bit index buffers
 	class IndexBuffer
 	{
 	public:
 		virtual ~IndexBuffer() = default;
+
+		virtual void setData(void* buffer, unsigned int size, unsigned int offset = 0) = 0;
 
 		virtual void bind() const = 0;
 		virtual void unbind() const = 0;
 
 		virtual uint32_t getCount() const = 0;
 
+		static IndexBuffer* create(uint32_t size = 0);
 		static std::shared_ptr<IndexBuffer> create(uint32_t* indices, uint32_t count);
 	};
 

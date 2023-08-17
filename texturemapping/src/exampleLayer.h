@@ -25,7 +25,10 @@ private:
 
 	std::shared_ptr<Engine::Texture2D> m_texture, m_chernoLogoTexture;
 
-	Engine::OrthographicCameraController m_cameraController;
+	//Engine::OrthographicCameraController m_cameraController;
+	Engine::Camera m_cameraController;
 	glm::vec3 m_squareColor = { 0.2f, 0.3f, 0.8f };
+
+	std::unique_ptr<Engine::Mesh> m_mesh;
 };
 

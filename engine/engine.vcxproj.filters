@@ -112,6 +112,9 @@
     <ClCompile Include="src\renderer\camera.cpp">
       <Filter>Resource Files\src\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\renderer\mesh.cpp">
+      <Filter>Resource Files\src\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\event\event.h">
@@ -226,6 +229,9 @@
       <Filter>Resource Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\openGLUniformBuffer.h">
+      <Filter>Resource Files\src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\mesh.h">
       <Filter>Resource Files\src\renderer</Filter>
     </ClInclude>
   </ItemGroup>

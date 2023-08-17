@@ -1,6 +1,10 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "core/timestep.h"
+#include "event/ApplicationEvent.h"
+#include "event/MouseEvent.h"
+
 
 namespace Engine {
 
@@ -9,8 +13,12 @@ namespace Engine {
 	public:
 		Camera(const glm::mat4& projectionMatrix);
 
+		void onUpdate(Timestep ts);
+		void onEvent(Event& e);
+
+		void onResize(float width, float height);
+
 		void focus();
-		void update();
 
 		inline float getDistance() const { return m_distance; }
 		inline void setDistance(float distance) { m_distance = distance; }
@@ -32,6 +40,10 @@ namespace Engine {
 		glm::vec3 calculatePosition();
 		glm::quat getOrientation();
 	private:
+
+		bool onMouseScrolled(MouseScrolledEvent& e);
+		bool onWindowResized(WindowResizeEvent& e);
+
 		glm::mat4 m_projectionMatrix, m_viewMatrix;
 		glm::vec3 m_position, m_rotation, m_focalPoint;
 

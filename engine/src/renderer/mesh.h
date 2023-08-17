@@ -3,23 +3,23 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-#include "Hazel/Renderer/Buffer.h"
+#include "renderer/buffer.h"
 
-namespace Hazel {
+namespace Engine {
 
 	class Mesh
 	{
 	public:
 		struct Vertex
 		{
-			glm::vec3 Position;
-			glm::vec3 Normal;
-			glm::vec3 Tangent;
-			glm::vec3 Binormal;
-			glm::vec2 Texcoord;
+			glm::vec3 position;
+			glm::vec3 normal;
+			glm::vec3 tangent;
+			glm::vec3 binormal;
+			glm::vec2 texcoord;
 		};
 		static_assert(sizeof(Vertex) == 14 * sizeof(float));
-		static const int NumAttributes = 5;
+		static const int numAttributes = 5;
 
 		struct Index
 		{
@@ -30,16 +30,16 @@ namespace Hazel {
 		Mesh(const std::string& filename);
 		~Mesh();
 
-		void Render();
+		void render();
 
-		inline const std::string& GetFilePath() const { return m_FilePath; }
+		inline const std::string& getFilePath() const { return m_filePath; }
 	private:
-		std::vector<Vertex> m_Vertices;
-		std::vector<Index> m_Indices;
+		std::vector<Vertex> m_vertices;
+		std::vector<Index> m_indices;
 
-		std::unique_ptr<VertexBuffer> m_VertexBuffer;
-		std::unique_ptr<IndexBuffer> m_IndexBuffer;
+		std::unique_ptr<VertexBuffer> m_vertexBuffer;
+		std::unique_ptr<IndexBuffer> m_indexBuffer;
 
-		std::string m_FilePath;
+		std::string m_filePath;
 	};
 }
