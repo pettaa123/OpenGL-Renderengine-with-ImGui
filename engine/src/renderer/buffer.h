@@ -129,7 +129,7 @@ namespace Engine {
 	public:
 		virtual ~IndexBuffer() = default;
 
-		virtual void setData(void* buffer, unsigned int size, unsigned int offset = 0) = 0;
+		virtual void setData(const void* buffer, uint32_t size) = 0;
 
 		virtual void bind() const = 0;
 		virtual void unbind() const = 0;

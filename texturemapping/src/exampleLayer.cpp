@@ -146,7 +146,8 @@ ExampleLayer::ExampleLayer()  //m_cameraController(1280.0f / 720.0f)
 void ExampleLayer::onAttach()
 {
 	//m_quadShader.reset(Engine::Shader::create("assets/shaders/quad.glsl"));
-	//m_mesh.reset(new Engine::Mesh("assets/meshes/cerberus.fbx"));
+	m_mesh.reset(new Engine::Mesh("assets/meshes/cerberus.fbx"));
+	//m_meshVA = Engine::OpenGLVertexArray::create();
 
 	m_squareVA = Engine::OpenGLVertexArray::create();
 	//vertices with texturecoordinates
@@ -222,9 +223,9 @@ void ExampleLayer::onUpdate(Engine::Timestep ts)
 
 
 	//Engine::Renderer::submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
-
-
-	//m_mesh->render();
+	//Engine::Renderer::submit(loadedShader, m_vertexArray);
+	
+	Engine::Renderer::submit(loadedShader, m_mesh->getVertexArray());
 
 	Engine::Renderer::endScene();
 }

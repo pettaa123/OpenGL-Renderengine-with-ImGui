@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 
 #include "renderer/buffer.h"
+#include "renderer/shader.h"
+#include "renderer/vertexArray.h"
 
 namespace Engine {
 
@@ -23,23 +25,32 @@ namespace Engine {
 
 		struct Index
 		{
-			uint32_t V1, V2, V3;
+			uint32_t v1, v2, v3;
 		};
 		static_assert(sizeof(Index) == 3 * sizeof(uint32_t));
 
 		Mesh(const std::string& filename);
 		~Mesh();
 
-		void render();
+		void setupMesh();
+
+		inline void getCount() {
+			m_indexBuffer->getCount();
+		}
+		inline std::shared_ptr<VertexArray> getVertexArray() {
+			return m_VAO;
+		}
 
 		inline const std::string& getFilePath() const { return m_filePath; }
 	private:
 		std::vector<Vertex> m_vertices;
 		std::vector<Index> m_indices;
 
-		std::unique_ptr<VertexBuffer> m_vertexBuffer;
-		std::unique_ptr<IndexBuffer> m_indexBuffer;
+		std::shared_ptr<VertexBuffer> m_vertexBuffer;
+		std::shared_ptr<IndexBuffer> m_indexBuffer;
 
 		std::string m_filePath;
+
+		std::shared_ptr<VertexArray> m_VAO;
 	};
 }

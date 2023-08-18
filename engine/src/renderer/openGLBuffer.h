@@ -30,7 +30,7 @@ namespace Engine {
 		OpenGLIndexBuffer(uint32_t count);
 		virtual ~OpenGLIndexBuffer();
 
-		virtual void setData(void* buffer, unsigned int size, unsigned int offset = 0) override;
+		virtual void setData(const void* data, uint32_t size) override;
 
 		virtual void bind() const override;
 		virtual void unbind() const override;

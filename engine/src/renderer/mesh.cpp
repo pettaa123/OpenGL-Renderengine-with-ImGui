@@ -9,7 +9,6 @@
 #include <glad/glad.h>
 
 #include "core/log.h"
-#include "renderCommand.h"
 
 
 namespace Engine {
@@ -81,9 +80,23 @@ namespace Engine {
 				vertex.texcoord = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
 			m_vertices.push_back(vertex);
 		}
-
 		m_vertexBuffer.reset(VertexBuffer::create());
 		m_vertexBuffer->setData(m_vertices.data(), m_vertices.size() * sizeof(Vertex));
+
+		//glm::vec3 position;
+		//glm::vec3 normal;
+		//glm::vec3 tangent;
+		//glm::vec3 binormal;
+		//glm::vec2 texcoord;
+
+		Engine::BufferLayout layout = {
+			{ Engine::ShaderDataType::Float3, "a_Position" },
+			{ Engine::ShaderDataType::Float3, "a_Normal" },
+			{ Engine::ShaderDataType::Float3, "a_Tangent" },
+			{ Engine::ShaderDataType::Float3, "a_Binormal" },
+			{ Engine::ShaderDataType::Float2, "a_Texcoord" }
+		};
+		m_vertexBuffer->setLayout(layout);
 
 		// Extract indices from model
 		m_indices.reserve(mesh->mNumFaces);
@@ -95,14 +108,21 @@ namespace Engine {
 
 		m_indexBuffer.reset(IndexBuffer::create());
 		m_indexBuffer->setData(m_indices.data(), m_indices.size() * sizeof(Index));
+
+		m_VAO = Engine::VertexArray::create();
+		m_VAO->addVertexBuffer(m_vertexBuffer);
+		m_VAO->setIndexBuffer(m_indexBuffer);
+
+		setupMesh();
 	}
 
 	Mesh::~Mesh()
 	{
 	}
 
-	void Mesh::render()
+	void Mesh::setupMesh()
 	{
+		m_VAO->bind();
 		// TODO: Sort this out
 		m_vertexBuffer->bind();
 		m_indexBuffer->bind();
@@ -121,7 +141,36 @@ namespace Engine {
 
 		glEnableVertexAttribArray(4);
 		glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, texcoord));
-		RenderCommand::drawMesh(m_indexBuffer->getCount());
+		
+		glBindVertexArray(0);		
 	}
+	/*
+	void Mesh::draw(std::shared_ptr<Shader> shader)
+	{
+		/*
+		unsigned int diffuseNr = 1;
+		unsigned int specularNr = 1;
+		for (unsigned int i = 0; i < textures.size(); i++)
+		{
+			glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
+			// retrieve texture number (the N in diffuse_textureN)
+			string number;
+			string name = textures[i].type;
+			if (name == "texture_diffuse")
+				number = std::to_string(diffuseNr++);
+			else if (name == "texture_specular")
+				number = std::to_string(specularNr++);
+
+			shader.setInt(("material." + name + number).c_str(), i);
+			glBindTexture(GL_TEXTURE_2D, textures[i].id);
+		}
+		glActiveTexture(GL_TEXTURE0);
+		
+		// draw mesh
+		glBindVertexArray(m_VAO);
+		glDrawElements(GL_TRIANGLES, m_indexBuffer->getCount(), GL_UNSIGNED_INT, 0);
+		//glBindVertexArray(0);
+	}
+	*/
 
 }
