@@ -43,6 +43,20 @@ namespace Engine {
 		}
 	};
 
+	// constructor
+	Mesh::Mesh(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer, std::vector<std::shared_ptr<Texture2D>> textures):
+		m_vertexBuffer(vertexBuffer),
+		m_indexBuffer(indexBuffer),
+		textures(textures)
+	{
+		m_VAO = Engine::VertexArray::create();
+		m_VAO->addVertexBuffer(m_vertexBuffer);
+		m_VAO->setIndexBuffer(m_indexBuffer);
+		// now that we have all the required data, set the vertex buffers and its attribute pointers.
+		//this was already done by setlayout?
+		//setupMesh();
+	};
+
 	Mesh::Mesh(const std::string& filename)
 		: m_filePath(filename)
 	{
@@ -77,24 +91,18 @@ namespace Engine {
 			}
 
 			if (mesh->HasTextureCoords(0))
-				vertex.texcoord = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
+				vertex.texCoords = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
 			m_vertices.push_back(vertex);
 		}
 		m_vertexBuffer.reset(VertexBuffer::create());
 		m_vertexBuffer->setData(m_vertices.data(), m_vertices.size() * sizeof(Vertex));
-
-		//glm::vec3 position;
-		//glm::vec3 normal;
-		//glm::vec3 tangent;
-		//glm::vec3 binormal;
-		//glm::vec2 texcoord;
 
 		Engine::BufferLayout layout = {
 			{ Engine::ShaderDataType::Float3, "a_Position" },
 			{ Engine::ShaderDataType::Float3, "a_Normal" },
 			{ Engine::ShaderDataType::Float3, "a_Tangent" },
 			{ Engine::ShaderDataType::Float3, "a_Binormal" },
-			{ Engine::ShaderDataType::Float2, "a_Texcoord" }
+			{ Engine::ShaderDataType::Float2, "a_TexCoords" }
 		};
 		m_vertexBuffer->setLayout(layout);
 
@@ -113,7 +121,7 @@ namespace Engine {
 		m_VAO->addVertexBuffer(m_vertexBuffer);
 		m_VAO->setIndexBuffer(m_indexBuffer);
 
-		setupMesh();
+		
 	}
 
 	Mesh::~Mesh()
@@ -140,37 +148,37 @@ namespace Engine {
 		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, binormal));
 
 		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, texcoord));
+		glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, texCoords));
 		
 		glBindVertexArray(0);		
 	}
-	/*
-	void Mesh::draw(std::shared_ptr<Shader> shader)
+
+	void Mesh::draw(Shader& shader)
 	{
-		/*
 		unsigned int diffuseNr = 1;
 		unsigned int specularNr = 1;
 		for (unsigned int i = 0; i < textures.size(); i++)
 		{
-			glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
+			glActiveTexture(GL_TEXTURE0 + i); // activate texture unit first
 			// retrieve texture number (the N in diffuse_textureN)
-			string number;
-			string name = textures[i].type;
+			std::string number;
+			std::string name = textures[i]->getType();
 			if (name == "texture_diffuse")
 				number = std::to_string(diffuseNr++);
 			else if (name == "texture_specular")
 				number = std::to_string(specularNr++);
-
-			shader.setInt(("material." + name + number).c_str(), i);
-			glBindTexture(GL_TEXTURE_2D, textures[i].id);
+			shader.setFloat(("material." + name + number).c_str(), i);
+			glBindTexture(GL_TEXTURE_2D, textures[i]->getRendererID());
 		}
 		glActiveTexture(GL_TEXTURE0);
-		
 		// draw mesh
-		glBindVertexArray(m_VAO);
-		glDrawElements(GL_TRIANGLES, m_indexBuffer->getCount(), GL_UNSIGNED_INT, 0);
-		//glBindVertexArray(0);
+		m_VAO->bind();
+		uint32_t count = m_VAO->getIndexBuffer()->getCount();
+		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+
+		// always good practice to set everything back to defaults once configured.
+		glActiveTexture(GL_TEXTURE0);
 	}
-	*/
 
 }

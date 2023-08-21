@@ -20,6 +20,7 @@ namespace Engine {
 		uint32_t height = 1;
 		ImageFormat format = ImageFormat::RGBA8;
 		bool generateMips = true;
+		std::string type = "";
 	};
 
 	class Texture
@@ -32,14 +33,21 @@ namespace Engine {
 		virtual uint32_t getWidth() const = 0;
 		virtual uint32_t getHeight() const = 0;
 		virtual uint32_t getRendererID() const = 0;
-
+		virtual std::string getType() const = 0;
+		virtual const std::string& getName() const = 0;
 		virtual const std::string& getPath() const = 0;
+
+		virtual void setType(std::string& type) = 0;
 
 		virtual void setData(void* data, uint32_t size) = 0;
 
 		virtual void bind(uint32_t slot = 0) const = 0;
 
 		virtual bool isLoaded() const = 0;
+
+
+
+
 
 		virtual bool operator==(const Texture& other) const = 0;
 	};

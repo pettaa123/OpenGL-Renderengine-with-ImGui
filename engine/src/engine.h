@@ -34,5 +34,6 @@
 #include "renderer/texture.h"
 #include "renderer/vertexArray.h"
 #include "renderer/mesh.h"
+#include "renderer/model.h"
 #include "renderer/camera.h"
 // -----------------------------------

@@ -115,6 +115,9 @@
     <ClCompile Include="src\renderer\mesh.cpp">
       <Filter>Resource Files\src\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\renderer\model.cpp">
+      <Filter>Resource Files\src\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\event\event.h">
@@ -232,6 +235,9 @@
       <Filter>Resource Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\mesh.h">
+      <Filter>Resource Files\src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer\model.h">
       <Filter>Resource Files\src\renderer</Filter>
     </ClInclude>
   </ItemGroup>

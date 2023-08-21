@@ -2,8 +2,10 @@
 
 #include "renderer/renderCommand.h"
 #include "renderer/shader.h"
+#include "renderer/model.h"
 #include "camera.h"
 #include "orthographicCamera.h"
+
 
 namespace Engine {
 
@@ -20,6 +22,7 @@ namespace Engine {
 		static void endScene();
 
 		static void submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f));
+		static void submit(const std::shared_ptr<Shader>& shader, const std::unique_ptr<Model>& model, const glm::mat4& transform = glm::mat4(1.0f));
 
 	private:
 

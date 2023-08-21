@@ -30,5 +30,6 @@ private:
 	glm::vec3 m_squareColor = { 0.2f, 0.3f, 0.8f };
 
 	std::unique_ptr<Engine::Mesh> m_mesh;
+	std::unique_ptr<Engine::Model> m_backpack;
 };
 

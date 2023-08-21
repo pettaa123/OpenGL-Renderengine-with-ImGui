@@ -49,9 +49,9 @@ namespace Engine {
 	}
 
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
-		: m_path(path)
+		:m_path(path)
 	{
-
+		m_name = path.substr(path.find_last_of("/\\") + 1);
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = nullptr;
@@ -114,4 +114,5 @@ namespace Engine {
 	{
 		glBindTextureUnit(slot, m_rendererID);
 	}
+
 }
