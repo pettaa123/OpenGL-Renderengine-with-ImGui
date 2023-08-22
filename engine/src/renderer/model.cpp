@@ -22,7 +22,7 @@ namespace Engine {
 	// draws the model, and thus all its meshes
 	void Model::draw(Shader& shader)
 	{
-		for (unsigned int i = 0; i < meshes.size(); i++)
+		for (uint32_t i = 0; i < meshes.size(); i++)
 			meshes[i].draw(shader);
 	}
 
@@ -189,7 +189,7 @@ namespace Engine {
 	}
 
 
-
+	/*
 	unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma)
 	{
 		std::string filename = std::string(path);
@@ -229,7 +229,7 @@ namespace Engine {
 
 		return textureID;
 	}
-
+	*/
 };
 
 

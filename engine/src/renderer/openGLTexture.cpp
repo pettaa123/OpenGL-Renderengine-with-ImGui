@@ -14,7 +14,7 @@ namespace Engine {
 				case ImageFormat::RGBA8: return GL_RGBA;
 			}
 
-			assert(false);
+			assert(false && "unsupported image format");
 			return 0;
 		}
 		
@@ -26,7 +26,7 @@ namespace Engine {
 			case ImageFormat::RGBA8: return GL_RGBA8;
 			}
 
-			assert(false);
+			assert(false && "unsupported image format");
 			return 0;
 		}
 

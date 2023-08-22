@@ -13,8 +13,8 @@ namespace Engine {
 	struct WindowSpecification
 	{
 		std::string title = "Engine";
-		uint32_t width = 1600;
-		uint32_t height = 900;
+		uint32_t width = 1920;
+		uint32_t height = 1080;
 		bool decorated = true;
 		bool fullscreen = false;
 		bool vSync = true;
@@ -37,7 +37,8 @@ namespace Engine {
 		void setEventCallback(const EventCallbackFn& callback) { m_data.eventCallback = callback; }
 		void setVSync(bool enabled);
 		bool isVSync() const;
-
+		void setWindowSize(int width, int height);
+		void getWindowSize(int* width, int* height);
 		void* getNativeWindow() const { return m_window; }
 
 		static Window* create(const WindowSpecification& specification = WindowSpecification());

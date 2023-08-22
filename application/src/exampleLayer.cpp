@@ -177,6 +177,7 @@ void ExampleLayer::onAttach()
 
 void ExampleLayer::onDetach()
 {
+
 }
 
 void ExampleLayer::onUpdate(Engine::Timestep ts) 
@@ -186,7 +187,7 @@ void ExampleLayer::onUpdate(Engine::Timestep ts)
 	m_cameraController.onUpdate(ts);
 
 	// Render
-	Engine::RenderCommand::setClearColor({ 0.5f, 0.1f, 0.1f, 1 });
+	Engine::RenderCommand::setClearColor({ m_squareColor, 1 });
 	Engine::RenderCommand::clear();
 
 	Engine::Renderer::beginScene(m_cameraController);
@@ -198,7 +199,6 @@ void ExampleLayer::onUpdate(Engine::Timestep ts)
 	
 	auto loadedShader = m_shaderLibrary.get("model_loading");;
 	//loadedShader->setFloat3("u_Color", m_squareColor);
-
 
 	//for (int y = 0; y < 20; y++)
 	//{
@@ -229,8 +229,6 @@ void ExampleLayer::onUpdate(Engine::Timestep ts)
 	
 	//make Models submittable
 	
-	//Engine::Renderer::submit(loadedShader, m_backpack->getVertexArray());
-
 
 
 	Engine::Renderer::submit(loadedShader, m_backpack);

@@ -22,14 +22,14 @@ namespace Engine {
 		m_rotationSpeed = 0.002f;
 		m_zoomSpeed = 0.2f;
 
-		m_position = { -100, 100, 100 };
-		m_rotation = glm::vec3(90.0f, 0.0f, 0.0f);
+		m_position = { 0, 0, 3 };
+		m_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 
 		m_focalPoint = glm::vec3(0.0f);
 		m_distance = glm::distance(m_position, m_focalPoint);
 
-		m_yaw = 3.0f * (float)M_PI / 4.0f;
-		m_pitch = M_PI / 4.0f;
+		m_yaw = 0.0f;// (float)M_PI / 4.0f;
+		m_pitch = 0.0f;// M_PI//4.0f;
 	}
 
 	void Camera::focus()

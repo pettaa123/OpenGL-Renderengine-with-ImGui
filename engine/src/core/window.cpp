@@ -204,6 +204,16 @@ namespace Engine {
 		m_data.vsync = enabled;
 	}
 
+	void Window::setWindowSize(int width,int height)
+	{
+		glfwSetWindowSize(m_window, width,height);
+	}
+
+	void Window::getWindowSize(int* width, int* height)
+	{
+		glfwGetWindowSize(m_window, width, height);
+	}
+
 	bool Window::isVSync() const
 	{
 		return m_data.vsync;

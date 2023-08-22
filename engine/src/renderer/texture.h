@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <optional>
 
 namespace Engine {
 
@@ -20,7 +21,7 @@ namespace Engine {
 		uint32_t height = 1;
 		ImageFormat format = ImageFormat::RGBA8;
 		bool generateMips = true;
-		std::string type = "";
+		std::optional<std::string> type;
 	};
 
 	class Texture

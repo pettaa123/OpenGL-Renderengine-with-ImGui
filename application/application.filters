@@ -21,7 +21,7 @@
     <ClCompile Include="src\exampleLayer.cpp">
       <Filter>Source Files\src</Filter>
     </ClCompile>
-    <ClCompile Include="src\texturemappingApp.cpp">
+    <ClCompile Include="src\App.cpp">
       <Filter>Source Files\src</Filter>
     </ClCompile>
   </ItemGroup>

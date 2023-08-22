@@ -22,9 +22,9 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{8c749dbe-6336-4ed2-807a-9c20c93422ee}</ProjectGuid>
-    <RootNamespace>texturemapping</RootNamespace>
+    <RootNamespace>rendering</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Texturemapping</ProjectName>
+    <ProjectName>Application</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -149,10 +149,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\exampleLayer.cpp" />
-    <ClCompile Include="src\texturemappingApp.cpp" />
+    <ClCompile Include="src\app.cpp" />
+    <ClCompile Include="src\webcamLayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\exampleLayer.h" />
+    <ClInclude Include="src\webcamLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\engine\engine.vcxproj">
