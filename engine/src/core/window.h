@@ -43,12 +43,14 @@ namespace Engine {
 
 		static Window* create(const WindowSpecification& specification = WindowSpecification());
 
+		void showFps();
+
 	private:
 
 		void init();
 		void shutdown();
 
-		void showFps();
+
 
 
 

@@ -48,6 +48,9 @@ namespace Engine {
 
 		inline Engine::Window& getWindow() { return *m_window; };
 
+
+		inline void showFps(bool display = true) { m_showFps = display; }
+
 		const ApplicationSpecification& GetSpecification() const { return m_specification; }
 
 
@@ -68,6 +71,7 @@ namespace Engine {
 		bool m_minimized = false;
 		Engine::LayerStack m_layerStack;
 		float m_lastFrameTime = 0.0f;
+		bool m_showFps = true;
 
 		std::vector<std::function<void()>> m_mainThreadQueue;
 		std::mutex m_mainThreadQueueMutex;

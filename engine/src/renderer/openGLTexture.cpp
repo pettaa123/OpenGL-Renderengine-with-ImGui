@@ -1,6 +1,6 @@
 #include "renderer/openGLTexture.h"
 #include <cassert>
-#include <stb_image.h>
+#include "stb_image.h"
 
 namespace Engine {
 

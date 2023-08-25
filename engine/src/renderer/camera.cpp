@@ -30,6 +30,9 @@ namespace Engine {
 
 		m_yaw = 0.0f;// (float)M_PI / 4.0f;
 		m_pitch = 0.0f;// M_PI//4.0f;
+
+		m_z_min = 0.01f; // min and max z-distance considered in clip space
+		m_z_max = 5.0f;
 	}
 
 	void Camera::focus()
@@ -129,5 +132,29 @@ namespace Engine {
 	glm::quat Camera::getOrientation()
 	{
 		return glm::quat(glm::vec3(-m_pitch, -m_yaw, 0.0f));
+	}
+
+	void Camera::calcProjectionMatrixFromIntrinsics() {
+		if (!m_intrinsics.has_value()) {
+			Log::error("Load Intrinsics first");
+			return;
+		}
+		m_projectionMatrix = glm::mat4(
+			2.0f * m_intrinsics->fx / m_intrinsics->width,
+			0.0f ,
+			2.0f * (m_intrinsics->cx + 0.5f) / m_intrinsics->width - 1.0f,
+			0.0f,
+			0.0f,
+			2.0f * m_intrinsics->fy / m_intrinsics->height,
+			2.0f * (m_intrinsics->cy + 0.5f) / float(m_intrinsics->height) - 1.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			(m_z_max + m_z_min) / (m_z_max - m_z_min),
+			-2.0f * m_z_max * m_z_min / (m_z_max - m_z_min),
+			0.0f,
+			0.0f,
+			1.0f,
+			0.0f);
 	}
 }

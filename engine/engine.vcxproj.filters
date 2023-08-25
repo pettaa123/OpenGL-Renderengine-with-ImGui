@@ -1,244 +1,244 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resource Files">
+    <Filter Include="Source Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Resource Files\src">
+    <Filter Include="Source Files\src">
       <UniqueIdentifier>{9a0d7004-9408-4ad9-ac10-b3ef7d10f270}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\src\event">
+    <Filter Include="Source Files\src\event">
       <UniqueIdentifier>{738c33b8-d5ee-4942-8be1-e467cb21e1a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\src\renderer">
+    <Filter Include="Source Files\src\renderer">
       <UniqueIdentifier>{95d1fcb7-a37f-42b9-81c4-0cc85a120647}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\src\core">
+    <Filter Include="Source Files\src\core">
       <UniqueIdentifier>{ae857925-e7fa-4097-859d-d11fc19ce78b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\src\imgui">
+    <Filter Include="Source Files\src\imgui">
       <UniqueIdentifier>{78af2970-5782-4bcf-b0e4-fdc723cac994}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\src\math">
+    <Filter Include="Source Files\src\math">
       <UniqueIdentifier>{fc1e0204-2b35-4491-bbb6-d4481b7b1c8f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\vendor">
+    <Filter Include="Source Files\vendor">
       <UniqueIdentifier>{c000e318-de60-4f15-9a8b-cc4ec4aa0b30}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\vendor\stb_image">
+    <Filter Include="Source Files\vendor\stb_image">
       <UniqueIdentifier>{429a3aa8-4267-4ae4-a252-64de0f2e0306}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\renderer\openGLContext.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\renderer.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\imgui\imGuiLayer.cpp">
-      <Filter>Resource Files\src\imgui</Filter>
+      <Filter>Source Files\src\imgui</Filter>
     </ClCompile>
     <ClCompile Include="src\core\application.cpp">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClCompile>
     <ClCompile Include="src\core\layer.cpp">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClCompile>
     <ClCompile Include="src\core\layerStack.cpp">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClCompile>
     <ClCompile Include="src\core\log.cpp">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClCompile>
     <ClCompile Include="src\core\terminalColor.cpp">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClCompile>
     <ClCompile Include="src\core\window.cpp">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClCompile>
     <ClCompile Include="src\core\input.cpp">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClCompile>
     <ClCompile Include="src\math\math.cpp">
-      <Filter>Resource Files\src\math</Filter>
+      <Filter>Source Files\src\math</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\buffer.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\openGLBuffer.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\openGLShader.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\openGLVertexArray.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\orthographicCamera.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\orthographicCameraController.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\openGLRenderer.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\texture.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\openGLTexture.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="..\vendor\stb_image\stb_image.cpp">
-      <Filter>Resource Files\vendor\stb_image</Filter>
+      <Filter>Source Files\vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\uniformBuffer.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\shader.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\renderCommand.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\vertexArray.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\openGLUniformBuffer.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\camera.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\mesh.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\model.cpp">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\event\event.h">
-      <Filter>Resource Files\src\event</Filter>
+      <Filter>Source Files\src\event</Filter>
     </ClInclude>
     <ClInclude Include="src\event\keyEvent.h">
-      <Filter>Resource Files\src\event</Filter>
+      <Filter>Source Files\src\event</Filter>
     </ClInclude>
     <ClInclude Include="src\event\mouseEvent.h">
-      <Filter>Resource Files\src\event</Filter>
+      <Filter>Source Files\src\event</Filter>
     </ClInclude>
     <ClInclude Include="src\event\applicationEvent.h">
-      <Filter>Resource Files\src\event</Filter>
+      <Filter>Source Files\src\event</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\openGLContext.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\renderer.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\core\timer.h">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\timestep.h">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\imgui\imGuiLayer.h">
-      <Filter>Resource Files\src\imgui</Filter>
+      <Filter>Source Files\src\imgui</Filter>
     </ClInclude>
     <ClInclude Include="src\core\application.h">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\layer.h">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\layerStack.h">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\log.h">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\window.h">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\input.h">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\keyCodes.h">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\mouseCodes.h">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\math\math.h">
-      <Filter>Resource Files\src\math</Filter>
+      <Filter>Source Files\src\math</Filter>
     </ClInclude>
     <ClInclude Include="src\terminalColor.h">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\entryPoint.h">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\engine.h">
-      <Filter>Resource Files\src</Filter>
+      <Filter>Source Files\src</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\buffer.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\core\buffer.h">
-      <Filter>Resource Files\src\core</Filter>
+      <Filter>Source Files\src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\openGLBuffer.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\openGLShader.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\openGLVertexArray.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\orthographicCamera.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\orthographicCameraController.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\openGLRenderer.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\camera.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\texture.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\openGLTexture.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\vendor\stb_image\stb_image.h">
-      <Filter>Resource Files\vendor\stb_image</Filter>
+      <Filter>Source Files\vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\uniformBuffer.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\shader.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\renderCommand.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\vertexArray.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\openGLUniformBuffer.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\mesh.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\model.h">
-      <Filter>Resource Files\src\renderer</Filter>
+      <Filter>Source Files\src\renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

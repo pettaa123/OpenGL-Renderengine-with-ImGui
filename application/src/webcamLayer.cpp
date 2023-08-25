@@ -16,6 +16,7 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 
 void WebcamLayer::onAttach()
 {
+
 	m_webcam = std::make_unique<Webcam>(0,0);
 	m_webcam->updateFrame(m_frame);
 
@@ -68,16 +69,31 @@ void WebcamLayer::onAttach()
 
 	auto loadedShader = m_shaderLibrary.load("assets/shaders/webcam.glsl");
 
-
 	Engine::Application::s_get().getWindow().getWindowSize(&frameWidth, &frameHeight);
 
-	Log::info(std::format("w {} h {}", frameWidth, frameHeight));
+	/// CHESSBOARD
+	Chessboard cb;
+	m_chessboardVA = Engine::OpenGLVertexArray::create();
+	m_chessboardVA->bind();
 
-	/// <summary>
-	/// 3D MODEL
-	/// </summary>
-	loadedShader = m_shaderLibrary.load("assets/shaders/model_loading.glsl");
-	m_3dObject.reset(new Engine::Model("assets/models/backpack/backpack.obj"));
+	float* verticesPtr = nullptr;
+	uint32_t size = 0;
+	cb.getVertices(&verticesPtr,size);
+	std::shared_ptr<Engine::VertexBuffer> vb = Engine::VertexBuffer::create(verticesPtr, size);
+	vb->setLayout({
+		{ Engine::ShaderDataType::Float3, "a_Position" }
+		});
+	m_chessboardVA->addVertexBuffer(vb);
+	uint32_t* indicesPtr = nullptr;
+	uint32_t count = 0;
+	cb.getIndices(&indicesPtr,count);
+	std::shared_ptr<Engine::IndexBuffer> ib = Engine::IndexBuffer::create(indicesPtr, count);
+	m_chessboardVA->setIndexBuffer(ib);
+
+	//cb->getVertices();
+	m_chessboardVA->unbind();
+	loadedShader = m_shaderLibrary.load("assets/shaders/FlatColor.glsl");
+
 }
 
 void WebcamLayer::onDetach()
@@ -98,18 +114,18 @@ void WebcamLayer::onUpdate(Engine::Timestep ts)
 	Engine::Renderer::beginScene(m_cameraController);
 
 	auto loadedShader = m_shaderLibrary.get("webcam");;
-	//loadedShader->setFloat3("u_Color", m_squareColor);
 	m_webcam->updateFrame(m_frame);
 	m_webcamFeedTexture->setData((void*)m_frame.data, m_frame.total() * m_frame.elemSize());
 	m_squareVA->bind();
 	m_webcamFeedTexture->bind();
 	Engine::Renderer::submit(loadedShader, m_squareVA, glm::mat4(1.0f));
 
-	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), 3.14f, glm::vec3(1.0));
-	loadedShader = m_shaderLibrary.get("model_loading");;
-	glm::mat4 r = glm::rotate(glm::mat4(1.0f), 3.141f, glm::vec3(0, 1, 0));
-	glm::mat4 t = glm::translate(r, glm::vec3(0, 0, 1.0f));
-	Engine::Renderer::submit(loadedShader, m_3dObject, glm::scale(t, glm::vec3(0.5f)));
+	loadedShader = m_shaderLibrary.get("FlatColor");;
+	loadedShader->bind();
+	loadedShader->setFloat3("u_Color", m_squareColor);
+
+	glm::mat4 t = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	Engine::Renderer::submit(loadedShader, m_chessboardVA,t);
 
 
 	Engine::Renderer::endScene();
@@ -118,7 +134,7 @@ void WebcamLayer::onUpdate(Engine::Timestep ts)
 void WebcamLayer::onImGuiRender()
 {
 	ImGui::Begin("Settings");
-	ImGui::ColorEdit3("Square Color", glm::value_ptr(im_color));
+	ImGui::ColorEdit3("Square Color", glm::value_ptr(m_squareColor));
 	ImGui::End();
 }
 

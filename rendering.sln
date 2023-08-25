@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.33130.400
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "engine\engine.vcxproj", "{57144731-EA2F-4157-ABF9-A3F773F2A36D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "engine\engine.vcxproj", "{57144731-EA2F-4157-ABF9-A3F773F2A36D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "imgui", "imgui\imgui.vcxproj", "{620249F6-9D04-4ED3-B388-A3CD63F75789}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "imgui\imgui.vcxproj", "{620249F6-9D04-4ED3-B388-A3CD63F75789}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "application", "application\application.vcxproj", "{8C749DBE-6336-4ED2-807A-9C20C93422EE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Application", "application\application.vcxproj", "{8C749DBE-6336-4ED2-807A-9C20C93422EE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextureMapping", "texuremapping\textureMapping.vcxproj", "{1A66036D-8DF1-4007-A7EB-7B57D98A5406}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelperLib", "HelperLib\HelperLib.vcxproj", "{D9D3E29C-4DB7-42B4-909B-97FFF684334E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,22 @@ Global
 		{8C749DBE-6336-4ED2-807A-9C20C93422EE}.Release|x64.Build.0 = Release|x64
 		{8C749DBE-6336-4ED2-807A-9C20C93422EE}.Release|x86.ActiveCfg = Release|Win32
 		{8C749DBE-6336-4ED2-807A-9C20C93422EE}.Release|x86.Build.0 = Release|Win32
+		{1A66036D-8DF1-4007-A7EB-7B57D98A5406}.Debug|x64.ActiveCfg = Debug|x64
+		{1A66036D-8DF1-4007-A7EB-7B57D98A5406}.Debug|x64.Build.0 = Debug|x64
+		{1A66036D-8DF1-4007-A7EB-7B57D98A5406}.Debug|x86.ActiveCfg = Debug|Win32
+		{1A66036D-8DF1-4007-A7EB-7B57D98A5406}.Debug|x86.Build.0 = Debug|Win32
+		{1A66036D-8DF1-4007-A7EB-7B57D98A5406}.Release|x64.ActiveCfg = Release|x64
+		{1A66036D-8DF1-4007-A7EB-7B57D98A5406}.Release|x64.Build.0 = Release|x64
+		{1A66036D-8DF1-4007-A7EB-7B57D98A5406}.Release|x86.ActiveCfg = Release|Win32
+		{1A66036D-8DF1-4007-A7EB-7B57D98A5406}.Release|x86.Build.0 = Release|Win32
+		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Debug|x64.ActiveCfg = Debug|x64
+		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Debug|x64.Build.0 = Debug|x64
+		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Debug|x86.ActiveCfg = Debug|Win32
+		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Debug|x86.Build.0 = Debug|Win32
+		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Release|x64.ActiveCfg = Release|x64
+		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Release|x64.Build.0 = Release|x64
+		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Release|x86.ActiveCfg = Release|Win32
+		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

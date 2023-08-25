@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Optimization">
+      <UniqueIdentifier>{1be58aba-e2b6-46a3-92cb-913250598340}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\mapping">
+      <UniqueIdentifier>{281cda8b-a376-41b4-950c-7a574b162a41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core">
+      <UniqueIdentifier>{af0f2dd8-94a7-47ad-becb-85ba73186739}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\mapping\solver">
+      <UniqueIdentifier>{bdeb5601-1bba-4503-825d-c26571e27501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\mapping\solver\base">
+      <UniqueIdentifier>{da5fd8dd-73bc-4196-a568-f35648fc1c69}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\calibratedCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\calibratedCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\optimization\errorDescription.h">
+      <Filter>Source Files\Optimization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\optimization\optimizationResult.h">
+      <Filter>Source Files\Optimization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\optimization\optimizationParameter.h">
+      <Filter>Source Files\Optimization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mapping\solvers\base\solver.h">
+      <Filter>Source Files\mapping\solver\base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\mappingDataSet.h">
+      <Filter>Source Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\stbImage.h">
+      <Filter>Source Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\polygonMarker.h">
+      <Filter>Source Files\core</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

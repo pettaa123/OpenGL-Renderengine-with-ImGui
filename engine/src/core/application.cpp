@@ -108,6 +108,9 @@ namespace Engine {
 			}
 
 			m_window->onUpdate();
+			if (m_showFps) {
+				m_window->showFps();
+			}
 		}
 	}
 }
