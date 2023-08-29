@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine.h"
+#include "engine/engine.h"
 #include <vector>
 #include <opencv2/opencv.hpp>
 #include <functional>
@@ -122,8 +122,8 @@ public:
 		}
 	}
 
-	void getVertices(float** data, uint32_t& size) { *data = m_vertices.data(); size = m_vertices.size() * sizeof(float); }
-	void getIndices(uint32_t** data, uint32_t& count) { *data = m_indices.data(); count = m_indices.size(); }
+	void getVertices(float** data, uint32_t& size) { *data = m_vertices.data(); size = (uint32_t)m_vertices.size() * (uint32_t)sizeof(float); }
+	void getIndices(uint32_t** data, uint32_t& count) { *data = m_indices.data(); count = (uint32_t)m_indices.size(); }
 
 private:
 	float m_size;
@@ -154,6 +154,7 @@ private:
 	Engine::Camera							m_cameraController; //perspective camera
 	std::shared_ptr<Engine::VertexArray>	m_chessboardVA;
 	std::unique_ptr<Webcam>					m_webcam;
+	std::unique_ptr<Engine::Model>          m_3dObject;
 	std::shared_ptr<Engine::VertexArray>	m_squareVA;
 	cv::Mat									m_frame;
 	glm::vec3								m_squareColor = { 0.5f, 0.2f, 0.5f };

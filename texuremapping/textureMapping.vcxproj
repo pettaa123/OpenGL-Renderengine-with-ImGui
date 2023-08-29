@@ -19,22 +19,33 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\calibratedCamera.cpp" />
+    <ClCompile Include="src\texturemapping\calibratedCamera.cpp" />
+    <ClCompile Include="src\texturemapping\core\mappingDataSet.cpp" />
+    <ClCompile Include="src\texturemapping\hardwareacceleration\openCL\openCLAccelerator.cpp" />
+    <ClCompile Include="src\texturemapping\import\intrinsicsImporter.cpp" />
+    <ClCompile Include="src\texturemapping\import\mappingDataSetImporter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\calibratedCamera.h" />
-    <ClInclude Include="src\core\mappingDataSet.h" />
-    <ClInclude Include="src\core\polygonMarker.h" />
-    <ClInclude Include="src\core\stbImage.h" />
-    <ClInclude Include="src\mapping\solvers\base\solver.h" />
-    <ClInclude Include="src\optimization\errorDescription.h" />
-    <ClInclude Include="src\optimization\optimizationParameter.h" />
-    <ClInclude Include="src\optimization\optimizationResult.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HelperLib\HelperLib.vcxproj">
-      <Project>{d9d3e29c-4db7-42b4-909b-97fff684334e}</Project>
-    </ProjectReference>
+    <ClInclude Include="json\single_include\nlohmann\json.hpp" />
+    <ClInclude Include="src\texturemapping\calibratedCamera.h" />
+    <ClInclude Include="src\texturemapping\core\color4.h" />
+    <ClInclude Include="src\texturemapping\core\intrinsics.h" />
+    <ClInclude Include="src\texturemapping\core\mappingDataSet.h" />
+    <ClInclude Include="src\texturemapping\core\polygonMarker.h" />
+    <ClInclude Include="src\texturemapping\core\stbImage.h" />
+    <ClInclude Include="src\texturemapping\hardwareacceleration\base\accelerator.h" />
+    <ClInclude Include="src\texturemapping\hardwareacceleration\base\acceleratorTechnique.h" />
+    <ClInclude Include="src\texturemapping\hardwareacceleration\base\graphicsDevice.h" />
+    <ClInclude Include="src\texturemapping\hardwareacceleration\openCL\openCLAccelerator.h" />
+    <ClInclude Include="src\texturemapping\helper\polygonHelper.h" />
+    <ClInclude Include="src\texturemapping\import\intrinsicsImporter.h" />
+    <ClInclude Include="src\texturemapping\import\mappingDataSetImporter.h" />
+    <ClInclude Include="src\texturemapping\mapping\core\projectionResult.h" />
+    <ClInclude Include="src\texturemapping\mapping\imageToModelProjector.h" />
+    <ClInclude Include="src\texturemapping\mapping\solvers\base\solver.h" />
+    <ClInclude Include="src\texturemapping\optimization\errorDescription.h" />
+    <ClInclude Include="src\texturemapping\optimization\optimizationParameter.h" />
+    <ClInclude Include="src\texturemapping\optimization\optimizationResult.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -107,8 +118,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -124,8 +136,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -139,13 +152,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;BOOST_COMPUTE_DEBUG_KERNEL_COMPILATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\git\OpenGL-Renderengine-with-ImGui\helperLib\src;D:\git\OpenGL-Renderengine-with-ImGui\vendor;D:\git\OpenGL-Renderengine-with-ImGui\engine\src;D:\git\OpenGL-Renderengine-with-ImGui\texuremapping\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\git\OpenGL-Renderengine-with-ImGui\vendor\json\include;D:\git\OpenGL-Renderengine-with-ImGui\vendor;D:\git\OpenGL-Renderengine-with-ImGui\engine\src;D:\git\OpenGL-Renderengine-with-ImGui\texuremapping\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -161,8 +174,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>

@@ -1,17 +1,65 @@
 #include "webcamLayer.h"
 #include "imgui/imgui.h"
-#include <opencv2/highgui.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <opencv2/videoio.hpp>
-#include "core/window.h"
+#include "engine/core/window.h"
 
+#include "texturemapping/import/mappingDataSetImporter.h"
+#include "texturemapping/hardwareacceleration/openCL/openCLAccelerator.h"
+#include "engine/renderer/model.h"
+
+#include "texturemapping/core/intrinsics.h"
+#include "texturemapping/import/intrinsicsImporter.h"
+#include "texturemapping/core/stbImage.h"
+
+#include <filesystem>
+#include <opencv2/highgui/highgui.hpp>
 
 WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 	: Layer("WebcamLayer"), m_cameraController(glm::perspectiveFov(glm::radians(45.0f), 1280.0f,720.0f, 0.1f, 10000.0f))
 {
+	std::filesystem::path ds("assets/mapping sample data/datasets");
+	std::vector<TextureMapping::MappingDataSet> mds = TextureMapping::MappingDataSetImporter::loadFromJSON(ds);
+
+	std::unique_ptr<Engine::Model> model = std::make_unique<Engine::Model>("assets/models/TruTh/TruTh_Mesh Creation.1_1.stl");
+
+	auto d = TextureMapping::OpenCLAccelerator::getDevices();
+	auto clA = TextureMapping::OpenCLAccelerator(d[0], *model.get());
+
+	std::string imageFile=mds[0].imageFile;
+	
+	std::filesystem::path imagePath("assets/mapping sample data/chessboard.png");// =ds / imageFile;
+
+	int width, height, channels;
+	stbi_uc* data = nullptr;
+	{
+		data = stbi_load(imagePath.string().c_str(), &width, &height, &channels, 0);
+	}
+
+	TextureMapping::STBimage image{
+			imageFile,
+			width,
+			height,
+			channels,
+			data,
+	};
+
+	std::filesystem::path intrinsicsPath("assets/mapping sample data/webcamIntrinsics.json");
+
+	TextureMapping::Intrinsics intrinsics = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsPath);
+
+	cv::Mat p(height, width, CV_8UC4,image.data);
+	cv::Mat pCopy = p.clone();
+	cv::imshow("distorted", pCopy);
+	cv::waitKey(1000);
+	clA.undistortImage(image, intrinsics);
+	cv::Mat p2= cv::Mat(height, width, CV_8UC4, image.data);
+	cv::imshow("undistorted", p2);
+	cv::waitKey(0);
+	auto a = TextureMapping::Accelerator::getGraphicsDevices();
 }
 
 void WebcamLayer::onAttach()
@@ -39,11 +87,11 @@ void WebcamLayer::onAttach()
 	m_webcamFeedTexture = Engine::Texture2D::create(Engine::TextureSpecification{ (uint32_t)m_frame.cols, (uint32_t)m_frame.rows, format} );
 	//size is correct if mat.isContinuous() https://stackoverflow.com/questions/26441072/finding-the-size-in-bytes-of-cvmat
 	assert(m_frame.isContinuous() && "mat not continuous");
-	m_webcamFeedTexture->setData((void*)m_frame.data, m_frame.total() * m_frame.elemSize());
+	m_webcamFeedTexture->setData((void*)m_frame.data, (uint32_t)m_frame.total() * (uint32_t)m_frame.elemSize());
 
-	//auto loadedShader = m_shaderLibrary.load("assets/shaders/model_loading.glsl");
+	auto loadedShader = m_shaderLibrary.load("assets/shaders/model_loading.glsl");
 
-	//m_3dObject.reset(new Engine::Model("assets/models/backpack/backpack.obj"));
+	m_3dObject.reset(new Engine::Model("assets/models/backpack/backpack.obj"));
 
 	m_squareVA = Engine::OpenGLVertexArray::create();
 	m_squareVA->bind();
@@ -67,7 +115,7 @@ void WebcamLayer::onAttach()
 
 	m_squareVA->unbind();
 
-	auto loadedShader = m_shaderLibrary.load("assets/shaders/webcam.glsl");
+	loadedShader = m_shaderLibrary.load("assets/shaders/webcam.glsl");
 
 	Engine::Application::s_get().getWindow().getWindowSize(&frameWidth, &frameHeight);
 
@@ -115,7 +163,7 @@ void WebcamLayer::onUpdate(Engine::Timestep ts)
 
 	auto loadedShader = m_shaderLibrary.get("webcam");;
 	m_webcam->updateFrame(m_frame);
-	m_webcamFeedTexture->setData((void*)m_frame.data, m_frame.total() * m_frame.elemSize());
+	m_webcamFeedTexture->setData((void*)m_frame.data, (uint32_t)m_frame.total() * (uint32_t)m_frame.elemSize());
 	m_squareVA->bind();
 	m_webcamFeedTexture->bind();
 	Engine::Renderer::submit(loadedShader, m_squareVA, glm::mat4(1.0f));
@@ -126,6 +174,8 @@ void WebcamLayer::onUpdate(Engine::Timestep ts)
 
 	glm::mat4 t = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	Engine::Renderer::submit(loadedShader, m_chessboardVA,t);
+
+	Engine::Renderer::submit(m_shaderLibrary.get("model_loading"), m_3dObject.get());
 
 
 	Engine::Renderer::endScene();

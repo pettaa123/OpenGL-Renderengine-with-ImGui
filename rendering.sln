@@ -11,8 +11,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Application", "application\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextureMapping", "texuremapping\textureMapping.vcxproj", "{1A66036D-8DF1-4007-A7EB-7B57D98A5406}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelperLib", "HelperLib\HelperLib.vcxproj", "{D9D3E29C-4DB7-42B4-909B-97FFF684334E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -53,14 +51,6 @@ Global
 		{1A66036D-8DF1-4007-A7EB-7B57D98A5406}.Release|x64.Build.0 = Release|x64
 		{1A66036D-8DF1-4007-A7EB-7B57D98A5406}.Release|x86.ActiveCfg = Release|Win32
 		{1A66036D-8DF1-4007-A7EB-7B57D98A5406}.Release|x86.Build.0 = Release|Win32
-		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Debug|x64.ActiveCfg = Debug|x64
-		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Debug|x64.Build.0 = Debug|x64
-		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Debug|x86.ActiveCfg = Debug|Win32
-		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Debug|x86.Build.0 = Debug|Win32
-		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Release|x64.ActiveCfg = Release|x64
-		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Release|x64.Build.0 = Release|x64
-		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Release|x86.ActiveCfg = Release|Win32
-		{D9D3E29C-4DB7-42B4-909B-97FFF684334E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

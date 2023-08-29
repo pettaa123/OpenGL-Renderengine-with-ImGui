@@ -1,8 +1,7 @@
-#include <core/EntryPoint.h>
-
+#include <engine/core/entryPoint.h>
 #include "exampleLayer.h"
 #include "webcamLayer.h"
-#include "calibratedCamera.h"
+
 
 class App : public Engine::Application
 {
@@ -25,9 +24,9 @@ Engine::Application* Engine::createApplication(Engine::ApplicationCommandLineArg
 	spec.name = "Rendering";
 	spec.workingDirectory = "../application";
 	spec.commandLineArgs = args;
-
-	TextureMapping::CalibratedCamera calibratedCamera;
-	calibratedCamera.setName("Harry");
+	//TEST
+	//TextureMapping::CalibratedCamera calibratedCamera;
+	//calibratedCamera.setName("Harry");
 
 	return new App(spec);
 }

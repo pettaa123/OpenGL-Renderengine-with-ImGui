@@ -1,0 +1,17 @@
+#pragma once
+
+
+#include <string>
+#include "stb_image/stb_image.h"
+
+namespace TextureMapping {
+	//container for stb_image data
+	struct STBimage {
+		std::string name;
+		int width;
+		int height;
+		int channels;
+		stbi_uc* data;
+
+	};
+}

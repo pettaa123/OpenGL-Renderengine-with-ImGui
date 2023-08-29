@@ -1,5 +1,4 @@
 #include "exampleLayer.h"
-
 #include "imgui/imgui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -231,7 +230,7 @@ void ExampleLayer::onUpdate(Engine::Timestep ts)
 	
 
 
-	Engine::Renderer::submit(loadedShader, m_backpack);
+	Engine::Renderer::submit(loadedShader, m_backpack.get());
 
 
 	Engine::Renderer::endScene();
