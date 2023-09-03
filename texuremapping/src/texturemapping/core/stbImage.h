@@ -1,8 +1,8 @@
 #pragma once
 
-
 #include <string>
-#include "stb_image/stb_image.h"
+#include <memory>
+#include <filesystem>
 
 namespace TextureMapping {
 	//container for stb_image data
@@ -11,7 +11,8 @@ namespace TextureMapping {
 		int width;
 		int height;
 		int channels;
-		stbi_uc* data;
+		std::shared_ptr<unsigned char> data;
 
+		bool load(const std::filesystem::path& imagePath);
 	};
 }

@@ -25,9 +25,6 @@
     <Filter Include="Source Files\mapping\solver">
       <UniqueIdentifier>{bdeb5601-1bba-4503-825d-c26571e27501}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\mapping\solver\base">
-      <UniqueIdentifier>{da5fd8dd-73bc-4196-a568-f35648fc1c69}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\import">
       <UniqueIdentifier>{51be6bb0-37af-4e5b-b618-71cdc409925c}</UniqueIdentifier>
     </Filter>
@@ -66,6 +63,24 @@
     <ClCompile Include="src\texturemapping\import\intrinsicsImporter.cpp">
       <Filter>Source Files\import</Filter>
     </ClCompile>
+    <ClCompile Include="src\texturemapping\mapping\solvers\dltSolver.cpp">
+      <Filter>Source Files\mapping\solver</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\helper\mathExtensions.cpp">
+      <Filter>helper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\core\log.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\core\terminalColor.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\mapping\core\undistorter.cpp">
+      <Filter>Source Files\mapping\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\core\stbImage.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\texturemapping\calibratedCamera.h">
@@ -79,9 +94,6 @@
     </ClInclude>
     <ClInclude Include="src\texturemapping\optimization\optimizationParameter.h">
       <Filter>Source Files\Optimization</Filter>
-    </ClInclude>
-    <ClInclude Include="src\texturemapping\mapping\solvers\base\solver.h">
-      <Filter>Source Files\mapping\solver\base</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\core\mappingDataSet.h">
       <Filter>Source Files\core</Filter>
@@ -127,6 +139,45 @@
     </ClInclude>
     <ClInclude Include="src\texturemapping\import\intrinsicsImporter.h">
       <Filter>Source Files\import</Filter>
+    </ClInclude>
+    <ClInclude Include="mapping\core\projectionResult.h">
+      <Filter>Source Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\core\barycentricCoordinate.h">
+      <Filter>Source Files\mapping\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\core\intersectionResult.h">
+      <Filter>Source Files\mapping\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\core\mergingResult.h">
+      <Filter>Source Files\mapping\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\core\triangleReplacement.h">
+      <Filter>Source Files\mapping\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\core\vectorResult.h">
+      <Filter>Source Files\mapping\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\core\vertexInformation.h">
+      <Filter>Source Files\mapping\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\solvers\solver.h">
+      <Filter>Source Files\mapping\solver</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\solvers\dltSolver.h">
+      <Filter>Source Files\mapping\solver</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\helper\mathExtensions.h">
+      <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\core\undistorter.h">
+      <Filter>Source Files\mapping\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\core\log.h">
+      <Filter>Source Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\core\terminalColor.h">
+      <Filter>Source Files\core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

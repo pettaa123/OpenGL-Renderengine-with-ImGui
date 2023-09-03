@@ -3,8 +3,19 @@
 
 namespace TextureMapping {
 
-	/// Crops the image.
-	void MappingDataSet::performCropping() {
+	MappingDataSet::MappingDataSet() :
+		model(nullptr),
+		optimizationResult(nullptr),
+		drawImagePoints(false),
+		visualizeModelPoints(false),
+		cropImage(false),
+		convexHull(false),
+		imageRow(0),
+		imageColumn(0)
+	{}
+
+		/// Crops the image.
+		void MappingDataSet::performCropping() {
 		prepareImagePolygon();
 
 		// Don't do this anymore. Now that an image can be cut at arbitrary points, image points can be outside the defined polygon.
@@ -19,7 +30,7 @@ namespace TextureMapping {
 
 		imagePolygonPointsInUV.reserve(imagePolygonPointsInPixels.size());
 		for (int i = 0; i < imagePolygonPointsInPixels.size(); i++) {
-			imagePolygonPointsInUV[i] = glm::vec2(imagePolygonPointsInPixels[i].x / projectionImage->width, imagePolygonPointsInPixels[i].y / projectionImage->height);
+			imagePolygonPointsInUV[i] = glm::vec2(imagePolygonPointsInPixels[i].x / projectionImage.width, imagePolygonPointsInPixels[i].y / projectionImage.height);
 		}
 		imagePolygonPointsInUV = imagePolygonPointsInUV;
 	}
@@ -35,8 +46,8 @@ namespace TextureMapping {
 			}
 		}
 		else {
-			int endX = loadedImage->width - 1;
-			int endY = loadedImage->height - 1;
+			int endX = loadedImage.width - 1;
+			int endY = loadedImage.height - 1;
 			polygonPoints = {
 				glm::vec2(0, 0),
 				glm::vec2(endX, 0),

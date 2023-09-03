@@ -44,6 +44,13 @@ namespace TextureMapping {
                     Log::error(std::format("Excpetion creating MappingDataSet's {} from JSON - {}", p.path().string(), ex.what()));
                 }
 
+
+                TextureMapping::STBimage image;
+
+                assert(image.load(folder / mds.imageFile) && "Couldn't load dataSet image");
+
+                mds.loadedImage = image;
+
                 dataSets.push_back(mds);
             }
         }

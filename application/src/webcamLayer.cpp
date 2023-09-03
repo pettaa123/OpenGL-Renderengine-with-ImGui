@@ -18,6 +18,9 @@
 #include <filesystem>
 #include <opencv2/highgui/highgui.hpp>
 
+#include "texturemapping/mapping/solvers/dltSolver.h"
+#include "texturemapping/mapping/core/undistorter.h"
+
 WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 	: Layer("WebcamLayer"), m_cameraController(glm::perspectiveFov(glm::radians(45.0f), 1280.0f,720.0f, 0.1f, 10000.0f))
 {
@@ -29,37 +32,31 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 	auto d = TextureMapping::OpenCLAccelerator::getDevices();
 	auto clA = TextureMapping::OpenCLAccelerator(d[0], *model.get());
 
-	std::string imageFile=mds[0].imageFile;
+	std::filesystem::path intrinsicsPath2("assets/mapping sample data/webcamIntrinsics.json");
+	TextureMapping::Intrinsics intrinsics2 = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsPath2);
+
+	std::vector<glm::vec2> undistortedImagePoints = TextureMapping::Undistorter::undistortPoints(mds[0], intrinsics2);
+
+	TextureMapping::DLTSolver dlt;
+	dlt.calculateProjectionMatrix(intrinsics2.toMat3(), mds[0].modelPoints, undistortedImagePoints);
+
 	
 	std::filesystem::path imagePath("assets/mapping sample data/chessboard.png");// =ds / imageFile;
 
-	int width, height, channels;
-	stbi_uc* data = nullptr;
-	{
-		data = stbi_load(imagePath.string().c_str(), &width, &height, &channels, 0);
-	}
-
-	TextureMapping::STBimage image{
-			imageFile,
-			width,
-			height,
-			channels,
-			data,
-	};
 
 	std::filesystem::path intrinsicsPath("assets/mapping sample data/webcamIntrinsics.json");
 
 	TextureMapping::Intrinsics intrinsics = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsPath);
 
-	cv::Mat p(height, width, CV_8UC4,image.data);
-	cv::Mat pCopy = p.clone();
-	cv::imshow("distorted", pCopy);
-	cv::waitKey(1000);
-	clA.undistortImage(image, intrinsics);
-	cv::Mat p2= cv::Mat(height, width, CV_8UC4, image.data);
-	cv::imshow("undistorted", p2);
-	cv::waitKey(0);
-	auto a = TextureMapping::Accelerator::getGraphicsDevices();
+	//cv::Mat p(height, width, CV_8UC4,image.data.get());
+	//cv::Mat pCopy = p.clone();
+	//cv::imshow("distorted", pCopy);
+	//cv::waitKey(1000);
+	//clA.undistortImage(image, intrinsics);
+	//cv::Mat p2= cv::Mat(height, width, CV_8UC4, image.data.get());
+	//cv::imshow("undistorted", p2);
+	//cv::waitKey(0);
+	//auto a = TextureMapping::Accelerator::getGraphicsDevices();
 }
 
 void WebcamLayer::onAttach()

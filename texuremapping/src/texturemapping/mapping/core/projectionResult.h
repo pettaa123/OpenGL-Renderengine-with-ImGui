@@ -7,7 +7,6 @@ namespace TextureMapping {
 
 	/// Data container for projection results.
 	struct ProjectionResult {
-	public:
 		std::unordered_set<int> triangleHash;
 		std::pair<std::vector<glm::vec2>, std::vector<int>> trianglePair;
 	};

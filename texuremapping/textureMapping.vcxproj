@@ -20,29 +20,47 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\texturemapping\calibratedCamera.cpp" />
+    <ClCompile Include="src\texturemapping\core\log.cpp" />
     <ClCompile Include="src\texturemapping\core\mappingDataSet.cpp" />
+    <ClCompile Include="src\texturemapping\core\stbImage.cpp" />
+    <ClCompile Include="src\texturemapping\core\terminalColor.cpp" />
     <ClCompile Include="src\texturemapping\hardwareacceleration\openCL\openCLAccelerator.cpp" />
+    <ClCompile Include="src\texturemapping\helper\mathExtensions.cpp" />
     <ClCompile Include="src\texturemapping\import\intrinsicsImporter.cpp" />
     <ClCompile Include="src\texturemapping\import\mappingDataSetImporter.cpp" />
+    <ClCompile Include="src\texturemapping\mapping\core\undistorter.cpp" />
+    <ClCompile Include="src\texturemapping\mapping\solvers\dltSolver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="json\single_include\nlohmann\json.hpp" />
+    <ClInclude Include="mapping\core\projectionResult.h" />
     <ClInclude Include="src\texturemapping\calibratedCamera.h" />
     <ClInclude Include="src\texturemapping\core\color4.h" />
     <ClInclude Include="src\texturemapping\core\intrinsics.h" />
+    <ClInclude Include="src\texturemapping\core\log.h" />
     <ClInclude Include="src\texturemapping\core\mappingDataSet.h" />
     <ClInclude Include="src\texturemapping\core\polygonMarker.h" />
     <ClInclude Include="src\texturemapping\core\stbImage.h" />
+    <ClInclude Include="src\texturemapping\core\terminalColor.h" />
     <ClInclude Include="src\texturemapping\hardwareacceleration\base\accelerator.h" />
     <ClInclude Include="src\texturemapping\hardwareacceleration\base\acceleratorTechnique.h" />
     <ClInclude Include="src\texturemapping\hardwareacceleration\base\graphicsDevice.h" />
     <ClInclude Include="src\texturemapping\hardwareacceleration\openCL\openCLAccelerator.h" />
+    <ClInclude Include="src\texturemapping\helper\mathExtensions.h" />
     <ClInclude Include="src\texturemapping\helper\polygonHelper.h" />
     <ClInclude Include="src\texturemapping\import\intrinsicsImporter.h" />
     <ClInclude Include="src\texturemapping\import\mappingDataSetImporter.h" />
+    <ClInclude Include="src\texturemapping\mapping\core\barycentricCoordinate.h" />
+    <ClInclude Include="src\texturemapping\mapping\core\intersectionResult.h" />
+    <ClInclude Include="src\texturemapping\mapping\core\mergingResult.h" />
     <ClInclude Include="src\texturemapping\mapping\core\projectionResult.h" />
+    <ClInclude Include="src\texturemapping\mapping\core\triangleReplacement.h" />
+    <ClInclude Include="src\texturemapping\mapping\core\undistorter.h" />
+    <ClInclude Include="src\texturemapping\mapping\core\vectorResult.h" />
+    <ClInclude Include="src\texturemapping\mapping\core\vertexInformation.h" />
     <ClInclude Include="src\texturemapping\mapping\imageToModelProjector.h" />
-    <ClInclude Include="src\texturemapping\mapping\solvers\base\solver.h" />
+    <ClInclude Include="src\texturemapping\mapping\solvers\dltSolver.h" />
+    <ClInclude Include="src\texturemapping\mapping\solvers\solver.h" />
     <ClInclude Include="src\texturemapping\optimization\errorDescription.h" />
     <ClInclude Include="src\texturemapping\optimization\optimizationParameter.h" />
     <ClInclude Include="src\texturemapping\optimization\optimizationResult.h" />

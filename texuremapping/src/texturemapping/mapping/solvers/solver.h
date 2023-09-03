@@ -14,6 +14,6 @@ namespace TextureMapping{
 
         virtual ~Solver() = default;
         // pure virtual function
-        virtual glm::mat3x4 calculateProjectionMatrix(glm::mat3 intrinsicsMat, std::vector<glm::vec3> modelPoints, std::vector<glm::vec2> imagePoints) = 0;
+        virtual glm::mat3x4 calculateProjectionMatrix(const glm::mat3& intrinsicsMat,const std::vector<glm::vec3>& modelPoints,const std::vector<glm::vec2>& imagePoints) const = 0;
     };
 }

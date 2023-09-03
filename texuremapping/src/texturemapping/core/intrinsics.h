@@ -12,15 +12,15 @@ namespace TextureMapping {
 		float k3;
 		uint32_t width, height;
 		uint32_t focusPos;
-		inline glm::mat3 mat3() const {
+		inline glm::mat3 toMat3() const {
 			return glm::mat3{
 				fx,0,cx,
 				0,fy,cy,
 				0,0,1
 			};
 		}
-		inline glm::mat3 mat3inv() const {
-			return glm::inverse(mat3());
+		inline glm::mat3 toMat3inv() const {
+			return glm::inverse(toMat3());
 		};
 
 		inline std::vector<float> distortionCoeffs() const {

@@ -100,7 +100,7 @@ kernel void undistortImage(__read_only image2d_t inputImg,
 	
 	
 	if (imagePlanePoint.x >= 0 && imagePlanePoint.x < width && imagePlanePoint.y >= 0 && imagePlanePoint.y < height) {
-		printf(" i: %f j: %f  imageplanepoint x:y %f:%f\n",pointF.x,pointF.y, imagePlanePoint.x,imagePlanePoint.y);
+		//printf(" i: %f j: %f  imageplanepoint x:y %f:%f\n",pointF.x,pointF.y, imagePlanePoint.x,imagePlanePoint.y);
 		write_imagef(outputImg,point , read_imagef(inputImg, sampler,imagePlanePoint )); 
 	}
 }

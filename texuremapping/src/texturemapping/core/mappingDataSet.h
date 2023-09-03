@@ -48,9 +48,9 @@ namespace TextureMapping {
 		glm::vec3 tcpRot;
 		std::string name;
 		std::shared_ptr<Engine::Model> model;
-		std::shared_ptr<STBimage> loadedImage;
-		std::shared_ptr<STBimage> alteredImage;
-		std::shared_ptr<STBimage> projectionImage;
+		STBimage loadedImage;
+		STBimage alteredImage;
+		STBimage projectionImage;
 		std::vector<glm::vec2> imagePolygonPointsInUV;
 		std::vector<glm::vec2> imagePolygonPointsInPixels;
 		std::shared_ptr<OptimizationResult> optimizationResult;
@@ -66,7 +66,7 @@ namespace TextureMapping {
 		std::vector<PolygonMarker> markers;
 
 		/// Initializes a new instance of the <see cref="MappingDataSet"/> class.
-		MappingDataSet(){}
+		MappingDataSet();
 
 			/// Crops the image.
 		void performCropping();

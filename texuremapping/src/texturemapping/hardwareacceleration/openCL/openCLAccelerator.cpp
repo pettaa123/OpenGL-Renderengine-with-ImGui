@@ -40,8 +40,8 @@ namespace TextureMapping {
 		//      send the sensor normal and the sensor size in real world to the kernel.
 		//      The kernel will move the normal to each pixel of the sensor and perform a ray casting towards the model.
 
-		int imageWidth = dataSet.projectionImage->width;
-		int imageHeight = dataSet.projectionImage->height;
+		int imageWidth = dataSet.projectionImage.width;
+		int imageHeight = dataSet.projectionImage.height;
 
 		// TODO: Evaluate if this is really necessary. If you experience problems try uncommenting this
 		// Don't forget to uncomment it also in line 90/91 and in the kernel
@@ -136,9 +136,9 @@ namespace TextureMapping {
 		uint32_t height = image.height;
 
 		//Variable to pass to the memory
-		float* intrinsicValues = &intrinsics.mat3()[0][0];
+		float* intrinsicValues = &intrinsics.toMat3()[0][0];
 
-		float* invIntrinsicValues = &intrinsics.mat3inv()[0][0];
+		float* invIntrinsicValues = &intrinsics.toMat3inv()[0][0];
 
 
 		//Create OpenCL buffers (copy data to device)
@@ -176,7 +176,7 @@ namespace TextureMapping {
 		// create a command queue
 		boost::compute::command_queue queue(m_context, m_device, boost::compute::command_queue::enable_profiling);
 		try {		
-			queue.enqueue_write_image(imageIn, imageIn.origin(), imageIn.size(), image.data);
+			queue.enqueue_write_image(imageIn, imageIn.origin(), imageIn.size(), image.data.get());
 			// write the data from to the device
 			std::cout << buffers[0].size();
 			queue.enqueue_write_buffer(buffers[0], 0, buffers[0].size(), intrinsicValues);
@@ -197,7 +197,7 @@ namespace TextureMapping {
 		}
 
 		try {
-			queue.enqueue_read_image(imageOut, imageOut.origin(), imageOut.size(), image.data);
+			queue.enqueue_read_image(imageOut, imageOut.origin(), imageOut.size(), image.data.get());
 		}
 		catch (boost::compute::opencl_error e) {
 			Log::error(e.error_string());
