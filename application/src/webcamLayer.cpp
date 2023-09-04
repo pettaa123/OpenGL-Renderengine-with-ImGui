@@ -20,6 +20,8 @@
 
 #include "texturemapping/mapping/solvers/dltSolver.h"
 #include "texturemapping/mapping/core/undistorter.h"
+#include "texturemapping/mapping/core/model.h"
+#include "texturemapping/mapping/meshCutter.h"
 
 WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 	: Layer("WebcamLayer"), m_cameraController(glm::perspectiveFov(glm::radians(45.0f), 1280.0f,720.0f, 0.1f, 10000.0f))
@@ -27,7 +29,10 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 	std::filesystem::path ds("assets/mapping sample data/datasets");
 	std::vector<TextureMapping::MappingDataSet> mds = TextureMapping::MappingDataSetImporter::loadFromJSON(ds);
 
-	std::unique_ptr<Engine::Model> model = std::make_unique<Engine::Model>("assets/models/TruTh/TruTh_Mesh Creation.1_1.stl");
+	std::unique_ptr<TextureMapping::Model> model = std::make_unique<TextureMapping::Model>("assets/models/TruTh/TruTh_Mesh Creation.1_1.stl");
+
+	TextureMapping::MeshCutter meshcutter(*model.get());
+	meshcutter.solveOverlayingTexturesConflicts(mds);
 
 	auto d = TextureMapping::OpenCLAccelerator::getDevices();
 	auto clA = TextureMapping::OpenCLAccelerator(d[0], *model.get());
@@ -40,9 +45,7 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 	TextureMapping::DLTSolver dlt;
 	dlt.calculateProjectionMatrix(intrinsics2.toMat3(), mds[0].modelPoints, undistortedImagePoints);
 
-	
 	std::filesystem::path imagePath("assets/mapping sample data/chessboard.png");// =ds / imageFile;
-
 
 	std::filesystem::path intrinsicsPath("assets/mapping sample data/webcamIntrinsics.json");
 

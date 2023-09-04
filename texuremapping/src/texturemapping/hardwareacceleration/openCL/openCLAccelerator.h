@@ -4,7 +4,7 @@
 #include <fstream>
 #include <filesystem>
 #include "texturemapping/hardwareacceleration/base/accelerator.h"
-#include "engine/renderer/model.h"
+#include "texturemapping/mapping/core/model.h"
 #include "compute/include/boost/compute/core.hpp"
 #include "texturemapping/core/intrinsics.h"
 #include "texturemapping/core/color4.h"
@@ -36,7 +36,7 @@ namespace TextureMapping {
 
 	public:
 
-		OpenCLAccelerator(boost::compute::device device,const Engine::Model& model);
+		OpenCLAccelerator(boost::compute::device device,const TextureMapping::Model& model);
 
 
 		/// Gets the OpenCL devices.

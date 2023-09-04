@@ -5,7 +5,7 @@
 namespace TextureMapping {
 
 
-	OpenCLAccelerator::OpenCLAccelerator(boost::compute::device device,const Engine::Model& model) :
+	OpenCLAccelerator::OpenCLAccelerator(boost::compute::device device,const TextureMapping::Model& model) :
 		Accelerator{ model },
 		m_device(device)
 	{
@@ -58,7 +58,7 @@ namespace TextureMapping {
 
 		//NIMMT TCP4 anstatt modelpoints als Übergabe für die Auswahl der STL vertices in der Projection.cl
 		//float[] TCP;
-		uint32_t numberOfModelPoints = (uint32_t)dataSet.modelPoints.size();
+		size_t numberOfModelPoints = dataSet.modelPoints.size();
 		//to floats
 		std::vector<float> modelPoints(numberOfModelPoints * 3);
 		for (auto& v : dataSet.modelPoints) {
@@ -67,7 +67,7 @@ namespace TextureMapping {
 			modelPoints.push_back(v.z);
 		}
 
-		uint32_t numberOfPoints = (uint32_t)dataSet.imagePolygonPointsInPixels.size();
+		size_t numberOfPoints = dataSet.imagePolygonPointsInPixels.size();
 		std::vector<float> polygonPoints(numberOfPoints);
 		for (auto& v : dataSet.imagePolygonPointsInPixels) {
 			modelPoints.push_back(v.x);

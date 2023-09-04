@@ -28,7 +28,11 @@
     <ClCompile Include="src\texturemapping\helper\mathExtensions.cpp" />
     <ClCompile Include="src\texturemapping\import\intrinsicsImporter.cpp" />
     <ClCompile Include="src\texturemapping\import\mappingDataSetImporter.cpp" />
+    <ClCompile Include="src\texturemapping\mapping\core\model.cpp" />
+    <ClCompile Include="src\texturemapping\mapping\core\ray2.cpp" />
     <ClCompile Include="src\texturemapping\mapping\core\undistorter.cpp" />
+    <ClCompile Include="src\texturemapping\mapping\imageToModelProjector.cpp" />
+    <ClCompile Include="src\texturemapping\mapping\meshCutter.cpp" />
     <ClCompile Include="src\texturemapping\mapping\solvers\dltSolver.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -53,12 +57,15 @@
     <ClInclude Include="src\texturemapping\mapping\core\barycentricCoordinate.h" />
     <ClInclude Include="src\texturemapping\mapping\core\intersectionResult.h" />
     <ClInclude Include="src\texturemapping\mapping\core\mergingResult.h" />
+    <ClInclude Include="src\texturemapping\mapping\core\model.h" />
     <ClInclude Include="src\texturemapping\mapping\core\projectionResult.h" />
+    <ClInclude Include="src\texturemapping\mapping\core\ray2.h" />
     <ClInclude Include="src\texturemapping\mapping\core\triangleReplacement.h" />
     <ClInclude Include="src\texturemapping\mapping\core\undistorter.h" />
     <ClInclude Include="src\texturemapping\mapping\core\vectorResult.h" />
     <ClInclude Include="src\texturemapping\mapping\core\vertexInformation.h" />
     <ClInclude Include="src\texturemapping\mapping\imageToModelProjector.h" />
+    <ClInclude Include="src\texturemapping\mapping\meshCutter.h" />
     <ClInclude Include="src\texturemapping\mapping\solvers\dltSolver.h" />
     <ClInclude Include="src\texturemapping\mapping\solvers\solver.h" />
     <ClInclude Include="src\texturemapping\optimization\errorDescription.h" />

@@ -20,11 +20,15 @@ namespace Engine {
 		loadModel(path);
 	}
 
+	const std::vector<Mesh>& Model::getMeshes() const{
+		return m_meshes;
+	}
+
 	// draws the model, and thus all its meshes
 	void Model::draw(Shader& shader)
 	{
-		for (uint32_t i = 0; i < meshes.size(); i++)
-			meshes[i].draw(shader);
+		for (uint32_t i = 0; i < m_meshes.size(); i++)
+			m_meshes[i].draw(shader);
 	}
 
 	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
@@ -58,7 +62,7 @@ namespace Engine {
 			// the node object only contains indices to index the actual objects in the scene. 
 			// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			meshes.push_back(processMesh(mesh, (void*)scene));
+			m_meshes.push_back(processMesh(mesh, (void*)scene));
 		}
 		// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -187,12 +191,6 @@ namespace Engine {
 		// return a mesh object created from the extracted mesh data
 
 		return Mesh(m_vertexBuffer, m_indexBuffer, textures_loaded);
-	}
-
-	uint32_t Model::getVerticesCount() const{
-		auto acc_lambda = [&](uint32_t count,const Mesh& m) {return count + m.getVerticesCount(); };
-		uint32_t count = std::accumulate(meshes.begin(), meshes.end(), 0, acc_lambda);
-		return count;
 	}
 
 

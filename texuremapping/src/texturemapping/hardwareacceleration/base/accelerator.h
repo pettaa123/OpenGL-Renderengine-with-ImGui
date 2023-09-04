@@ -4,11 +4,11 @@
 #include <memory>
 #include <execution>
 #include <format>
-#include "engine/renderer/model.h"
+#include "texturemapping/mapping/core/model.h"
 #include "texturemapping/core/mappingDataSet.h"
 #include "texturemapping/mapping/core/projectionResult.h"
 #include "texturemapping/hardwareacceleration/base/graphicsDevice.h"
-#include "engine/core/log.h"
+#include "texturemapping/core/log.h"
 #include "texturemapping/core/intrinsics.h"
 
 
@@ -24,7 +24,7 @@ namespace TextureMapping {
 		//std::vector<float> getDefaultTexCoords() { return m_defaultTexCoords; };
 		//int getNumberOfTriangles() { return m_numberOfTriangles; };
 
-		Accelerator(const Engine::Model& model) {
+		Accelerator(const TextureMapping::Model& model) {
 			m_vertices = generateVertexCache(model);
 			m_defaultTexCoords = generateDefaultTextureCoordinates(model);
 			m_numberOfTriangles = (uint32_t)m_vertices.size() / 9;
@@ -104,7 +104,7 @@ namespace TextureMapping {
 		virtual ProjectionResult projectImage(MappingDataSet& correspondence, std::vector<float>& projectionMatrix, int dataSetID) = 0;
 
 		/// Undistorts the image.
-		virtual void undistortImage(STBimage& image,const Intrinsics& intrinsicParameters) = 0;
+		virtual void undistortImage(STBimage& image, const Intrinsics& intrinsicParameters) = 0;
 
 
 		// Filters the projection result.
@@ -145,7 +145,7 @@ namespace TextureMapping {
 
 		// TODO: This method exists twice (also in the Projector)
 		/// Generates default texture coordinates.
-		std::vector<float> generateDefaultTextureCoordinates(const Engine::Model& model) const {
+		std::vector<float> generateDefaultTextureCoordinates(const TextureMapping::Model& model) const {
 			std::vector<float> textureCoordinates(model.getVerticesCount());
 			// TODO: Use Parallel here?
 			for (size_t i = 0; i < textureCoordinates.size(); i++) {
@@ -154,16 +154,15 @@ namespace TextureMapping {
 			return textureCoordinates;
 		}
 
-		std::vector<float> generateVertexCache(const Engine::Model& model) const {
+		std::vector<float> generateVertexCache(const TextureMapping::Model& model) const {
 			std::vector<float> verticesAsFloats(model.getVerticesCount() * 3);
 			uint32_t idx = 0;
-			for (const Engine::Mesh& m : model.meshes) {
-				for (auto& v : m.getVertices()) {
-					verticesAsFloats[idx++] = v.position.x;
-					verticesAsFloats[idx++] = v.position.y;
-					verticesAsFloats[idx] = v.position.z;
-				}
+			for (auto& v : model.getVertices()) {
+				verticesAsFloats[idx++] = v.x;
+				verticesAsFloats[idx++] = v.y;
+				verticesAsFloats[idx] = v.z;
 			}
+
 			/*
 			Parallel.ForEach(model.Vertices, (vertex, loopState, index) = > {
 				long idx = index * 3;

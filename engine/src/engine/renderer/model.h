@@ -22,22 +22,20 @@ namespace Engine {
     {
     public:
 
+        // constructor, expects a filepath to a 3D model.
+        Model(const std::string& path, bool gamma = false);
+
         // model data 
         std::vector<std::shared_ptr<Texture2D>> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-        std::vector<Mesh> meshes;
         std::string directory;
         bool gammaCorrection;
 
-        // constructor, expects a filepath to a 3D model.
-        Model(const std::string& path, bool gamma = false);
+
+        const std::vector<Mesh>& getMeshes() const;
 
         // draws the model, and thus all its meshes
         void draw(Shader& shader);
 
-        uint32_t getVerticesCount() const;
-
-
-    private:
         // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
         void loadModel(const std::string& path);
 
@@ -56,6 +54,10 @@ namespace Engine {
         
         std::shared_ptr<VertexBuffer> m_vertexBuffer;
         std::shared_ptr<IndexBuffer> m_indexBuffer;
+
+    protected:
+
+        std::vector<Mesh> m_meshes;
 
     };
 }

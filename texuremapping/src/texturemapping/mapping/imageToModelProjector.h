@@ -1,34 +1,29 @@
 #pragma once
 
+#include "texturemapping/hardwareacceleration/base/accelerator.h"
+#include "engine/renderer/model.h"
+#include "texturemapping/helper/mathExtensions.h"
+#include "texturemapping/mapping/core/mergingResult.h"
 
-#include "renderer/model.h"
-
-namespace TextureMapping.Mapping{
+namespace TextureMapping{
 
 
     /// Projects an image to a model.
     class ImageToModelProjector {
     private:
-        Engine::Model m_model;
-        Accelerator m_accelerator;
-        CancelObserver m_cancelObserver;
-        List<MappingDataSet> m_projectedDataSets;
+        Engine::Model &m_model;
+        Accelerator &m_accelerator;
+        std::vector<MappingDataSet> m_projectedDataSets;
         bool m_isCancelled;
-        ApplicationParameters m_parameters;
-
+        //ApplicationParameters m_parameters;
+    public:
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageToModelProjector"/> class.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="accelerator">The accelerator.</param>
         /// <param name="cancelObserver">The cancel observer.</param>
-        public ImageToModelProjector(Model model, Accelerator accelerator) {
-            _model = model;
-            _accelerator = accelerator;
-            _projectedDataSets = new List<MappingDataSet>();
-            cancelObserver.AddListener(this);
-            _cancelObserver = cancelObserver;
-        }
+        ImageToModelProjector(Engine::Model& model, Accelerator& accelerator);
 
         /// <summary>
         /// Projects the image to the model.
@@ -36,17 +31,17 @@ namespace TextureMapping.Mapping{
         /// <param name="dataSet">The data set.</param>
         /// <param name="originId">The origin identifier.</param>
         /// <param name="projectionMatrix">The projection matrix.</param>
-        public void ProjectImage(MappingDataSet dataSet, int originId, Matrix3x4 projectionMatrix) {
-            Vector3[] modelPoints = dataSet.ModelPoints;
-            Vector2[] imagePoints = dataSet.ImagePoints;
+        void projectImage(MappingDataSet& dataSet, int originId, glm::mat3x4& projectionMatrix) {
+            std::vector<glm::vec3> modelPoints = dataSet.modelPoints;
+            std::vector<glm::vec2> imagePoints = dataSet.imagePoints;
 
-            float[] matrixValues = projectionMatrix.ToFloats();
+            std::vector<float> projectionMatrixVector = MathExtension::toVector(projectionMatrix);
             // PNP: Hand over the additional params from the TextureMapper to the accelerator
             //openclaccelerator projectimage
-            ProjectionResult projectionResult = _accelerator.ProjectImage(dataSet, matrixValues,originId);
-            dataSet.TriangleHash = projectionResult.TriangleHash;
-            dataSet.TexCoordsAndTriangleIds = projectionResult.TriangleTuple;
-            _projectedDataSets.Add(dataSet);
+            ProjectionResult projectionResult = m_accelerator.projectImage(dataSet,projectionMatrixVector ,originId);
+            dataSet.triangleHash = projectionResult.triangleHash;
+            dataSet.texCoordsAndTriangleIds = projectionResult.trianglePair;
+            m_projectedDataSets.push_back(dataSet);
         }
 
         /// <summary>
@@ -54,10 +49,8 @@ namespace TextureMapping.Mapping{
         /// </summary>
         /// <param name="loadingObserver">The loading observer.</param>
         /// <returns></returns>
-        public MergingResult Finish(LoadingObserver loadingObserver) {
-            if (_projectedDataSets.Count == 0) {
-                return null;
-            }
+        MergingResult finish() {
+            assert(m_projectedDataSets.size() != 0 && "projectedDataSets empty")
 
             // Sort the data sets according to their (re?)projection errors
             // The image with lowest error will be on top of others

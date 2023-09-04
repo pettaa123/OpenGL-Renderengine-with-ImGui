@@ -81,6 +81,18 @@
     <ClCompile Include="src\texturemapping\core\stbImage.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
+    <ClCompile Include="src\texturemapping\mapping\meshCutter.cpp">
+      <Filter>Source Files\mapping</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\mapping\core\ray2.cpp">
+      <Filter>Source Files\mapping\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\mapping\core\model.cpp">
+      <Filter>Source Files\mapping\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\mapping\imageToModelProjector.cpp">
+      <Filter>Source Files\mapping</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\texturemapping\calibratedCamera.h">
@@ -115,9 +127,6 @@
     </ClInclude>
     <ClInclude Include="src\texturemapping\helper\polygonHelper.h">
       <Filter>helper</Filter>
-    </ClInclude>
-    <ClInclude Include="src\texturemapping\mapping\imageToModelProjector.h">
-      <Filter>Source Files\mapping</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\hardwareacceleration\base\accelerator.h">
       <Filter>Source Files\hardwareacceleration\base</Filter>
@@ -178,6 +187,18 @@
     </ClInclude>
     <ClInclude Include="src\texturemapping\core\terminalColor.h">
       <Filter>Source Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\meshCutter.h">
+      <Filter>Source Files\mapping</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\core\ray2.h">
+      <Filter>Source Files\mapping\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\core\model.h">
+      <Filter>Source Files\mapping\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\imageToModelProjector.h">
+      <Filter>Source Files\mapping</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,6 +2,8 @@
 
 #include <vector>
 #include <glm/glm.hpp>
+#include <cmath>
+#include <limits>
 
 namespace TextureMapping {
     class MathExtension {
@@ -17,5 +19,7 @@ namespace TextureMapping {
 
         /// Multiplies a 3x4 matrix by a 4x4 matrix.
         static glm::mat3x4 mult(const glm::mat3x4& matrixA, const glm::mat4& matrixB);
+
+        static std::vector<float> toVector(const glm::mat3x4& matrix);
     };
 }

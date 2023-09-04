@@ -71,4 +71,16 @@ namespace TextureMapping {
         return result;
     }
 
+
+    std::vector<float> MathExtension::toVector(const glm::mat3x4 & matrix) {
+        std::vector<float> values;
+        values.reserve(12);
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 4; x++) {
+                values[x + 4 * y] = matrix[y][x];
+            }
+        }
+        return values;
+    }
+
 }
