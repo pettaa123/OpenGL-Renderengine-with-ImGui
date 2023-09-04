@@ -2,7 +2,7 @@
 
 namespace TextureMapping {
 
-	ImageToModelProjector::ImageToModelProjector(Engine::Model& model, Accelerator& accelerator)
+	ImageToModelProjector::ImageToModelProjector(TextureMapping::Model& model, Accelerator& accelerator)
 		:m_model(model),
 		m_accelerator(accelerator)
 	{}

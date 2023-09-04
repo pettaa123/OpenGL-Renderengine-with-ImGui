@@ -1,9 +1,10 @@
 #pragma once
-
+#include <optional>
 #include "texturemapping/hardwareacceleration/base/accelerator.h"
-#include "engine/renderer/model.h"
+#include "texturemapping/mapping/core/model.h"
 #include "texturemapping/helper/mathExtensions.h"
 #include "texturemapping/mapping/core/mergingResult.h"
+#include "texturemapping/mapping/meshCutter.h"
 
 namespace TextureMapping{
 
@@ -11,7 +12,7 @@ namespace TextureMapping{
     /// Projects an image to a model.
     class ImageToModelProjector {
     private:
-        Engine::Model &m_model;
+        TextureMapping::Model &m_model;
         Accelerator &m_accelerator;
         std::vector<MappingDataSet> m_projectedDataSets;
         bool m_isCancelled;
@@ -23,7 +24,7 @@ namespace TextureMapping{
         /// <param name="model">The model.</param>
         /// <param name="accelerator">The accelerator.</param>
         /// <param name="cancelObserver">The cancel observer.</param>
-        ImageToModelProjector(Engine::Model& model, Accelerator& accelerator);
+        ImageToModelProjector(TextureMapping::Model& model, Accelerator& accelerator);
 
         /// <summary>
         /// Projects the image to the model.
@@ -49,22 +50,22 @@ namespace TextureMapping{
         /// </summary>
         /// <param name="loadingObserver">The loading observer.</param>
         /// <returns></returns>
-        MergingResult finish() {
-            assert(m_projectedDataSets.size() != 0 && "projectedDataSets empty")
+        std::optional<MergingResult> finish() {
+            assert(m_projectedDataSets.size() != 0 && "projectedDataSets empty");
 
             // Sort the data sets according to their (re?)projection errors
             // The image with lowest error will be on top of others
             //_projectedDataSets = _projectedDataSets.OrderBy(p => p.OptimizationResult.AverageErrorInPixels).ToList();
 
-            MeshCutter cutter = new MeshCutter(_model, _cancelObserver);
+            MeshCutter cutter(m_model);
             //Texturekoordinaten / Liste aus welchem dataSet diese Stammen
-            Tuple<List<Vector2>, List<int>> textureCoordinates = cutter.SolveOverlayingTexturesConflicts(_projectedDataSets, loadingObserver);
+            std::pair<std::vector<glm::vec2>, std::vector<int>> textureCoordinates = cutter.solveOverlayingTexturesConflicts(m_projectedDataSets);
 
-            if (_isCancelled) {
-                return null;
+            if (m_isCancelled) {
+                return {};
             }
 
-            _model.TextureDescription.Coordinates = textureCoordinates.Item1;
+            m_model.textureDescription.coordinates = textureCoordinates.first;
 
             StartWatch();
             int borderSize = 1;
@@ -169,13 +170,13 @@ namespace TextureMapping{
         /// <param name="mergingResult">The merging result.</param>
         /// <param name="triangleOriginIds">The triangle origin ids.</param>
         /// <param name="borderSize">Size of the border.</param>
-        private void TransformTextureCoordinates(MergingResult mergingResult, List<int> triangleOriginIds, int borderSize) {
+        private void TransformTextureCoordinates(MergingResult& mergingResult, std::vector<int>& triangleOriginIds, int borderSize) {
             //Wie viele Bilder pro Spalte
             int columns = mergingResult.Columns;
             //Faktor mit denen die alten Texturkoordinaten pro Bild zu verrechnen sind, damits für das mergedImage passt.
             float widthFactor = mergingResult.WidthFactor;
             float heightFactor = mergingResult.HeightFactor;
-            List<Vector2> modelTexCoords = _model.TextureDescription.Coordinates;
+            std::vector<glm::vec2> modelTexCoords = _model.TextureDescription.Coordinates;
 
             for (int i = 0; i < _projectedDataSets.Count; i++) {
                 MappingDataSet dataSet = _projectedDataSets[i];
@@ -186,7 +187,7 @@ namespace TextureMapping{
                 float yOffset = (1f + 2 * borderSize * row) / mergingResult.Image.Height;
                 dataSet.ImageRow = row;
                 dataSet.ImageColumn = column;
-                dataSet.TexCoordsOffset = new Vector2(xOffset, yOffset);
+                dataSet.TexCoordsOffset = new glm::vec2(xOffset, yOffset);
             }
 
             for (int i = 0; i < triangleOriginIds.Count; i++) {
@@ -194,13 +195,13 @@ namespace TextureMapping{
                 MappingDataSet dataSet = _projectedDataSets[triangleOriginIds[i]];
 
                 for (int a = 0; a < 3; a++) {
-                    Vector2 coordinate = modelTexCoords[texIdx + a];
+                    glm::vec2 coordinate = modelTexCoords[texIdx + a];
 
                     if (coordinate.IsTextureCoordinate()) {
                         // Don't use "coordinate =" here (it's a struct)
                         float transformedX = (dataSet.ImageColumn + coordinate.X) * widthFactor + dataSet.TexCoordsOffset.X;
                         float transformedY = (dataSet.ImageRow + coordinate.Y) * heightFactor + dataSet.TexCoordsOffset.Y;
-                        modelTexCoords[texIdx + a] = new Vector2(transformedX, transformedY);
+                        modelTexCoords[texIdx + a] = new glm::vec2(transformedX, transformedY);
                     }
                 }
             }

@@ -55,7 +55,7 @@ namespace TextureMapping {
 		std::vector<glm::vec2> imagePolygonPointsInPixels;
 		std::shared_ptr<OptimizationResult> optimizationResult;
 		std::unordered_set<int> triangleHash; //HashSet<int>
-		std::pair<glm::vec2, std::vector<int>> texCoordsAndTriangleIds;
+		std::pair< std::vector<glm::vec2>, std::vector<int>> texCoordsAndTriangleIds;
 		bool drawImagePoints;
 		bool visualizeModelPoints;
 		bool cropImage;
