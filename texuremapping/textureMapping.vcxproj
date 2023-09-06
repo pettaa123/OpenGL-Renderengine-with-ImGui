@@ -24,16 +24,20 @@
     <ClCompile Include="src\texturemapping\core\mappingDataSet.cpp" />
     <ClCompile Include="src\texturemapping\core\stbImage.cpp" />
     <ClCompile Include="src\texturemapping\core\terminalColor.cpp" />
+    <ClCompile Include="src\texturemapping\hardwareacceleration\base\accelerator.cpp" />
     <ClCompile Include="src\texturemapping\hardwareacceleration\openCL\openCLAccelerator.cpp" />
     <ClCompile Include="src\texturemapping\helper\mathExtensions.cpp" />
     <ClCompile Include="src\texturemapping\import\intrinsicsImporter.cpp" />
     <ClCompile Include="src\texturemapping\import\mappingDataSetImporter.cpp" />
-    <ClCompile Include="src\texturemapping\mapping\core\model.cpp" />
     <ClCompile Include="src\texturemapping\mapping\core\ray2.cpp" />
     <ClCompile Include="src\texturemapping\mapping\core\undistorter.cpp" />
     <ClCompile Include="src\texturemapping\mapping\imageToModelProjector.cpp" />
     <ClCompile Include="src\texturemapping\mapping\meshCutter.cpp" />
     <ClCompile Include="src\texturemapping\mapping\solvers\dltSolver.cpp" />
+    <ClCompile Include="src\texturemapping\mapping\solvers\solver.cpp" />
+    <ClCompile Include="src\texturemapping\modeling\model.cpp" />
+    <ClCompile Include="src\texturemapping\modeling\texture.cpp" />
+    <ClCompile Include="src\texturemapping\modeling\textureDescription.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="json\single_include\nlohmann\json.hpp" />
@@ -57,7 +61,6 @@
     <ClInclude Include="src\texturemapping\mapping\core\barycentricCoordinate.h" />
     <ClInclude Include="src\texturemapping\mapping\core\intersectionResult.h" />
     <ClInclude Include="src\texturemapping\mapping\core\mergingResult.h" />
-    <ClInclude Include="src\texturemapping\mapping\core\model.h" />
     <ClInclude Include="src\texturemapping\mapping\core\projectionResult.h" />
     <ClInclude Include="src\texturemapping\mapping\core\ray2.h" />
     <ClInclude Include="src\texturemapping\mapping\core\triangleReplacement.h" />
@@ -68,9 +71,15 @@
     <ClInclude Include="src\texturemapping\mapping\meshCutter.h" />
     <ClInclude Include="src\texturemapping\mapping\solvers\dltSolver.h" />
     <ClInclude Include="src\texturemapping\mapping\solvers\solver.h" />
+    <ClInclude Include="src\texturemapping\mapping\textureMapper.h" />
+    <ClInclude Include="src\texturemapping\modeling\model.h" />
+    <ClInclude Include="src\texturemapping\modeling\texture.h" />
+    <ClInclude Include="src\texturemapping\modeling\textureDescription.h" />
     <ClInclude Include="src\texturemapping\optimization\errorDescription.h" />
     <ClInclude Include="src\texturemapping\optimization\optimizationParameter.h" />
     <ClInclude Include="src\texturemapping\optimization\optimizationResult.h" />
+    <ClInclude Include="src\texturemapping\optimization\optimizer.h" />
+    <ClInclude Include="src\texturemapping\texturemapping.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

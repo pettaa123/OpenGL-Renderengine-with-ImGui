@@ -1,0 +1,31 @@
+#pragma once
+
+#include "engine/renderer/texture.h"
+#include "engine/renderer/texture.h"
+#include <texturemapping/core/stbImage.h>
+
+namespace TextureMapping {
+
+    //wrapper class for engine texture
+	class Texture {
+
+	public:
+
+		Texture(const STBimage& image, bool generateMipMaps = true);
+
+		bool getUseMipMaps() { return m_useMipMaps; };
+		int getId() { return m_id; };
+		int getWidth() { return m_width; }
+		int getheight() { return m_height; }
+
+	private:
+		std::string m_file;
+		STBimage m_image;
+		bool m_isFlipped;
+		bool m_useMipMaps;
+		int m_id;
+		int m_width;
+		int m_height;
+
+	};
+}

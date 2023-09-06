@@ -28,6 +28,6 @@ namespace TextureMapping {
     private:
         std::vector<ErrorDescription> m_errorDescriptions;
         glm::mat3x4 m_projectionMatrix;
-        float m_averageErrorInPixels;
+        float m_averageErrorInPixels=0;
     };
 }

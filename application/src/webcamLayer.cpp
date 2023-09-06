@@ -5,51 +5,53 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <opencv2/videoio.hpp>
-#include "engine/core/window.h"
 
-#include "texturemapping/import/mappingDataSetImporter.h"
-#include "texturemapping/hardwareacceleration/openCL/openCLAccelerator.h"
-#include "engine/renderer/model.h"
-
-#include "texturemapping/core/intrinsics.h"
-#include "texturemapping/import/intrinsicsImporter.h"
-#include "texturemapping/core/stbImage.h"
-
-#include <filesystem>
 #include <opencv2/highgui/highgui.hpp>
 
-#include "texturemapping/mapping/solvers/dltSolver.h"
-#include "texturemapping/mapping/core/undistorter.h"
-#include "texturemapping/mapping/core/model.h"
-#include "texturemapping/mapping/meshCutter.h"
+
 
 WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 	: Layer("WebcamLayer"), m_cameraController(glm::perspectiveFov(glm::radians(45.0f), 1280.0f,720.0f, 0.1f, 10000.0f))
 {
-	std::filesystem::path ds("assets/mapping sample data/datasets");
-	std::vector<TextureMapping::MappingDataSet> mds = TextureMapping::MappingDataSetImporter::loadFromJSON(ds);
+	//load datasets
+	std::filesystem::path dataSetsPath("assets/mapping sample data/datasets");
+	std::vector<TextureMapping::MappingDataSet> dataSets = TextureMapping::MappingDataSetImporter::loadFromJSON(dataSetsPath);
+	//load intrinsics
+	std::filesystem::path intrinsicsPath("assets/mapping sample data/intrinsics.json");
+	TextureMapping::Intrinsics intrinsics = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsPath);
 
 	std::unique_ptr<TextureMapping::Model> model = std::make_unique<TextureMapping::Model>("assets/models/TruTh/TruTh_Mesh Creation.1_1.stl");
 
-	TextureMapping::MeshCutter meshcutter(*model.get());
-	meshcutter.solveOverlayingTexturesConflicts(mds);
+	for(TextureMapping::MappingDataSet& d : dataSets) {
+		d.projectionImage = d.alteredImage.has_value() ? d.alteredImage.value() : d.loadedImage;
+		d.performCropping();
+		//d.model = model;
+	}
+
+	TextureMapping::TextureMapper mapper;
+	std::optional<TextureMapping::MergingResult> mergingResult = mapper.project(intrinsics.toMat3(),dataSets, *model);
+
+
+
+
+
+	//TextureMapping::MeshCutter meshcutter(*model.get());
+	//meshcutter.solveOverlayingTexturesConflicts(mds);
 
 	auto d = TextureMapping::OpenCLAccelerator::getDevices();
 	auto clA = TextureMapping::OpenCLAccelerator(d[0], *model.get());
 
-	std::filesystem::path intrinsicsPath2("assets/mapping sample data/webcamIntrinsics.json");
-	TextureMapping::Intrinsics intrinsics2 = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsPath2);
 
-	std::vector<glm::vec2> undistortedImagePoints = TextureMapping::Undistorter::undistortPoints(mds[0], intrinsics2);
-
-	TextureMapping::DLTSolver dlt;
-	dlt.calculateProjectionMatrix(intrinsics2.toMat3(), mds[0].modelPoints, undistortedImagePoints);
-
-	std::filesystem::path imagePath("assets/mapping sample data/chessboard.png");// =ds / imageFile;
-
-	std::filesystem::path intrinsicsPath("assets/mapping sample data/webcamIntrinsics.json");
-
-	TextureMapping::Intrinsics intrinsics = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsPath);
+	//std::vector<glm::vec2> undistortedImagePoints = TextureMapping::Undistorter::undistortPoints(mds[0], intrinsics2);
+	//
+	//TextureMapping::DLTSolver dlt;
+	//dlt.calculateProjectionMatrix(intrinsics2.toMat3(), mds[0].modelPoints, undistortedImagePoints);
+	//
+	//std::filesystem::path imagePath("assets/mapping sample data/chessboard.png");// =ds / imageFile;
+	//
+	//std::filesystem::path intrinsicsPath("assets/mapping sample data/webcamIntrinsics.json");
+	//
+	//TextureMapping::Intrinsics intrinsics = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsPath);
 
 	//cv::Mat p(height, width, CV_8UC4,image.data.get());
 	//cv::Mat pCopy = p.clone();

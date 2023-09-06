@@ -49,7 +49,7 @@ namespace TextureMapping {
 		std::string name;
 		std::shared_ptr<Engine::Model> model;
 		STBimage loadedImage;
-		STBimage alteredImage;
+		std::optional<STBimage> alteredImage;
 		STBimage projectionImage;
 		std::vector<glm::vec2> imagePolygonPointsInUV;
 		std::vector<glm::vec2> imagePolygonPointsInPixels;

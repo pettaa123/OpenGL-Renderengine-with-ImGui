@@ -1,17 +1,19 @@
 #pragma once
 
-#include "dltSolver.h"
+#include "texturemapping/mapping/solvers/dltSolver.h"
 #include "texturemapping/helper/mathExtensions.h"
 #include <cmath>
 #include <Eigen/Dense>
 #include <iostream>
 #include "texturemapping/core/log.h"
-
+//----------------------------------
+#include <glm/gtx/string_cast.hpp>
+#include <iostream>
 
 namespace TextureMapping {
 
-	DLTSolver::DLTSolver(bool normalizeData):
-	m_normalizeData(normalizeData){}
+	DLTSolver::DLTSolver(bool normalizeData)
+		:m_normalizeData(normalizeData){}
 
 	glm::mat3x4 DLTSolver::calculateProjectionMatrix(const glm::mat3& intrinsics, const std::vector<glm::vec3>& modelPoints_in, const std::vector<glm::vec2>& imagePoints_in) const {
 
@@ -23,9 +25,13 @@ namespace TextureMapping {
 
 		if (m_normalizeData) {
 			modelNormalizationMatrix = getNormalizationMatrix(modelPoints_in);
+			//std::cout << glm::to_string(modelNormalizationMatrix) << std::endl;
 			imageNormalizationMatrix = getNormalizationMatrix(imagePoints_in);
+			//std::cout << glm::to_string(imageNormalizationMatrix) << std::endl;
 			modelPoints = applyNormalization(modelNormalizationMatrix, modelPoints_in);
+			//std::cout << glm::to_string(modelPoints[0]) << std::endl;
 			imagePoints = applyNormalization(imageNormalizationMatrix, imagePoints_in);
+			//std::cout << glm::to_string(imagePoints[0]) << std::endl;
 		}
 		else
 		{
@@ -40,8 +46,8 @@ namespace TextureMapping {
 		Eigen::Matrix<double, Eigen::Dynamic, 12, Eigen::RowMajor> mat;
 		mat.resize(rows, 12);
 		mat.setZero();
-		for (size_t i = 0; i < rows; i += 2) {
-			static int ii = 0;
+		int ii = 0;
+		for (size_t i = 0; i < rows; i += 2) {			
 			glm::vec3 m = modelPoints[ii];
 			glm::vec2 p = imagePoints[ii];
 			Eigen::Matrix<double, 1, 12,Eigen::RowMajor> r;
@@ -52,21 +58,23 @@ namespace TextureMapping {
 			mat.block<1, 12>(i+1,0) = r2;
 			ii++;
 		};
-		std::cout << mat << std::endl;
+		//std::cout << mat << std::endl;
 		///////////////////////////////////////////////////
 
 		Eigen::MatrixXd lastColumn;
 
 		try {
-			auto svd = mat.jacobiSvd(Eigen::ComputeFullV);
-			std::cout << svd.matrixV() << std::endl;
+			Eigen::JacobiSVD<Eigen::Matrix<double,Eigen::Dynamic,12,Eigen::RowMajor>> svd = mat.jacobiSvd(Eigen::ComputeFullU | Eigen::ComputeFullV);
 			Eigen::MatrixXd v = svd.matrixV();
+			//std::cout << svd.singularValues() << std::endl;
+			//std::cout << svd.matrixU() << std::endl;
+			//std::cout << v << std::endl;
 			lastColumn = v.col(v.cols() - 1);
 		}
 		catch (std::exception& e){
 			Log::error(e.what());
 		}
-		std::cout << lastColumn << std::endl;
+		//std::cout << lastColumn << std::endl;
 		//Svd<float> svd = matrix.Svd();
 		//Matrix<float> v = svd.VT.Transpose();
 		
@@ -81,18 +89,19 @@ namespace TextureMapping {
 			}
 		}
 
+		//std::cout << glm::to_string(projectionMatrix) << std::endl;
 
 		if (m_normalizeData) {
 			//projectionMatrix = imageNormalizationMatrix.Inverted().Mult(projectionMatrix).Mult(modelNormalizationMatrix);			
 			projectionMatrix = MathExtension::mult(MathExtension::mult(glm::inverse(imageNormalizationMatrix), projectionMatrix), modelNormalizationMatrix);
 		}
-
+		//std::cout << glm::to_string(projectionMatrix) << std::endl;
 		projectionMatrix = projectionMatrix / (projectionMatrix[2][3]);
 
 		//Tuple<Matrix3x4, Matrix<float>, Matrix<float>, Vector<float>> decomp = internalParameters(projectionMatrix);
 
 
-
+		//std::cout << glm::to_string(projectionMatrix) << std::endl;
 		return projectionMatrix;
 
 	}
@@ -169,7 +178,8 @@ namespace TextureMapping {
 		std::vector<glm::vec3> normalizedData(data.size());
 		for (int i = 0; i < data.size(); i++) {
 			// TODO: Check if this is still right after the vector4 in this method is being normalized
-			normalizedData[i] = glm::vec3(normalizationMatrix * glm::vec4(data[i], 1));
+			auto t = glm::vec4(data[i], 1.0f)* normalizationMatrix;
+			normalizedData[i] = glm::vec3(glm::vec4(data[i], 1.0f) * normalizationMatrix);
 		}
 		return normalizedData;
 	}
@@ -178,7 +188,7 @@ namespace TextureMapping {
 		std::vector<glm::vec2> normalizedData(data.size());
 		for (int i = 0; i < data.size(); i++) {
 			// TODO: Check if this is still right after the vector4 in this method is being normalized
-			normalizedData[i] = glm::vec2(normalizationMatrix * glm::vec3(data[i], 1));
+			normalizedData[i] = glm::vec2(glm::vec3(data[i], 1) * normalizationMatrix);
 		}
 		return normalizedData;
 	}

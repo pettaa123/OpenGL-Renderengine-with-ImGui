@@ -1,6 +1,9 @@
 #pragma once
 
 #include "engine/renderer/model.h"
+#include "engine/renderer/texture.h"
+#include "texturemapping/modeling/textureDescription.h"
+#include <memory>
 
 //wrapper class for the engine model, mostly because texturemapping expects that the model consists of only 1 mesh
 
@@ -20,11 +23,18 @@ namespace TextureMapping {
 
 		inline size_t getVerticesCount() const { return m_vertices.size(); };
 
+		TextureDescription textureDescription;
+
+		void setTexture(std::shared_ptr<Texture> texture) {
+			textureDescription.texture = texture;
+		}
 
 	private:
 
 		std::vector<glm::vec3> m_vertices; //combined vertex positions
 		std::vector<glm::vec3> m_normals; //combined normals
+
+		
 
 	};
 }

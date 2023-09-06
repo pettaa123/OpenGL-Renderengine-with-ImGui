@@ -5,6 +5,6 @@ namespace TextureMapping{
     // Data container for projection error descriptions.
 
     struct ErrorDescription {
-        float error;
+        float error=0;
     };
 }

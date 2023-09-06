@@ -24,9 +24,6 @@ Engine::Application* Engine::createApplication(Engine::ApplicationCommandLineArg
 	spec.name = "Rendering";
 	spec.workingDirectory = "../application";
 	spec.commandLineArgs = args;
-	//TEST
-	//TextureMapping::CalibratedCamera calibratedCamera;
-	//calibratedCamera.setName("Harry");
 
 	return new App(spec);
 }

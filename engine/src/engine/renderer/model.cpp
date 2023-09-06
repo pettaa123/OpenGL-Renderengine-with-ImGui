@@ -78,16 +78,16 @@ namespace Engine {
 		const aiScene* scene = static_cast<const aiScene*>(scene_in);
 
 		// data to fill
-		std::vector<Mesh::Vertex> vertices;
-		std::vector<Mesh::Index> indices;
+		std::shared_ptr<std::vector<Mesh::Vertex>> vertices = std::make_shared<std::vector<Mesh::Vertex>>();
+		std::shared_ptr<std::vector<Mesh::Index>> indices = std::make_shared<std::vector<Mesh::Index>>();
 
 		assert(mesh->HasPositions() && "Mesh requires positions.");
 		assert(mesh->HasNormals() && "Mesh requires normals.");
 
-		vertices.reserve(mesh->mNumVertices);
+		vertices->reserve(mesh->mNumVertices);
 
 		// walk through each of the mesh's vertices
-		for (size_t i = 0; i < vertices.capacity(); i++)
+		for (size_t i = 0; i < vertices->capacity(); i++)
 		{
 			Mesh::Vertex vertex;
 			vertex.position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
@@ -103,11 +103,11 @@ namespace Engine {
 				vertex.texCoords = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
 			}
 
-			vertices.push_back(vertex);
+			vertices->push_back(vertex);
 		}
 
 		m_vertexBuffer.reset(VertexBuffer::create());
-		m_vertexBuffer->setData(vertices.data(), (uint32_t)vertices.size() * sizeof(Mesh::Vertex));
+		m_vertexBuffer->setData(vertices->data(), (uint32_t)vertices->size() * sizeof(Mesh::Vertex));
 
 		Engine::BufferLayout layout = {
 			{ Engine::ShaderDataType::Float3, "a_Position" },
@@ -123,11 +123,11 @@ namespace Engine {
 		{
 			assert(mesh->mFaces[i].mNumIndices == 3 && "Must have 3 indices.");
 			Mesh::Index index = { mesh->mFaces[i].mIndices[0], mesh->mFaces[i].mIndices[1], mesh->mFaces[i].mIndices[2] };
-			indices.push_back(index);
+			indices->push_back(index);
 		}
 
 		m_indexBuffer.reset(IndexBuffer::create());
-		m_indexBuffer->setData(indices.data(), (uint32_t)indices.size() * sizeof(Mesh::Index));
+		m_indexBuffer->setData(indices->data(), (uint32_t)indices->size() * sizeof(Mesh::Index));
 
 		// process materials
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
@@ -190,7 +190,7 @@ namespace Engine {
 		*/
 		// return a mesh object created from the extracted mesh data
 
-		return Mesh(m_vertexBuffer, m_indexBuffer, textures_loaded);
+		return Mesh(vertices,indices,m_vertexBuffer, m_indexBuffer, textures_loaded);
 	}
 
 

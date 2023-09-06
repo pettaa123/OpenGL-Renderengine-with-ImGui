@@ -4,8 +4,6 @@
 namespace TextureMapping {
 
 	MappingDataSet::MappingDataSet() :
-		model(nullptr),
-		optimizationResult(nullptr),
 		drawImagePoints(false),
 		visualizeModelPoints(false),
 		cropImage(false),
@@ -14,8 +12,8 @@ namespace TextureMapping {
 		imageColumn(0)
 	{}
 
-		/// Crops the image.
-		void MappingDataSet::performCropping() {
+	/// Crops the image.
+	void MappingDataSet::performCropping() {
 		prepareImagePolygon();
 
 		// Don't do this anymore. Now that an image can be cut at arbitrary points, image points can be outside the defined polygon.
@@ -30,7 +28,7 @@ namespace TextureMapping {
 
 		imagePolygonPointsInUV.reserve(imagePolygonPointsInPixels.size());
 		for (int i = 0; i < imagePolygonPointsInPixels.size(); i++) {
-			imagePolygonPointsInUV[i] = glm::vec2(imagePolygonPointsInPixels[i].x / projectionImage.width, imagePolygonPointsInPixels[i].y / projectionImage.height);
+			imagePolygonPointsInUV.push_back(glm::vec2(imagePolygonPointsInPixels[i].x / projectionImage.width, imagePolygonPointsInPixels[i].y / projectionImage.height));
 		}
 		imagePolygonPointsInUV = imagePolygonPointsInUV;
 	}

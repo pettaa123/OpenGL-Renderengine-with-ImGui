@@ -7,9 +7,9 @@ namespace TextureMapping{
 
     /// Data container for vertex information.
     struct VertexInformation {
-        int vertexIdx;
-        glm::vec3 vertex;
-        glm::vec2 texCoord;
+        int vertexIdx=0;
+        glm::vec3 vertex{ 0.0f };
+        glm::vec2 texCoord{ 0.0f };
         std::vector<glm::vec2> underlayingTexCoords;
     };
 }

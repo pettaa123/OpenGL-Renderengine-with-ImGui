@@ -1,12 +1,12 @@
 #pragma once
 
+#define CL_TARGET_OPENCL_VERSION 220
+
 #include <algorithm>
 #include <fstream>
 #include <filesystem>
 #include "texturemapping/hardwareacceleration/base/accelerator.h"
-#include "texturemapping/mapping/core/model.h"
 #include "compute/include/boost/compute/core.hpp"
-#include "texturemapping/core/intrinsics.h"
 #include "texturemapping/core/color4.h"
 
 

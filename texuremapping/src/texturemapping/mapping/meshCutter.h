@@ -1,6 +1,6 @@
 #pragma once
 
-#include "texturemapping/mapping/core/model.h"
+#include "texturemapping/modeling/model.h"
 #include "texturemapping/core/mappingDataSet.h"
 #include "texturemapping/mapping/core/triangleReplacement.h"
 #include "texturemapping/mapping/core/intersectionResult.h"

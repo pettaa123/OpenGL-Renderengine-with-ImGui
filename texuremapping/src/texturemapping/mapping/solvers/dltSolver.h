@@ -4,7 +4,7 @@
 
 namespace TextureMapping {
 
-	class DLTSolver : Solver {
+	class DLTSolver : public Solver {
 
 	private:
 		bool m_normalizeData;
@@ -14,7 +14,7 @@ namespace TextureMapping {
 		/// Solves 2D/3D correspondences by Direct Linear Transformation.
 		/// </summary>
 		DLTSolver(bool normalizeData=true);
-		//~DLTSolver();
+		~DLTSolver() override {};
 
 		glm::mat3x4 calculateProjectionMatrix(const glm::mat3& intrinsics, const std::vector<glm::vec3>& modelPoints, const std::vector<glm::vec2>& imagePoints) const override;
 

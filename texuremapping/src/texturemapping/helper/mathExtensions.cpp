@@ -1,7 +1,6 @@
 #include "texturemapping/helper/mathExtensions.h"
 
 
-
 namespace TextureMapping {
 
     glm::vec3 MathExtension::calculateCentroid(const std::vector<glm::vec3>& vectors) {
@@ -47,7 +46,7 @@ namespace TextureMapping {
 
     /// Multiplies a 3x3 matrix by a 3x4 matrix.
     glm::mat3x4 MathExtension::mult(const glm::mat3& matrixA, const glm::mat3x4& matrixB) {
-        glm::mat3x4 result;
+        glm::mat3x4 result(0.0f);
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 4; col++) {
                 for (int i = 0; i < 3; i++) {
@@ -60,7 +59,7 @@ namespace TextureMapping {
 
     /// Multiplies a 3x4 matrix by a 4x4 matrix.
     glm::mat3x4 MathExtension::mult(const glm::mat3x4& matrixA, const glm::mat4& matrixB) {
-        glm::mat3x4 result;
+        glm::mat3x4 result(0.0f);
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 4; col++) {
                 for (int i = 0; i < 4; i++) {
@@ -71,10 +70,20 @@ namespace TextureMapping {
         return result;
     }
 
+    glm::vec2 MathExtension::mult(const glm::mat3x4& matrix, const glm::vec3& vector) {
+        float x = matrix[0][0] * vector.x + matrix[0][1] * vector.y + matrix[0][2] * vector.z + matrix[0][3];
+        float y = matrix[1][0] * vector.x + matrix[1][1] * vector.y + matrix[1][2] * vector.z + matrix[1][3];
+        float w = matrix[2][0] * vector.x + matrix[2][1] * vector.y + matrix[2][2] * vector.z + matrix[2][3];
+        x /= w;
+        y /= w;
+
+        glm::vec2 result(x, y);
+        return result;
+    }
+
 
     std::vector<float> MathExtension::toVector(const glm::mat3x4 & matrix) {
-        std::vector<float> values;
-        values.reserve(12);
+        std::vector<float> values(12);
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 4; x++) {
                 values[x + 4 * y] = matrix[y][x];

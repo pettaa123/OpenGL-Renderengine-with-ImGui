@@ -4,7 +4,7 @@
 #include <memory>
 #include <execution>
 #include <format>
-#include "texturemapping/mapping/core/model.h"
+#include "texturemapping/modeling/model.h"
 #include "texturemapping/core/mappingDataSet.h"
 #include "texturemapping/mapping/core/projectionResult.h"
 #include "texturemapping/hardwareacceleration/base/graphicsDevice.h"
@@ -24,20 +24,22 @@ namespace TextureMapping {
 		//std::vector<float> getDefaultTexCoords() { return m_defaultTexCoords; };
 		//int getNumberOfTriangles() { return m_numberOfTriangles; };
 
-		Accelerator(const TextureMapping::Model& model) {
+		Accelerator(const Model& model) {
 			m_vertices = generateVertexCache(model);
 			m_defaultTexCoords = generateDefaultTextureCoordinates(model);
-			m_numberOfTriangles = (uint32_t)m_vertices.size() / 9;
+			m_numberOfTriangles = m_vertices.size() / 9;
 		}
 
+		virtual ~Accelerator() = default;
 
 		std::vector<float> m_vertices;
 		std::vector<float> m_defaultTexCoords;
-		uint32_t m_numberOfTriangles;
+		size_t m_numberOfTriangles;
 
 
 	public:
 
+		static std::shared_ptr<Accelerator> create(const Model& model);
 		static std::vector<GraphicsDevice> getGraphicsDevices() {
 
 			std::vector<boost::compute::device> devices = boost::compute::system::devices();
@@ -102,7 +104,6 @@ namespace TextureMapping {
 
 		/// Projects the image.
 		virtual ProjectionResult projectImage(MappingDataSet& correspondence, std::vector<float>& projectionMatrix, int dataSetID) = 0;
-
 		/// Undistorts the image.
 		virtual void undistortImage(STBimage& image, const Intrinsics& intrinsicParameters) = 0;
 
@@ -146,11 +147,7 @@ namespace TextureMapping {
 		// TODO: This method exists twice (also in the Projector)
 		/// Generates default texture coordinates.
 		std::vector<float> generateDefaultTextureCoordinates(const TextureMapping::Model& model) const {
-			std::vector<float> textureCoordinates(model.getVerticesCount());
-			// TODO: Use Parallel here?
-			for (size_t i = 0; i < textureCoordinates.size(); i++) {
-				textureCoordinates[i] = -1000;
-			}
+			std::vector<float> textureCoordinates(model.getVerticesCount()*2,-1000);
 			return textureCoordinates;
 		}
 

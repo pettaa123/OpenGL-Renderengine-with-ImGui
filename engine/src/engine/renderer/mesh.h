@@ -7,7 +7,7 @@
 #include "engine/renderer/shader.h"
 #include "engine/renderer/vertexArray.h"
 #include "engine/renderer/buffer.h"
-#include "engine/renderer/Texture.h"
+#include "engine/renderer/texture.h"
 
 namespace Engine {
 
@@ -42,7 +42,7 @@ namespace Engine {
 
 		static_assert(sizeof(Index) == 3 * sizeof(uint32_t));
 
-		Mesh(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer, std::vector<std::shared_ptr<Texture2D>> textures);
+		Mesh(std::shared_ptr<std::vector<Vertex>> vertices, std::shared_ptr<std::vector<Index>> indices,  std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer, std::vector<std::shared_ptr<Texture2D>> textures);
 		Mesh(const std::string& filename);
 		~Mesh();
 
@@ -50,9 +50,9 @@ namespace Engine {
 
 		uint32_t getIndicesCount() { return (uint32_t)m_indexBuffer->getCount();}
 
-		uint32_t getVerticesCount() const { return (uint32_t)m_vertices.size(); }
+		uint32_t getVerticesCount() const { return (uint32_t)m_vertices->size(); }
 
-		const std::vector<Vertex>& getVertices() const { return m_vertices; }
+		const std::vector<Vertex>& getVertices() const { return *m_vertices; }
 
 		std::shared_ptr<VertexArray> getVertexArray() { return m_VAO;}
 
@@ -61,8 +61,8 @@ namespace Engine {
 		void draw(Shader& shader);
 
 	private:
-		std::vector<Vertex> m_vertices;
-		std::vector<Index> m_indices;
+		std::shared_ptr<std::vector<Vertex>> m_vertices;
+		std::shared_ptr<std::vector<Index>> m_indices;
 		std::shared_ptr<VertexBuffer> m_vertexBuffer;
 		std::shared_ptr<IndexBuffer> m_indexBuffer;
 

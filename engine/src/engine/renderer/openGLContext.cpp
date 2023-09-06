@@ -23,6 +23,10 @@ namespace Engine {
 		Log::info(std::format("  Vendor: {0}", (const char*)glGetString(GL_VENDOR)));
 		Log::info(std::format("  Renderer: {0}", (const char*)glGetString(GL_RENDERER)));
 		Log::info(std::format("  Version: {0}", (const char*)glGetString(GL_VERSION)));
+		int maxTexSize;
+		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
+		Log::info(std::format("  Max Texture Size: {0}", maxTexSize));
+		//maximum edge length of a texture.
 
 		if (GLVersion.major < 4 || (GLVersion.major == 4 && GLVersion.minor < 5))
 			Log::error("Engine requires at least OpenGL version 4.5!");

@@ -132,7 +132,8 @@ bool isPointInsidePolygon(global float* polygonPoints, int numberOfPoints, float
 	return isInside;
 }
 
-kernel void project(global float* vertices,
+kernel void project(
+	global float* vertices,
 	global float* projectionMatrix,
 	global float* polygonPoints,
 	global float* modelPoints,
@@ -144,19 +145,28 @@ kernel void project(global float* vertices,
 	int imageHeight)
 	//int IsDLT) 
 	{
-		
 	//global float* pixelMinCriterion,
 	//global float* pixelMaxCriterion,
 
-	int triangleId = get_global_id(0);
-	int vertexId = triangleId * 9;
-
+	size_t triangleId = get_global_id(0);
+	size_t vertexId = triangleId * 9;
 	float3 triangleVertices[3] = { { vertices[vertexId], vertices[vertexId + 1], vertices[vertexId + 2] },
 								   { vertices[vertexId + 3], vertices[vertexId + 4], vertices[vertexId + 5] },
 								   { vertices[vertexId + 6], vertices[vertexId + 7], vertices[vertexId + 8] } };
+								   						
 	
 	bool isTriangleValid = false;
-
+	
+	//printf(" proj: %f \n",projectionMatrix[0]);
+	//printf(" pp: %f \n",polygonPoints[0]);
+	//printf(" mp: %f \n",modelPoints[0]);	
+	//printf(" tc: %f \n",textureCoordinates[0]);	
+	//
+	//printf(" imageWidth: %d \n",imageWidth);
+	//printf(" imageHeight: %d \n",imageHeight);
+	//printf(" numberOfPoints: %zu \n",numberOfPoints);	
+	//printf(" numberOfModelPoints: %zu \n",numberOfModelPoints);	
+	
 	for (int i = 0; i < numberOfModelPoints; i++) {
 		int idx = i * 3;
 		float3 modelPoint = { modelPoints[idx], modelPoints[idx + 1], modelPoints[idx + 2] };
@@ -172,11 +182,11 @@ kernel void project(global float* vertices,
 			break;
 		}
 	}
-
+	
 	if (!isTriangleValid) {
 		return;
 	}
-
+	
 	isTriangleValid = false;
 	float2 pixelCoords[ 3];
 	for (int i = 0; i < 3; i++) {
@@ -203,10 +213,10 @@ kernel void project(global float* vertices,
 	}
 	
 	if (isTriangleValid) {
-		int texStartIdx = triangleId * 6;
+		size_t texStartIdx = triangleId * 6;
 		if (textureCoordinates[texStartIdx] == -1000) {
 			for (int i = 0; i < 3; i++) {
-				int idx = texStartIdx + 2 * i;
+				size_t idx = texStartIdx + 2 * i;
 				float uvX = pixelCoords[i].x / imageWidth;
 				float uvY = pixelCoords[i].y / imageHeight;
 				textureCoordinates[idx] = uvX;

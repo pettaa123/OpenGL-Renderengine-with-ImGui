@@ -1,4 +1,4 @@
-#include "texturemapping/mapping/core/model.h"
+#include "texturemapping/modeling/model.h"
 
 namespace TextureMapping {
 

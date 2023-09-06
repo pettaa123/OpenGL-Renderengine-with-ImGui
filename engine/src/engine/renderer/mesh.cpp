@@ -44,7 +44,9 @@ namespace Engine {
 	};
 
 	// constructor
-	Mesh::Mesh(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer, std::vector<std::shared_ptr<Texture2D>> textures):
+	Mesh::Mesh(std::shared_ptr<std::vector<Vertex>> vertices, std::shared_ptr<std::vector<Index>> indices, std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer, std::vector<std::shared_ptr<Texture2D>> textures):
+		m_vertices(vertices),
+		m_indices(indices),
 		m_vertexBuffer(vertexBuffer),
 		m_indexBuffer(indexBuffer),
 		textures(textures)
@@ -75,10 +77,10 @@ namespace Engine {
 		assert(mesh->HasPositions() && "Meshes require positions.");
 		assert(mesh->HasNormals() && "Meshes require normals.");
 
-		m_vertices.reserve(mesh->mNumVertices);
+		m_vertices->reserve(mesh->mNumVertices);
 
 		// Extract vertices from model
-		for (size_t i = 0; i < m_vertices.capacity(); i++)
+		for (size_t i = 0; i < m_vertices->capacity(); i++)
 		{
 			Vertex vertex;
 			vertex.position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
@@ -92,10 +94,10 @@ namespace Engine {
 
 			if (mesh->HasTextureCoords(0))
 				vertex.texCoords = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
-			m_vertices.push_back(vertex);
+			m_vertices->push_back(vertex);
 		}
 		m_vertexBuffer.reset(VertexBuffer::create());
-		m_vertexBuffer->setData(m_vertices.data(), (uint32_t)(m_vertices.size() * sizeof(Vertex)));
+		m_vertexBuffer->setData(m_vertices->data(), (uint32_t)(m_vertices->size() * sizeof(Vertex)));
 
 		Engine::BufferLayout layout = {
 			{ Engine::ShaderDataType::Float3, "a_Position" },
@@ -107,26 +109,25 @@ namespace Engine {
 		m_vertexBuffer->setLayout(layout);
 
 		// Extract indices from model
-		m_indices.reserve(mesh->mNumFaces);
-		for (size_t i = 0; i < m_indices.capacity(); i++)
+		m_indices->reserve(mesh->mNumFaces);
+		for (size_t i = 0; i < m_indices->capacity(); i++)
 		{
 			assert(mesh->mFaces[i].mNumIndices == 3 && "Must have 3 indices.");
-			m_indices.push_back({ mesh->mFaces[i].mIndices[0], mesh->mFaces[i].mIndices[1], mesh->mFaces[i].mIndices[2] });
+			m_indices->push_back({ mesh->mFaces[i].mIndices[0], mesh->mFaces[i].mIndices[1], mesh->mFaces[i].mIndices[2] });
 		}
 
 		m_indexBuffer.reset(IndexBuffer::create());
-		m_indexBuffer->setData(m_indices.data(), (uint32_t)(m_indices.size() * sizeof(Index)));
+		m_indexBuffer->setData(m_indices->data(), (uint32_t)(m_indices->size() * sizeof(Index)));
 
 		m_VAO = Engine::VertexArray::create();
 		m_VAO->addVertexBuffer(m_vertexBuffer);
 		m_VAO->setIndexBuffer(m_indexBuffer);
-
-		
 	}
+
 
 	Mesh::~Mesh()
-	{
-	}
+	{}
+
 
 	void Mesh::setupMesh()
 	{

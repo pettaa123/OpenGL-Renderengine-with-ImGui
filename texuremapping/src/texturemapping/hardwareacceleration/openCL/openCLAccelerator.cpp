@@ -1,11 +1,12 @@
 #include "texturemapping/hardwareacceleration/openCL/openCLAccelerator.h"
 #include "texturemapping/core/intrinsics.h"
 #include <boost/compute/utility/dim.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace TextureMapping {
 
 
-	OpenCLAccelerator::OpenCLAccelerator(boost::compute::device device,const TextureMapping::Model& model) :
+	OpenCLAccelerator::OpenCLAccelerator(boost::compute::device device, const TextureMapping::Model& model) :
 		Accelerator{ model },
 		m_device(device)
 	{
@@ -40,8 +41,8 @@ namespace TextureMapping {
 		//      send the sensor normal and the sensor size in real world to the kernel.
 		//      The kernel will move the normal to each pixel of the sensor and perform a ray casting towards the model.
 
-		int imageWidth = dataSet.projectionImage.width;
-		int imageHeight = dataSet.projectionImage.height;
+		cl_int imageWidth = dataSet.projectionImage.width;
+		cl_int imageHeight = dataSet.projectionImage.height;
 
 		// TODO: Evaluate if this is really necessary. If you experience problems try uncommenting this
 		// Don't forget to uncomment it also in line 90/91 and in the kernel
@@ -58,64 +59,70 @@ namespace TextureMapping {
 
 		//NIMMT TCP4 anstatt modelpoints als Übergabe für die Auswahl der STL vertices in der Projection.cl
 		//float[] TCP;
-		size_t numberOfModelPoints = dataSet.modelPoints.size();
+		int numberOfModelPoints = (int)dataSet.modelPoints.size();
+		float* data = glm::value_ptr(dataSet.modelPoints[0]);
 		//to floats
-		std::vector<float> modelPoints(numberOfModelPoints * 3);
-		for (auto& v : dataSet.modelPoints) {
-			modelPoints.push_back(v.x);
-			modelPoints.push_back(v.y);
-			modelPoints.push_back(v.z);
-		}
+		std::vector<float> modelPoints(data, data + numberOfModelPoints * 3);
 
-		size_t numberOfPoints = dataSet.imagePolygonPointsInPixels.size();
-		std::vector<float> polygonPoints(numberOfPoints);
-		for (auto& v : dataSet.imagePolygonPointsInPixels) {
-			modelPoints.push_back(v.x);
-			modelPoints.push_back(v.y);
-		}
 
+
+		int numberOfPoints = (int)dataSet.imagePolygonPointsInPixels.size();
+		data = glm::value_ptr(dataSet.imagePolygonPointsInPixels[0]);
+		//to floats
+		std::vector<float> polygonPoints(data, data + numberOfModelPoints * 2);
 
 
 		std::vector<float> textureCoordinates(m_defaultTexCoords);
 
-		// create memory buffers for the input and output
-		std::vector< boost::compute::buffer> buffers;
-		buffers.push_back(boost::compute::buffer(m_context, m_vertices.size() * sizeof(float)));
-		buffers.push_back(boost::compute::buffer(m_context, projectionMatrix.size() * sizeof(float)));
-		buffers.push_back(boost::compute::buffer(m_context, polygonPoints.size() * sizeof(float)));
-		buffers.push_back(boost::compute::buffer(m_context, modelPoints.size() * sizeof(float)));
-		buffers.push_back(boost::compute::buffer(m_context, textureCoordinates.size() * sizeof(float)));
-		buffers.push_back(boost::compute::buffer(m_context, sizeof(numberOfPoints)));
-		buffers.push_back(boost::compute::buffer(m_context, sizeof(numberOfModelPoints)));
-		buffers.push_back(boost::compute::buffer(m_context, sizeof(imageWidth)));
-		buffers.push_back(boost::compute::buffer(m_context, sizeof(imageHeight)));
+		try {
+			// create memory buffers for the input and output
+			std::vector< boost::compute::buffer> buffers;
 
-		// set the kernel arguments
-		uint32_t a = 0;
-		for (auto& b : buffers) {
-			m_rayCastingKernel.set_arg(a++, b);
+			buffers.push_back(boost::compute::buffer(m_context, m_vertices.size() * sizeof(float), CL_MEM_READ_ONLY));
+			buffers.push_back(boost::compute::buffer(m_context, projectionMatrix.size() * sizeof(float), CL_MEM_READ_ONLY));
+			buffers.push_back(boost::compute::buffer(m_context, polygonPoints.size() * sizeof(float), CL_MEM_READ_ONLY));
+			buffers.push_back(boost::compute::buffer(m_context, modelPoints.size() * sizeof(float), CL_MEM_READ_ONLY));
+			buffers.push_back(boost::compute::buffer(m_context, textureCoordinates.size() * sizeof(float), CL_MEM_READ_WRITE));
+
+			// set the kernel arguments
+			uint32_t a = 0;
+			for (auto& b : buffers) {
+				m_rayCastingKernel.set_arg(a++, b);
+			}
+			m_rayCastingKernel.set_arg(a++, numberOfPoints);
+			m_rayCastingKernel.set_arg(a++, numberOfModelPoints);
+			m_rayCastingKernel.set_arg(a++, imageWidth);
+			m_rayCastingKernel.set_arg(a++, imageHeight);
+
+			boost::compute::command_queue queue(m_context, m_device);
+
+			// create a command queue
+
+			// write the data from to the device
+			queue.enqueue_write_buffer(buffers[0], 0, buffers[0].size(), m_vertices.data());
+			queue.enqueue_write_buffer(buffers[1], 0, buffers[1].size(), projectionMatrix.data());
+			queue.enqueue_write_buffer(buffers[2], 0, buffers[2].size(), polygonPoints.data());
+			queue.enqueue_write_buffer(buffers[3], 0, buffers[3].size(), modelPoints.data());
+			queue.enqueue_write_buffer(buffers[4], 0, buffers[4].size(), textureCoordinates.data());
+
+			size_t global_size = m_numberOfTriangles;
+			// run the add kernel
+			queue.enqueue_1d_range_kernel(m_rayCastingKernel, 0, global_size, 0);
+			queue.finish();
+
+			// transfer results back to the host array 'c'
+			queue.enqueue_read_buffer(buffers[4], 0, buffers[4].size(), textureCoordinates.data());
+
+			//for (size_t i = 0; i < textureCoordinates.size(); i++)
+			//{
+			//	if (textureCoordinates[i] != -1000)
+			//		Log::info(std::format(" {} = {} ", i, textureCoordinates[i]));
+			//}
 		}
 
-		// create a command queue
-		boost::compute::command_queue queue(m_context, m_device);
-
-		// write the data from to the device
-		queue.enqueue_write_buffer(buffers[0], 0, buffers[0].size(), m_vertices.data());
-		queue.enqueue_write_buffer(buffers[1], 0, buffers[1].size(), projectionMatrix.data());
-		queue.enqueue_write_buffer(buffers[2], 0, buffers[2].size(), polygonPoints.data());
-		queue.enqueue_write_buffer(buffers[3], 0, buffers[3].size(), modelPoints.data());
-		queue.enqueue_write_buffer(buffers[4], 0, buffers[4].size(), textureCoordinates.data());
-		queue.enqueue_write_buffer(buffers[5], 0, buffers[5].size(), &numberOfPoints);
-		queue.enqueue_write_buffer(buffers[6], 0, buffers[6].size(), &numberOfModelPoints);
-		queue.enqueue_write_buffer(buffers[7], 0, buffers[7].size(), &imageWidth);
-		queue.enqueue_write_buffer(buffers[8], 0, buffers[8].size(), &imageHeight);
-
-		// run the add kernel
-		queue.enqueue_1d_range_kernel(m_rayCastingKernel, 0, 4, 0);
-
-		// transfer results back to the host array 'c'
-		queue.enqueue_read_buffer(buffers[4], 0, buffers[4].size(), textureCoordinates.data());
-
+		catch (boost::compute::opencl_error e) {
+			Log::error(e.error_string());
+		}
 
 		ProjectionResult result = filterResult(textureCoordinates);
 
@@ -130,7 +137,7 @@ namespace TextureMapping {
 	/// <param name="image">The image.</param>
 	/// <param name="intrinsicParameters">The intrinsic parameters.</param>
 	/// <param name="distortionCoefficients">The distortion coefficients.</param>
-	void OpenCLAccelerator::undistortImage(STBimage& image,const Intrinsics& intrinsics)
+	void OpenCLAccelerator::undistortImage(STBimage& image, const Intrinsics& intrinsics)
 	{
 		uint32_t width = image.width;
 		uint32_t height = image.height;
@@ -148,7 +155,7 @@ namespace TextureMapping {
 
 
 		boost::compute::image_format imageformat(boost::compute::image_format::channel_order::rgba, boost::compute::image_format::channel_data_type::unsigned_int8);
-		boost::compute::image2d imageIn(m_context,width,height,imageformat, CL_MEM_READ_ONLY); //new ComputeImage2D(_context, ComputeMemoryFlags.WriteOnly, imageFormat, width, height, 0, IntPtr.Zero),
+		boost::compute::image2d imageIn(m_context, width, height, imageformat, CL_MEM_READ_ONLY); //new ComputeImage2D(_context, ComputeMemoryFlags.WriteOnly, imageFormat, width, height, 0, IntPtr.Zero),
 		boost::compute::image2d imageOut(m_context, width, height, imageformat, CL_MEM_WRITE_ONLY);
 
 		std::vector< boost::compute::buffer> buffers;
@@ -174,11 +181,10 @@ namespace TextureMapping {
 			Log::error(e.error_string());
 		}
 		// create a command queue
-		boost::compute::command_queue queue(m_context, m_device, boost::compute::command_queue::enable_profiling);
-		try {		
+		boost::compute::command_queue queue(m_context, m_device);
+		try {
 			queue.enqueue_write_image(imageIn, imageIn.origin(), imageIn.size(), image.data.get());
 			// write the data from to the device
-			std::cout << buffers[0].size();
 			queue.enqueue_write_buffer(buffers[0], 0, buffers[0].size(), intrinsicValues);
 			queue.enqueue_write_buffer(buffers[1], 0, buffers[1].size(), invIntrinsicValues);
 			queue.enqueue_write_buffer(buffers[2], 0, buffers[2].size(), intrinsics.distortionCoeffs().data());
@@ -251,28 +257,23 @@ namespace TextureMapping {
 			m_context = boost::compute::context(m_device);
 			program = boost::compute::program::create_with_source_file(s.string(), m_context);
 			program.build();
+			m_rayCastingKernel = program.create_kernel("project");
 		}
 		catch (boost::compute::opencl_error e) {
 			Log::error(e.error_string());
 		}
-		//m_rayCastingKernel = program.create_kernel("projection");
-		auto k = program.create_kernel("project");
 
 		s = resourcePrefix / "ImageProcessing.cl";
 		try {
 			program = boost::compute::program::create_with_source_file(s.string(), m_context);
 			program.build();
-		}
-		catch (boost::compute::opencl_error e) {
-			Log::error(e.error_string());
-		}
-		try {
 			m_undistortKernel = program.create_kernel("undistortImage");
 			m_cropKernel = program.create_kernel("cropImage");
 		}
 		catch (boost::compute::opencl_error e) {
 			Log::error(e.error_string());
 		}
+
 	}
 }
 

@@ -13,17 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Optimization">
-      <UniqueIdentifier>{1be58aba-e2b6-46a3-92cb-913250598340}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\mapping">
       <UniqueIdentifier>{281cda8b-a376-41b4-950c-7a574b162a41}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\core">
       <UniqueIdentifier>{af0f2dd8-94a7-47ad-becb-85ba73186739}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\mapping\solver">
-      <UniqueIdentifier>{bdeb5601-1bba-4503-825d-c26571e27501}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\import">
       <UniqueIdentifier>{51be6bb0-37af-4e5b-b618-71cdc409925c}</UniqueIdentifier>
@@ -46,6 +40,15 @@
     <Filter Include="Source Files\hardwareacceleration\openCL">
       <UniqueIdentifier>{e239748b-355d-4ebd-9b17-62a4e161c798}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\modeling">
+      <UniqueIdentifier>{53324343-0e95-40dd-9f45-aa80f25c292d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\mapping\solvers">
+      <UniqueIdentifier>{bdeb5601-1bba-4503-825d-c26571e27501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\optimization">
+      <UniqueIdentifier>{1be58aba-e2b6-46a3-92cb-913250598340}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\texturemapping\calibratedCamera.cpp">
@@ -64,7 +67,7 @@
       <Filter>Source Files\import</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\mapping\solvers\dltSolver.cpp">
-      <Filter>Source Files\mapping\solver</Filter>
+      <Filter>Source Files\mapping\solvers</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\helper\mathExtensions.cpp">
       <Filter>helper</Filter>
@@ -87,11 +90,23 @@
     <ClCompile Include="src\texturemapping\mapping\core\ray2.cpp">
       <Filter>Source Files\mapping\core</Filter>
     </ClCompile>
-    <ClCompile Include="src\texturemapping\mapping\core\model.cpp">
-      <Filter>Source Files\mapping\core</Filter>
-    </ClCompile>
     <ClCompile Include="src\texturemapping\mapping\imageToModelProjector.cpp">
       <Filter>Source Files\mapping</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\modeling\textureDescription.cpp">
+      <Filter>Source Files\modeling</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\modeling\model.cpp">
+      <Filter>Source Files\modeling</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\modeling\texture.cpp">
+      <Filter>Source Files\modeling</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\mapping\solvers\solver.cpp">
+      <Filter>Source Files\mapping\solvers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\hardwareacceleration\base\accelerator.cpp">
+      <Filter>Source Files\hardwareacceleration\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -99,13 +114,13 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\optimization\errorDescription.h">
-      <Filter>Source Files\Optimization</Filter>
+      <Filter>Source Files\optimization</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\optimization\optimizationResult.h">
-      <Filter>Source Files\Optimization</Filter>
+      <Filter>Source Files\optimization</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\optimization\optimizationParameter.h">
-      <Filter>Source Files\Optimization</Filter>
+      <Filter>Source Files\optimization</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\core\mappingDataSet.h">
       <Filter>Source Files\core</Filter>
@@ -171,10 +186,10 @@
       <Filter>Source Files\mapping\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\solvers\solver.h">
-      <Filter>Source Files\mapping\solver</Filter>
+      <Filter>Source Files\mapping\solvers</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\solvers\dltSolver.h">
-      <Filter>Source Files\mapping\solver</Filter>
+      <Filter>Source Files\mapping\solvers</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\helper\mathExtensions.h">
       <Filter>helper</Filter>
@@ -194,11 +209,26 @@
     <ClInclude Include="src\texturemapping\mapping\core\ray2.h">
       <Filter>Source Files\mapping\core</Filter>
     </ClInclude>
-    <ClInclude Include="src\texturemapping\mapping\core\model.h">
-      <Filter>Source Files\mapping\core</Filter>
-    </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\imageToModelProjector.h">
       <Filter>Source Files\mapping</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\modeling\textureDescription.h">
+      <Filter>Source Files\modeling</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\modeling\model.h">
+      <Filter>Source Files\modeling</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\modeling\texture.h">
+      <Filter>Source Files\modeling</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\textureMapper.h">
+      <Filter>Source Files\mapping</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\texturemapping.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\optimization\optimizer.h">
+      <Filter>Source Files\optimization</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
