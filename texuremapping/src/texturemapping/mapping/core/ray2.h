@@ -21,7 +21,7 @@ namespace TextureMapping {
 		/// </summary>
 		/// <param name="position">The position.</param>
 		/// <param name="direction">The direction.</param>
-		Ray2(glm::vec2 origin, glm::vec2 direction);
+		Ray2(glm::vec2 origin = glm::vec2(0.0f), glm::vec2 direction = glm::vec2(0.0f));
 
 		inline glm::vec2 getOrigin() const { return m_origin; };
 		inline glm::vec2 getDirection() const { return m_direction; };

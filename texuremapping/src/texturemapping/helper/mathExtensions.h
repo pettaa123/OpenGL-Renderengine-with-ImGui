@@ -24,5 +24,11 @@ namespace TextureMapping {
         static glm::vec2 mult(const glm::mat3x4& matrix, const glm::vec3& vector);
 
         static std::vector<float> toVector(const glm::mat3x4& matrix);
+
+        /// Determines whether a 2D point is within a triangle consisting of three vertices.
+        static bool isPointInsideTriangle(const glm::vec2& point, const glm::vec2& v1, const glm::vec2& v2, const glm::vec2& v3);
+
+        /// Returns a boolean according to the side Point 3 lies realtive to the line made up by Point 1 and Point 2.
+        static bool pointRelativeToSide(const glm::vec2& p1, const glm::vec2& p2, const glm::vec2& p3);
     };
 }

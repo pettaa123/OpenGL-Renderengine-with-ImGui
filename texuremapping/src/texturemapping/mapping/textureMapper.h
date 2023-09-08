@@ -36,7 +36,7 @@ namespace TextureMapping {
 		/// <param name="intrinsic">The intrinsic.</param>
 		/// <param name="loadingObserver">The loading observer.</param>
 		/// <returns></returns>
-		std::optional<MergingResult> project(const glm::mat3& intrinsics, const std::vector<MappingDataSet>& dataSets, Model& model)
+		std::optional<MergingResult> project(const glm::mat3& intrinsics,std::vector<MappingDataSet>& dataSets, Model& model)
 		{
 
 			//Berechnung camToObj
@@ -97,7 +97,6 @@ namespace TextureMapping {
 
 			for (size_t i = 0; i < dataSets.size(); i++)
 			{
-				MappingDataSet dataSet = dataSets[i];
 				glm::mat3x4 projectionMatrix;
 
 				//if (parameters.UseOptimization)
@@ -205,7 +204,7 @@ namespace TextureMapping {
 					//	//Berechnet Fehler in Abstand[Pixeln] von auf textur gemappte Modelpunkte via projektionsmatrix 
 					//}
 					//ToDo:
-					dataSet.optimizationResult = Optimizer::analyseProjectionMatrix(model, dataSet, projectionMatrix);
+					dataSets[i].optimizationResult = Optimizer::analyseProjectionMatrix(model, dataSets[i], projectionMatrix);
 
 				}
 
@@ -216,7 +215,7 @@ namespace TextureMapping {
 
 				// PNP: Hand over the calculated sensor normal to the projector
 				//Errechnet die Korrespondenz zwischen Textur und STL und speichert das gefilterte Ergebnis in einem Tupel aus Texturkoordinaten und dazugehörigen TriangleID
-				projector.projectImage(dataSet, (int)i, projectionMatrix);
+				projector.projectImage(dataSets[i], (int)i, projectionMatrix);
 
 			}
 

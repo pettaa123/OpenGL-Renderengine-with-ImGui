@@ -35,7 +35,7 @@ namespace TextureMapping {
 	}
 
 	/// Projects the image.
-	ProjectionResult OpenCLAccelerator::projectImage(MappingDataSet& dataSet, std::vector<float>& projectionMatrix, int dataSetID)
+	ProjectionResult OpenCLAccelerator::projectImage(const MappingDataSet& dataSet, std::vector<float>& projectionMatrix, int dataSetID)
 	{
 		// PNP: Use the ray casting kernel. Remove the projection matrix below and
 		//      send the sensor normal and the sensor size in real world to the kernel.
@@ -60,7 +60,7 @@ namespace TextureMapping {
 		//NIMMT TCP4 anstatt modelpoints als Übergabe für die Auswahl der STL vertices in der Projection.cl
 		//float[] TCP;
 		int numberOfModelPoints = (int)dataSet.modelPoints.size();
-		float* data = glm::value_ptr(dataSet.modelPoints[0]);
+		const float* data = glm::value_ptr(dataSet.modelPoints[0]);
 		//to floats
 		std::vector<float> modelPoints(data, data + numberOfModelPoints * 3);
 

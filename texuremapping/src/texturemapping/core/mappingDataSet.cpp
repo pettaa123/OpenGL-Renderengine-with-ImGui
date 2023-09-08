@@ -55,7 +55,7 @@ namespace TextureMapping {
 		}
 
 		if (convexHull) {
-			imagePolygonPointsInPixels = HelperLib::PolygonHelper::getConvexHull(polygonPoints);
+			imagePolygonPointsInPixels = PolygonHelper::getConvexHull(polygonPoints);
 		}
 		else {
 			imagePolygonPointsInPixels = polygonPoints;

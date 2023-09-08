@@ -75,6 +75,11 @@ namespace TextureMapping {
 		/// Prepares the image polygon.
 		void prepareImagePolygon();
 
+		bool operator == (const MappingDataSet &rhs) const
+		{ /* your logic for comparision between "*this" and "rhs" */
+			return true;
+		}
+
 	private:
 		/// Crops the image in a simple way.
 		void cropImageSimple();

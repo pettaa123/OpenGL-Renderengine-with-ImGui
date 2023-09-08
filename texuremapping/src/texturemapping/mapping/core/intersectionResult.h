@@ -18,6 +18,15 @@ namespace TextureMapping {
 			:sideIdx(sideIdx) {
 			vertexInfo = VertexInformation(-1, intersectionVertex, intersectionTexCoords, underlayingIntersectionTexCoords);
 		}
+
+		IntersectionResult()
+			:sideIdx(-1) {
+		}
+
+		bool operator==(const IntersectionResult& rhs) const {
+			return (sideIdx == rhs.sideIdx) && (vertexInfo == rhs.vertexInfo);
+		}
+
 	};
 }
 

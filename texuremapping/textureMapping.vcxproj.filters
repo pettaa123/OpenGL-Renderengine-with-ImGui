@@ -108,6 +108,9 @@
     <ClCompile Include="src\texturemapping\hardwareacceleration\base\accelerator.cpp">
       <Filter>Source Files\hardwareacceleration\base</Filter>
     </ClCompile>
+    <ClCompile Include="src\texturemapping\mapping\core\ray3.cpp">
+      <Filter>Source Files\mapping\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\texturemapping\calibratedCamera.h">
@@ -229,6 +232,9 @@
     </ClInclude>
     <ClInclude Include="src\texturemapping\optimization\optimizer.h">
       <Filter>Source Files\optimization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texturemapping\mapping\core\ray3.h">
+      <Filter>Source Files\mapping\core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

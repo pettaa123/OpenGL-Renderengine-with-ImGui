@@ -26,7 +26,7 @@ namespace TextureMapping {
 		/// <param name="v1">Second triangle vertex.</param>
 		/// <param name="v2">Third triangle vertex.</param>
 		/// <returns></returns>
-		static BarycentricCoordinate FromTrianglePoint(const glm::vec2& p, const glm::vec2& v0, const glm::vec2& v1, const glm::vec2& v2) {
+		static BarycentricCoordinate fromTrianglePoint(const glm::vec2& p, const glm::vec2& v0, const glm::vec2& v1, const glm::vec2& v2) {
 			glm::vec2 a = v1 - v0;
 			glm::vec2 b = v2 - v0;
 			glm::vec2 c = p - v0;

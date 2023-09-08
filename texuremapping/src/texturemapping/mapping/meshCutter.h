@@ -20,8 +20,8 @@ namespace TextureMapping {
 	private:
 
 		Model m_model;
-		const std::vector<glm::vec3>& m_modelVertices;
-		const std::vector<glm::vec3>& m_modelNormals;
+		std::vector<glm::vec3> m_modelVertices;
+		std::vector<glm::vec3> m_modelNormals;
 		glm::vec2 m_defaultTexCoord;
 		bool m_isCancelled;
 
@@ -53,13 +53,13 @@ namespace TextureMapping {
 		/// </summary>
 		/// <param name="triangleReplacements">The triangle replacements.</param>
 		/// <param name="dataSets">The data sets.</param>
-		void handleTriangleReplacements(std::vector<TriangleReplacement> triangleReplacements, std::vector<MappingDataSet>& dataSets);
+		void handleTriangleReplacements(const std::vector<TriangleReplacement>& triangleReplacements);
 
 		/// <summary>
 		/// Handles the vertex and texture coordinate replacement.
 		/// </summary>
 		/// <param name="replacement">The replacement.</param>
-		void handleVertexAndTextureCoordinateReplacement(TriangleReplacement replacement);
+		void handleVertexAndTextureCoordinateReplacement(const TriangleReplacement& replacement);
 
 		/// <summary>
 		/// Adds normals for the new triangles.
@@ -93,7 +93,7 @@ namespace TextureMapping {
 		/// <param name="textureCoordinates">The texture coordinates.</param>
 		/// <param name="imagePolygon">The image polygon.</param>
 		/// <returns></returns>
-		VectorResult determineValidAndInvalidVectors(int triangleStartVertexIdx, std::vector<glm::vec2>& textureCoordinates, std::vector<glm::vec2>& imagePolygon);
+		VectorResult determineValidAndInvalidVectors(int triangleStartVertexIdx,const std::vector<glm::vec2>& textureCoordinates,const std::vector<glm::vec2>& imagePolygon);
 
 		/// <summary>
 		/// Finds valid or invalid vertices.
@@ -101,7 +101,7 @@ namespace TextureMapping {
 		/// <param name="triangleStartVertexIdx">Index of the triangle start vertex.</param>
 		/// <param name="indices">The indices.</param>
 		/// <returns></returns>
-		std::vector<glm::vec3> findVertices(int triangleStartVertexIdx, std::vector<int>& indices);
+		std::vector<glm::vec3> findVertices(int triangleStartVertexIdx, const std::vector<int>& indices);
 
 		/// <summary>
 		/// Finds the indices.
@@ -133,7 +133,7 @@ namespace TextureMapping {
 		/// <param name="sideIdx">Index of the side.</param>
 		/// <param name="vertexInfos">The vertex infos.</param>
 		/// <returns></returns>
-		std::vector<VertexInformation> getVertexInformationsFromIntersection(int sideIdx, std::vector<VertexInformation> vertexInfos);
+		std::vector<VertexInformation> getVertexInformationsFromIntersection(int sideIdx,const std::vector<VertexInformation>& vertexInfos);
 
 		/// <summary>
 		/// Gets the vertex information from intersection.
@@ -142,6 +142,6 @@ namespace TextureMapping {
 		/// <param name="vertexInfos">The vertex infos.</param>
 		/// <param name="pool">The pool.</param>
 		/// <returns></returns>
-		VertexInformation getVertexInformationFromIntersection(int sideIdx, std::vector<VertexInformation> vertexInfos, std::vector<glm::vec3>& pool);
+		VertexInformation getVertexInformationFromIntersection(int sideIdx,const std::vector<VertexInformation>& vertexInfos,const std::vector<glm::vec3>& pool);
 	};
 }

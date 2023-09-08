@@ -44,7 +44,7 @@ namespace TextureMapping {
 
 
 		/// Projects the image.
-		ProjectionResult projectImage(MappingDataSet& dataSet, std::vector<float>& projectionMatrix, int dataSetID) override;
+		ProjectionResult projectImage(const MappingDataSet& dataSet, std::vector<float>& projectionMatrix, int dataSetID) override;
 
 
 		/// <summary>

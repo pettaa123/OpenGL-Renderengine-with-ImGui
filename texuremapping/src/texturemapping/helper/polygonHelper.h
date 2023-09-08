@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <algorithm>
 
-namespace HelperLib {
+namespace TextureMapping {
 
     // Various functions for polygon mathematics.
 
@@ -20,7 +20,7 @@ namespace HelperLib {
         /// <returns>
         ///   <c>true</c> if the point is inside the polygon.
         /// </returns>
-            static bool isPointInsidePolygon(std::vector<glm::vec2>& polygonPoints, float testPointX, float testPointY) {
+            static bool isPointInsidePolygon(const std::vector<glm::vec2>& polygonPoints,const float testPointX,const float testPointY) {
                 return isPointInsidePolygon(polygonPoints, glm::vec2(testPointX, testPointY));
         }
 
@@ -33,7 +33,7 @@ namespace HelperLib {
         /// <returns>
         ///   <c>true</c> if the point is inside the polygon.
         /// </returns>
-            static bool isPointInsidePolygon(std::vector<glm::vec2>& polygonPoints, glm::vec2 testPoint) {
+            static bool isPointInsidePolygon(const std::vector<glm::vec2>& polygonPoints,const glm::vec2& testPoint) {
             float t = -1;
             for (int i = 0; i < polygonPoints.size() - 1; i++) {
                 t = t * crossProductTest(testPoint, polygonPoints[i], polygonPoints[i + 1]);

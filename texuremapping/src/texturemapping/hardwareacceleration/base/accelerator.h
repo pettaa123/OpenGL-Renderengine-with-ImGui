@@ -103,7 +103,7 @@ namespace TextureMapping {
 		*/
 
 		/// Projects the image.
-		virtual ProjectionResult projectImage(MappingDataSet& correspondence, std::vector<float>& projectionMatrix, int dataSetID) = 0;
+		virtual ProjectionResult projectImage(const MappingDataSet& correspondence, std::vector<float>& projectionMatrix, int dataSetID) = 0;
 		/// Undistorts the image.
 		virtual void undistortImage(STBimage& image, const Intrinsics& intrinsicParameters) = 0;
 

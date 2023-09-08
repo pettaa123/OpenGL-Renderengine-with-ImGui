@@ -92,4 +92,18 @@ namespace TextureMapping {
         return values;
     }
 
+    bool MathExtension::isPointInsideTriangle(const glm::vec2& point, const glm::vec2& v1, const glm::vec2& v2, const glm::vec2& v3) {
+        bool b1 = pointRelativeToSide(point, v1, v2);
+        bool b2 = pointRelativeToSide(point, v2, v3);
+        bool b3 = pointRelativeToSide(point, v3, v1);
+        bool isInside = b1 == b2 && b2 == b3;
+        return isInside;
+    }
+
+    bool MathExtension::pointRelativeToSide(const glm::vec2& p1, const glm::vec2& p2, const glm::vec2& p3) {
+        float value = (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+        bool sideValue = value < 0;
+        return sideValue;
+    }
+
 }
