@@ -53,10 +53,10 @@ namespace TextureMapping {
 		/// <param name="image">The image.</param>
 		/// <param name="intrinsicParameters">The intrinsic parameters.</param>
 		/// <param name="distortionCoefficients">The distortion coefficients.</param>
-		void undistortImage(STBimage& image,const Intrinsics& intrinsicParameters) override;
+		void undistortImage(BaseLib::STBimage& image, const Intrinsics& intrinsicParameters) override;
 
 
-		void cropImage(STBimage& image, std::vector<glm::vec2> polygon, Color4& defaultColor);
+		void cropImage(BaseLib::STBimage& image, std::vector<glm::vec2> polygon, Color4& defaultColor);
 
 
 	};

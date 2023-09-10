@@ -117,7 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\git\OpenGL-Renderengine-with-ImGui\texuremapping\src;$(SolutionDir)engine\src;$(SolutionDir)\vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\git\OpenGL-Renderengine-with-ImGui\baseLib\src;D:\git\OpenGL-Renderengine-with-ImGui\markerLib\src;D:\git\OpenGL-Renderengine-with-ImGui\texuremapping\src;$(SolutionDir)engine\src;$(SolutionDir)\vendor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -157,8 +157,14 @@
     <ClInclude Include="src\webcamLayer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\baseLib\baseLib.vcxproj">
+      <Project>{6558f4a1-9155-4657-a31c-3a55874d2a60}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\engine\engine.vcxproj">
       <Project>{57144731-ea2f-4157-abf9-a3f773f2a36d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\markerLib\markerLib.vcxproj">
+      <Project>{471eba91-c150-4b1d-b73a-aba682b34c99}</Project>
     </ProjectReference>
     <ProjectReference Include="..\texuremapping\textureMapping.vcxproj">
       <Project>{1a66036d-8df1-4007-a7eb-7b57d98a5406}</Project>

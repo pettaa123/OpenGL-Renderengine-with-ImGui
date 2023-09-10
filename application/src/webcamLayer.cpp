@@ -7,12 +7,58 @@
 #include <opencv2/videoio.hpp>
 
 #include <opencv2/highgui/highgui.hpp>
-
-
+#include "markerLib/markerFinder.h"
+#include "baseLib/stbImage.h"
+#include "markerLib/poseEstimator.h"
+#include "texturemapping/helper/mathExtensions.h"
 
 WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
-	: Layer("WebcamLayer"), m_cameraController(glm::perspectiveFov(glm::radians(45.0f), 1280.0f,720.0f, 0.1f, 10000.0f))
+	: Layer("WebcamLayer"), m_cameraController(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 10000.0f))
 {
+
+	BaseLib::STBimage stbImage;
+	std::filesystem::path markerImagePath("assets/marker/IMG_2821.jpg");
+	//std::filesystem::path markerImagePath("assets/marker/chess.jpg");
+	if (!stbImage.load(markerImagePath))
+		Log::error("error while loading markerImage");
+
+	//2 cols , 4 rows
+	std::array<std::array<float, 2>, 4> pointBuf;
+
+	MarkerLib::MarkerFinder finder;
+	uint32_t pointBufLen = (uint32_t)(sizeof(float) * pointBuf.size() * pointBuf[0].size());
+	//finder.selectAndRefineCorners(stbImage, &pointBuf[0][0],pointBufLen);
+	//for (size_t i = 0; i < pointBuf.size(); i++)
+	//{
+	//	Log::info(std::format("x: {} , y: {}", pointBuf[i][0], pointBuf[i][1]));
+	//}
+
+	std::filesystem::path intrinsicsIPhonePath("assets/marker/iphone_intrinsics.json");
+	TextureMapping::Intrinsics intrinsicsIPhone = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsIPhonePath);
+
+	MarkerLib::PoseEstimator estimator;
+	std::array<std::array<float, 3>, 4> objPtsBuf{{
+													{25,20,0},
+													{130,42.5,0},
+													{25,82.5,0},
+													{100,80,0}
+													}};
+
+	glm::mat3 rvec;
+	glm::vec3 tvec;
+	float imgArray[4][2]
+	{
+		{393.524719 ,564.781433 },
+		{3684.94727 ,1260.65320 },
+		{502.313965 ,2479.42603 },
+		{2741.11938 ,2385.86646 }
+	};
+		//&pointBuf[0][0]
+	estimator.estimate(&objPtsBuf[0][0], sizeof(float) * 12, &imgArray[0][0] , pointBufLen ,glm::value_ptr(intrinsicsIPhone.toMat3()),intrinsicsIPhone.distortionCoeffs().data(), glm::value_ptr(rvec), glm::value_ptr(tvec),(int)MarkerLib::SolvePnPMethod::SOLVEPNP_ITERATIVE);
+
+	glm::mat3x4 proj = TextureMapping::MathExtension::createProjectionMatrix(rvec, tvec);
+
+
 	//load datasets
 	std::filesystem::path dataSetsPath("assets/mapping sample data/datasets");
 	std::vector<TextureMapping::MappingDataSet> dataSets = TextureMapping::MappingDataSetImporter::loadFromJSON(dataSetsPath);
@@ -22,14 +68,14 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 
 	std::unique_ptr<TextureMapping::Model> model = std::make_unique<TextureMapping::Model>("assets/models/TruTh/TruTh_Mesh Creation.1_1.stl");
 
-	for(TextureMapping::MappingDataSet& d : dataSets) {
+	for (TextureMapping::MappingDataSet& d : dataSets) {
 		d.projectionImage = d.alteredImage.has_value() ? d.alteredImage.value() : d.loadedImage;
 		d.performCropping();
 		//d.model = model;
 	}
 
 	TextureMapping::TextureMapper mapper;
-	std::optional<TextureMapping::MergingResult> mergingResult = mapper.project(intrinsics.toMat3(),dataSets, *model);
+	std::optional<TextureMapping::MergingResult> mergingResult = mapper.project(intrinsics.toMat3(), dataSets, *model);
 
 
 
@@ -67,26 +113,26 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 void WebcamLayer::onAttach()
 {
 
-	m_webcam = std::make_unique<Webcam>(0,0);
+	m_webcam = std::make_unique<Webcam>(0, 0);
 	m_webcam->updateFrame(m_frame);
 
 	int frameWidth = m_frame.cols;
 	int frameHeight = m_frame.rows;
-	Engine::Application::s_get().getWindow().setWindowSize(frameWidth,frameHeight);
+	Engine::Application::s_get().getWindow().setWindowSize(frameWidth, frameHeight);
 
 	m_cameraController.setProjectionMatrix(glm::mat4(
-		glm::perspectiveFov(glm::radians(45.0f),(float)frameWidth,(float)frameHeight,0.1f,10000.0f
+		glm::perspectiveFov(glm::radians(45.0f), (float)frameWidth, (float)frameHeight, 0.1f, 10000.0f
 		)));
 
-	Engine::RenderCommand::setViewport(0,0,(uint32_t)frameWidth, (uint32_t)frameHeight);
+	Engine::RenderCommand::setViewport(0, 0, (uint32_t)frameWidth, (uint32_t)frameHeight);
 	Log::info(std::format("webcam frame channels: {0} depth: {1}", m_frame.channels(), m_frame.depth()));
 
 	assert(m_frame.channels() == 3 && "Webcam Image Format not supported");
 	assert(m_frame.depth() == CV_8U && "Webcam Image Format not supported");
 	Engine::ImageFormat format = Engine::ImageFormat::RGB8;
 
-		
-	m_webcamFeedTexture = Engine::Texture2D::create(Engine::TextureSpecification{ (uint32_t)m_frame.cols, (uint32_t)m_frame.rows, format} );
+
+	m_webcamFeedTexture = Engine::Texture2D::create(Engine::TextureSpecification{ (uint32_t)m_frame.cols, (uint32_t)m_frame.rows, format });
 	//size is correct if mat.isContinuous() https://stackoverflow.com/questions/26441072/finding-the-size-in-bytes-of-cvmat
 	assert(m_frame.isContinuous() && "mat not continuous");
 	m_webcamFeedTexture->setData((void*)m_frame.data, (uint32_t)m_frame.total() * (uint32_t)m_frame.elemSize());
@@ -110,7 +156,7 @@ void WebcamLayer::onAttach()
 		{ Engine::ShaderDataType::Float2, "a_TexCoords" }
 		});
 	m_squareVA->addVertexBuffer(squareVB);
-	
+
 	uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 	std::shared_ptr<Engine::IndexBuffer> squareIB = Engine::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 	m_squareVA->setIndexBuffer(squareIB);
@@ -128,7 +174,7 @@ void WebcamLayer::onAttach()
 
 	float* verticesPtr = nullptr;
 	uint32_t size = 0;
-	cb.getVertices(&verticesPtr,size);
+	cb.getVertices(&verticesPtr, size);
 	std::shared_ptr<Engine::VertexBuffer> vb = Engine::VertexBuffer::create(verticesPtr, size);
 	vb->setLayout({
 		{ Engine::ShaderDataType::Float3, "a_Position" }
@@ -136,7 +182,7 @@ void WebcamLayer::onAttach()
 	m_chessboardVA->addVertexBuffer(vb);
 	uint32_t* indicesPtr = nullptr;
 	uint32_t count = 0;
-	cb.getIndices(&indicesPtr,count);
+	cb.getIndices(&indicesPtr, count);
 	std::shared_ptr<Engine::IndexBuffer> ib = Engine::IndexBuffer::create(indicesPtr, count);
 	m_chessboardVA->setIndexBuffer(ib);
 
@@ -175,7 +221,7 @@ void WebcamLayer::onUpdate(Engine::Timestep ts)
 	loadedShader->setFloat3("u_Color", m_squareColor);
 
 	glm::mat4 t = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-	Engine::Renderer::submit(loadedShader, m_chessboardVA,t);
+	Engine::Renderer::submit(loadedShader, m_chessboardVA, t);
 
 	Engine::Renderer::submit(m_shaderLibrary.get("model_loading"), m_3dObject.get());
 

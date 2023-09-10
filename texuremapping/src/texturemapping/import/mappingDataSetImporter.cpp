@@ -45,7 +45,7 @@ namespace TextureMapping {
                 }
 
 
-                TextureMapping::STBimage image;
+                BaseLib::STBimage image;
 
                 assert(image.load(folder / mds.imageFile) && "Couldn't load dataSet image");
 

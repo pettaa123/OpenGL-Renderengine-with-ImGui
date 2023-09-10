@@ -137,7 +137,7 @@ namespace TextureMapping {
 	/// <param name="image">The image.</param>
 	/// <param name="intrinsicParameters">The intrinsic parameters.</param>
 	/// <param name="distortionCoefficients">The distortion coefficients.</param>
-	void OpenCLAccelerator::undistortImage(STBimage& image, const Intrinsics& intrinsics)
+	void OpenCLAccelerator::undistortImage(BaseLib::STBimage& image, const Intrinsics& intrinsics)
 	{
 		uint32_t width = image.width;
 		uint32_t height = image.height;
@@ -210,7 +210,7 @@ namespace TextureMapping {
 		}
 	}
 
-	void OpenCLAccelerator::cropImage(STBimage& image, std::vector<glm::vec2> polygon, Color4& defaultColor)
+	void OpenCLAccelerator::cropImage(BaseLib::STBimage& image, std::vector<glm::vec2> polygon, Color4& defaultColor)
 	{
 		//int width = image.Width;
 		//int height = image.Height;

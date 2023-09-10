@@ -8,6 +8,9 @@
 namespace TextureMapping {
     class MathExtension {
     public:
+        // initialize glm::mat3x4 from rotation matrix and translation vector;
+        static glm::mat3x4 createProjectionMatrix(const glm::mat3& rotation_matrix, const glm::vec3& translation_vector);
+
         /// Calculates the centroid from an array of 3D vectors.
         static glm::vec3 calculateCentroid(const std::vector<glm::vec3>& vectors);
 

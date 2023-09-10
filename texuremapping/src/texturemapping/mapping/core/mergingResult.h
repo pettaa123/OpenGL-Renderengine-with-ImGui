@@ -1,6 +1,6 @@
 #pragma once
 
-#include "texturemapping/core/stbImage.h"
+#include "baseLib/stbImage.h"
 
 namespace TextureMapping{
 
@@ -9,7 +9,7 @@ namespace TextureMapping{
 
         int rows=0;
         int columns=0;
-        STBimage image;
+        BaseLib::STBimage image;
         float widthFactor=0;
         float heightFactor=0;
     };

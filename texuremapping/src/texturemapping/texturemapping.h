@@ -4,7 +4,7 @@
 
 #include "texturemapping/mapping/core/undistorter.h"
 #include "texturemapping/core/intrinsics.h"
-#include "texturemapping/core/stbImage.h"
+#include "baseLib/stbImage.h"
 #include "texturemapping/mapping/core/mergingResult.h"
 
 #include "texturemapping/mapping/solvers/dltSolver.h"

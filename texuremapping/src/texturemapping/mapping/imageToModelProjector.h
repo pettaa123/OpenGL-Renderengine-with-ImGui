@@ -96,7 +96,7 @@ namespace TextureMapping {
 		/// <exception cref="Exception">The merged texture size ({mergedWidth}x{mergedHeight})</exception>
 		MergingResult mergeProjectedImages(int borderSize) {
 			int twoBorderSize = 2 * borderSize;
-			std::vector<STBimage> images;
+			std::vector<BaseLib::STBimage> images;
 
 			for (auto& p : m_projectedDataSets) {
 				images.push_back(p.projectionImage);
@@ -122,7 +122,7 @@ namespace TextureMapping {
 			//SystemSpecifications specifications = OpenGLEngine.GetSystemSpecifications();
 			assert((mergedWidth < 16384) & (mergedHeight < 16384) && "The merged texture size ({mergedWidth}x{mergedHeight}) exceeds the graphics card's capabilities.");
 			
-			STBimage mergedImage;
+			BaseLib::STBimage mergedImage;
 			mergedImage.width = mergedWidth;
 			mergedImage.height = mergedHeight;
 			mergedImage.channels = m_projectedDataSets[0].projectionImage.channels;

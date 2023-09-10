@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
@@ -13,103 +9,104 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\mapping">
-      <UniqueIdentifier>{281cda8b-a376-41b4-950c-7a574b162a41}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\core">
-      <UniqueIdentifier>{af0f2dd8-94a7-47ad-becb-85ba73186739}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\import">
-      <UniqueIdentifier>{51be6bb0-37af-4e5b-b618-71cdc409925c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{a922d7ce-0448-473d-b40c-b66c28476143}</UniqueIdentifier>
     </Filter>
     <Filter Include="helper">
       <UniqueIdentifier>{08a0ff2d-b5fc-4f5a-8c6f-fedcae5295df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\hardwareacceleration">
-      <UniqueIdentifier>{b2b6c35b-7e38-4ffa-bcd7-99dd85e1e026}</UniqueIdentifier>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Source Files\hardwareacceleration\base">
-      <UniqueIdentifier>{88664840-0505-494c-8f6b-ec9425106309}</UniqueIdentifier>
+    <Filter Include="src\mapping">
+      <UniqueIdentifier>{281cda8b-a376-41b4-950c-7a574b162a41}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\mapping\core">
+    <Filter Include="src\mapping\core">
       <UniqueIdentifier>{ee40fb7e-7f47-4ed2-8894-53646f5e64f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\hardwareacceleration\openCL">
-      <UniqueIdentifier>{e239748b-355d-4ebd-9b17-62a4e161c798}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\modeling">
-      <UniqueIdentifier>{53324343-0e95-40dd-9f45-aa80f25c292d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\mapping\solvers">
+    <Filter Include="src\mapping\solvers">
       <UniqueIdentifier>{bdeb5601-1bba-4503-825d-c26571e27501}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\optimization">
+    <Filter Include="src\core">
+      <UniqueIdentifier>{af0f2dd8-94a7-47ad-becb-85ba73186739}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\import">
+      <UniqueIdentifier>{51be6bb0-37af-4e5b-b618-71cdc409925c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\hardwareacceleration">
+      <UniqueIdentifier>{b2b6c35b-7e38-4ffa-bcd7-99dd85e1e026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\hardwareacceleration\base">
+      <UniqueIdentifier>{88664840-0505-494c-8f6b-ec9425106309}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\hardwareacceleration\openCL">
+      <UniqueIdentifier>{e239748b-355d-4ebd-9b17-62a4e161c798}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\modeling">
+      <UniqueIdentifier>{53324343-0e95-40dd-9f45-aa80f25c292d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\optimization">
       <UniqueIdentifier>{1be58aba-e2b6-46a3-92cb-913250598340}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\texturemapping\calibratedCamera.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\hardwareacceleration\openCL\openCLAccelerator.cpp">
-      <Filter>Source Files\hardwareacceleration\openCL</Filter>
+      <Filter>src\hardwareacceleration\openCL</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\core\mappingDataSet.cpp">
-      <Filter>Source Files\core</Filter>
+      <Filter>src\core</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\import\mappingDataSetImporter.cpp">
-      <Filter>Source Files\import</Filter>
+      <Filter>src\import</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\import\intrinsicsImporter.cpp">
-      <Filter>Source Files\import</Filter>
+      <Filter>src\import</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\mapping\solvers\dltSolver.cpp">
-      <Filter>Source Files\mapping\solvers</Filter>
+      <Filter>src\mapping\solvers</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\helper\mathExtensions.cpp">
       <Filter>helper</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\core\log.cpp">
-      <Filter>Source Files\core</Filter>
+      <Filter>src\core</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\core\terminalColor.cpp">
-      <Filter>Source Files\core</Filter>
+      <Filter>src\core</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\mapping\core\undistorter.cpp">
-      <Filter>Source Files\mapping\core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\texturemapping\core\stbImage.cpp">
-      <Filter>Source Files\core</Filter>
+      <Filter>src\mapping\core</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\mapping\meshCutter.cpp">
-      <Filter>Source Files\mapping</Filter>
+      <Filter>src\mapping</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\mapping\core\ray2.cpp">
-      <Filter>Source Files\mapping\core</Filter>
+      <Filter>src\mapping\core</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\mapping\imageToModelProjector.cpp">
-      <Filter>Source Files\mapping</Filter>
+      <Filter>src\mapping</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\modeling\textureDescription.cpp">
-      <Filter>Source Files\modeling</Filter>
+      <Filter>src\modeling</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\modeling\model.cpp">
-      <Filter>Source Files\modeling</Filter>
+      <Filter>src\modeling</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\modeling\texture.cpp">
-      <Filter>Source Files\modeling</Filter>
+      <Filter>src\modeling</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\mapping\solvers\solver.cpp">
-      <Filter>Source Files\mapping\solvers</Filter>
+      <Filter>src\mapping\solvers</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\hardwareacceleration\base\accelerator.cpp">
-      <Filter>Source Files\hardwareacceleration\base</Filter>
+      <Filter>src\hardwareacceleration\base</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\mapping\core\ray3.cpp">
-      <Filter>Source Files\mapping\core</Filter>
+      <Filter>src\mapping\core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -117,28 +114,25 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\optimization\errorDescription.h">
-      <Filter>Source Files\optimization</Filter>
+      <Filter>src\optimization</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\optimization\optimizationResult.h">
-      <Filter>Source Files\optimization</Filter>
+      <Filter>src\optimization</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\optimization\optimizationParameter.h">
-      <Filter>Source Files\optimization</Filter>
+      <Filter>src\optimization</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\core\mappingDataSet.h">
-      <Filter>Source Files\core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\texturemapping\core\stbImage.h">
-      <Filter>Source Files\core</Filter>
+      <Filter>src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\core\polygonMarker.h">
-      <Filter>Source Files\core</Filter>
+      <Filter>src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\core\intrinsics.h">
-      <Filter>Source Files\core</Filter>
+      <Filter>src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\import\mappingDataSetImporter.h">
-      <Filter>Source Files\import</Filter>
+      <Filter>src\import</Filter>
     </ClInclude>
     <ClInclude Include="json\single_include\nlohmann\json.hpp">
       <Filter>vendor</Filter>
@@ -147,94 +141,91 @@
       <Filter>helper</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\hardwareacceleration\base\accelerator.h">
-      <Filter>Source Files\hardwareacceleration\base</Filter>
+      <Filter>src\hardwareacceleration\base</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\hardwareacceleration\base\acceleratorTechnique.h">
-      <Filter>Source Files\hardwareacceleration\base</Filter>
+      <Filter>src\hardwareacceleration\base</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\hardwareacceleration\base\graphicsDevice.h">
-      <Filter>Source Files\hardwareacceleration\base</Filter>
+      <Filter>src\hardwareacceleration\base</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\core\projectionResult.h">
-      <Filter>Source Files\mapping\core</Filter>
+      <Filter>src\mapping\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\hardwareacceleration\openCL\openCLAccelerator.h">
-      <Filter>Source Files\hardwareacceleration\openCL</Filter>
+      <Filter>src\hardwareacceleration\openCL</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\core\color4.h">
-      <Filter>Source Files\core</Filter>
+      <Filter>src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\import\intrinsicsImporter.h">
-      <Filter>Source Files\import</Filter>
-    </ClInclude>
-    <ClInclude Include="mapping\core\projectionResult.h">
-      <Filter>Source Files\core</Filter>
+      <Filter>src\import</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\core\barycentricCoordinate.h">
-      <Filter>Source Files\mapping\core</Filter>
+      <Filter>src\mapping\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\core\intersectionResult.h">
-      <Filter>Source Files\mapping\core</Filter>
+      <Filter>src\mapping\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\core\mergingResult.h">
-      <Filter>Source Files\mapping\core</Filter>
+      <Filter>src\mapping\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\core\triangleReplacement.h">
-      <Filter>Source Files\mapping\core</Filter>
+      <Filter>src\mapping\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\core\vectorResult.h">
-      <Filter>Source Files\mapping\core</Filter>
+      <Filter>src\mapping\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\core\vertexInformation.h">
-      <Filter>Source Files\mapping\core</Filter>
+      <Filter>src\mapping\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\solvers\solver.h">
-      <Filter>Source Files\mapping\solvers</Filter>
+      <Filter>src\mapping\solvers</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\solvers\dltSolver.h">
-      <Filter>Source Files\mapping\solvers</Filter>
+      <Filter>src\mapping\solvers</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\helper\mathExtensions.h">
       <Filter>helper</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\core\undistorter.h">
-      <Filter>Source Files\mapping\core</Filter>
+      <Filter>src\mapping\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\core\log.h">
-      <Filter>Source Files\core</Filter>
+      <Filter>src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\core\terminalColor.h">
-      <Filter>Source Files\core</Filter>
+      <Filter>src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\meshCutter.h">
-      <Filter>Source Files\mapping</Filter>
+      <Filter>src\mapping</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\core\ray2.h">
-      <Filter>Source Files\mapping\core</Filter>
+      <Filter>src\mapping\core</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\imageToModelProjector.h">
-      <Filter>Source Files\mapping</Filter>
+      <Filter>src\mapping</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\modeling\textureDescription.h">
-      <Filter>Source Files\modeling</Filter>
+      <Filter>src\modeling</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\modeling\model.h">
-      <Filter>Source Files\modeling</Filter>
+      <Filter>src\modeling</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\modeling\texture.h">
-      <Filter>Source Files\modeling</Filter>
+      <Filter>src\modeling</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\textureMapper.h">
-      <Filter>Source Files\mapping</Filter>
+      <Filter>src\mapping</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\texturemapping.h">
-      <Filter>Source Files</Filter>
+      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\optimization\optimizer.h">
-      <Filter>Source Files\optimization</Filter>
+      <Filter>src\optimization</Filter>
     </ClInclude>
     <ClInclude Include="src\texturemapping\mapping\core\ray3.h">
-      <Filter>Source Files\mapping\core</Filter>
+      <Filter>src\mapping\core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

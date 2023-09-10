@@ -2,7 +2,6 @@
 #include "exampleLayer.h"
 #include "webcamLayer.h"
 
-
 class App : public Engine::Application
 {
 public:

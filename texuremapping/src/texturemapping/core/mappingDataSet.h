@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include "texturemapping/core/polygonMarker.h"
 #include "engine/renderer/model.h"
-#include "texturemapping/core/stbImage.h"
+#include "baseLib/stbImage.h"
 #include "texturemapping/optimization/optimizationResult.h"
 
 //////////////////////////////////////////////////////////
@@ -48,9 +48,9 @@ namespace TextureMapping {
 		glm::vec3 tcpRot;
 		std::string name;
 		std::shared_ptr<Engine::Model> model;
-		STBimage loadedImage;
-		std::optional<STBimage> alteredImage;
-		STBimage projectionImage;
+		BaseLib::STBimage loadedImage;
+		std::optional<BaseLib::STBimage> alteredImage;
+		BaseLib::STBimage projectionImage;
 		std::vector<glm::vec2> imagePolygonPointsInUV;
 		std::vector<glm::vec2> imagePolygonPointsInPixels;
 		std::shared_ptr<OptimizationResult> optimizationResult;

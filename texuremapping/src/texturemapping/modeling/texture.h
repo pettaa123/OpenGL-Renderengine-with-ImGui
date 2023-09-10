@@ -2,7 +2,7 @@
 
 #include "engine/renderer/texture.h"
 #include "engine/renderer/texture.h"
-#include <texturemapping/core/stbImage.h>
+#include "baseLib/stbImage.h"
 
 namespace TextureMapping {
 
@@ -11,7 +11,7 @@ namespace TextureMapping {
 
 	public:
 
-		Texture(const STBimage& image, bool generateMipMaps = true);
+		Texture(const BaseLib::STBimage& image, bool generateMipMaps = true);
 
 		bool getUseMipMaps() { return m_useMipMaps; };
 		int getId() { return m_id; };
@@ -20,7 +20,7 @@ namespace TextureMapping {
 
 	private:
 		std::string m_file;
-		STBimage m_image;
+		BaseLib::STBimage m_image;
 		bool m_isFlipped;
 		bool m_useMipMaps;
 		int m_id;

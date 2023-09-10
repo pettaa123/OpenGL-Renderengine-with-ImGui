@@ -3,7 +3,7 @@
 namespace TextureMapping {
 
 
-	Texture::Texture(const STBimage& image, bool generateMipMaps)
+	Texture::Texture(const BaseLib::STBimage& image, bool generateMipMaps)
 		:m_image(image),
 		m_useMipMaps(generateMipMaps)
 	{
