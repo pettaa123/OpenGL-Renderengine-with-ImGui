@@ -52,7 +52,7 @@ namespace TextureMapping {
 		/// </summary>
 		/// <param name="triangleReplacements">The triangle replacements.</param>
 		/// <param name="dataSets">The data sets.</param>
-		void handleTriangleReplacements(const std::vector<TriangleReplacement>& triangleReplacements);
+		void handleTriangleReplacements(std::vector<TriangleReplacement>& triangleReplacements);
 
 		/// <summary>
 		/// Handles the vertex and texture coordinate replacement.

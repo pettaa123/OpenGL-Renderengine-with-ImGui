@@ -14,9 +14,9 @@ namespace TextureMapping{
         int triangleStartVertexId;
         std::vector<int> triangleArrayIndices;
         std::vector<std::optional<Engine::Mesh::Vertex>> newVertices;
-        std::vector<MappingDataSet> dataSets;
+        std::vector<MappingDataSet*> dataSets;
         std::vector<std::vector<glm::vec2>> newTextureCoordinates;
-        std::vector<MappingDataSet> affectedDataSets;
+        std::vector<MappingDataSet*> affectedDataSets;
 
     };
 }

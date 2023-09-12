@@ -1,5 +1,6 @@
 #include "baseLib/stbImage.h"
 #include "stb_image/stb_image.h"
+#include "stb_image/stb_image_write.h"
 
 namespace BaseLib {
 	bool STBimage::load(const std::filesystem::path& imagePath) {
@@ -9,6 +10,12 @@ namespace BaseLib {
 			return false;
 		data.reset(img);
 		return (data != nullptr) ? true : false;
-	};
+	}
+
+	bool STBimage::write(const std::filesystem::path& savePath) {
+		if (stbi_write_png(savePath.string().c_str(), width, height, channels, data.get(), width * channels))
+			return EXIT_SUCCESS;
+		return EXIT_FAILURE;
+	}
 }
 

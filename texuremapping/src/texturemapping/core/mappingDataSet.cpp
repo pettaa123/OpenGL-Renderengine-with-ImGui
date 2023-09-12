@@ -9,7 +9,8 @@ namespace TextureMapping {
 		cropImage(false),
 		convexHull(false),
 		imageRow(0),
-		imageColumn(0)
+		imageColumn(0),
+		texCoordsOffset(glm::vec2())
 	{}
 
 	/// Crops the image.

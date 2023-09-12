@@ -44,8 +44,6 @@ namespace TextureMapping {
 		std::vector<glm::vec2> imagePoints;
 		std::vector<glm::vec3> modelPoints;
 		std::string imageFile;
-		glm::vec3 tcpTrans;
-		glm::vec3 tcpRot;
 		std::string name;
 		std::shared_ptr<Engine::Model> model;
 		BaseLib::STBimage loadedImage;
@@ -75,10 +73,39 @@ namespace TextureMapping {
 		/// Prepares the image polygon.
 		void prepareImagePolygon();
 
-		bool operator == (const MappingDataSet &rhs) const
-		{ /* your logic for comparision between "*this" and "rhs" */
-			return true;
+		//friend bool operator<=>(MappingDataSet const& lhs, MappingDataSet const& rhs) = default;
+
+		bool operator==(const MappingDataSet& rhs) {
+			// Compare relevant members here
+			return name == rhs.name &&
+				imagePoints == rhs.imagePoints &&
+				modelPoints == rhs.modelPoints &&
+				imageFile == rhs.imageFile;
 		}
+
+		////ToDo: complete this one 
+		//bool operator == (const MappingDataSet &rhs) const
+		//{ /* your logic for comparision between "*this" and "rhs" */
+		//	if (name == rhs.name &&
+		//		imagePoints == rhs.imagePoints &&
+		//		modelPoints == rhs.modelPoints &&
+		//		imageFile == rhs.imageFile)
+		//	{
+		//		return true;
+		//	}
+		//	return false;
+		//}
+		//
+		//bool operator==(const MappingDataSet& lhs, const MappingDataSet& rhs)
+		//{
+		//	return (
+		//		lhs.name == rhs.name &&
+		//		lhs.imagePoints == rhs.imagePoints &&
+		//		lhs.modelPoints == rhs.modelPoints &&
+		//		lhs.imageFile == rhs.imageFile
+		//		);
+		//}
+
 
 	private:
 		/// Crops the image in a simple way.

@@ -76,38 +76,47 @@ namespace TextureMapping {
 
 			//SystemSpecifications specifications = OpenGLEngine.GetSystemSpecifications();
 			assert((mergedWidth < 16384) & (mergedHeight < 16384) && "The merged texture size ({mergedWidth}x{mergedHeight}) exceeds the graphics card's capabilities.");
-			
+
 			BaseLib::STBimage mergedImage;
 			mergedImage.width = mergedWidth;
 			mergedImage.height = mergedHeight;
 			mergedImage.channels = m_projectedDataSets[0].projectionImage.channels;
+			mergedImage.data = std::make_shared<uint8_t[]>(mergedWidth * mergedHeight * mergedImage.channels);
+
 
 			// For testing
 			//gfx.FillRectangle(Brushes.Red, 0, 0, mergedImage.Width, mergedImage.Height);
 
+			for (int i = 0; i < mergedWidth * mergedHeight * mergedImage.channels;) {
+				mergedImage.data[i++] = 0xFF;
+				mergedImage.data[i++] = 0x00;
+				mergedImage.data[i++] = 0x00;
+				mergedImage.data[i++] = 0xFF;
+			}
+
 			int xOffset = borderSize;
 			int yOffset = borderSize;
 
-			
-			std::unique_ptr<uint8_t[]> mergedData = std::make_unique<uint8_t[]>(mergedImage.width * mergedImage.height * mergedImage.channels);
-
-			size_t offset=borderSize;
-
-			for (size_t i = 0; i < images.size(); i++) {
-				// For some reason, some images need to have the width and height parameter to be set
-				for (int j = 0; j < images[i].width * images[i].height * images[i].channels;j++) {
-					mergedData[offset - borderSize + j] = images[i].data.get()[j];
+			size_t offset = (borderSize + mergedWidth) * images[0].channels;
+			size_t writeIdx = -1;
+			for (size_t j = 0; j < mergedHeight - twoBorderSize; j++) {
+				for (size_t i = 0; i < images.size(); i++) {
+					for (size_t k = 0; k < images[i].width * images[i].channels; k++)
+					{
+						writeIdx = offset + k;
+						size_t readIdx = k + j * images[i].width * images[i].channels;
+						mergedImage.data[writeIdx] = images[i].data.get()[readIdx];
+					}
+					offset = writeIdx+ 2 * images[0].channels +1;
 				}
 				//gfx.DrawImage(image, xOffset - borderSize, yOffset - borderSize, maxImageWidth + twoBorderSize, maxImageHeight + twoBorderSize);
 				//gfx.DrawImage(image, xOffset, yOffset, maxImageWidth, maxImageHeight);
-				offset += (maxImageWidth + maxImageHeight + twoBorderSize);
-
-				if (xOffset == mergedWidth + borderSize) {
-					xOffset = borderSize;
-					yOffset += maxImageHeight + twoBorderSize;
-				}
+				
 			}
-			
+
+
+
+			mergedImage.write("red2.png");
 
 			MergingResult mergingResult;
 			mergingResult.columns = imagesPerRow;
@@ -127,10 +136,10 @@ namespace TextureMapping {
 			//Faktor mit denen die alten Texturkoordinaten pro Bild zu verrechnen sind, damits für das mergedImage passt.
 			float widthFactor = mergingResult.widthFactor;
 			float heightFactor = mergingResult.heightFactor;
-			std::vector<glm::vec2> modelTexCoords = m_model.textureDescription.coordinates;
+			std::vector<glm::vec2>& modelTexCoords = m_model.textureDescription.coordinates;
 
 			for (size_t i = 0; i < m_projectedDataSets.size(); i++) {
-				MappingDataSet dataSet = m_projectedDataSets[i];
+				MappingDataSet& dataSet = m_projectedDataSets[i];
 
 				int row = (int)i / columns;
 				int column = (int)i % columns;

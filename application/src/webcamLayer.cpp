@@ -55,10 +55,14 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 		{502.313965 ,2479.42603 },
 		{2741.11938 ,2385.86646 }
 	};
-
-	glm::mat3x4 projectionMatrix{ 0.1616492, -4.67145, -0.9188864, -225.4973,
+	std::vector<glm::mat3x4> projectionMatrices(2);
+	projectionMatrices[0]=glm::mat3x4{ 0.1616492, -4.67145, -0.9188864, -225.4973,
 -4.550404, 0.005104297, -1.303263, 3427.303,
 0.0003606202, 0.0001024668,-0.002355226, 1 };
+
+	projectionMatrices[1] = glm::mat3x4(0.1440116, -4.724898, -0.7858894, -971.3934,
+		-4.580642, -0.0172976, -1.299532, 3444.831,
+		0.0003571537, 3.197087E-05, -0.002372077, 1);
 
 	//glm::mat3x4 projectionMatrix{
 	//	-0.1261689, -1.773039, 1.130976, 88.56658,
@@ -66,7 +70,6 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 	//	-0.0005472497, -6.943075E-05, 0.004378841, 1
 	//};
 
-	std::cout << glm::to_string(projectionMatrix).c_str();
 
 	//std::vector<float> reprojectionError(1);
 	//
@@ -96,10 +99,12 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 
 
 	TextureMapping::ImageToModelProjector projector(*m_markerModel, executor);
-	projector.projectImage(dataSets[0], 0, projectionMatrix);
-
+	for (size_t i = 0; i < dataSets.size(); i++)
+	{		
+		projector.projectImage(dataSets[i], i, projectionMatrices[i]);		
+	}
 	std::optional<TextureMapping::MergingResult> mergingResult = projector.finish();
-	
+
 
 
 
