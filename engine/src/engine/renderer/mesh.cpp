@@ -60,7 +60,9 @@ namespace Engine {
 	};
 
 	Mesh::Mesh(const std::string& filename)
-		: m_filePath(filename)
+		: m_filePath(filename),
+		m_vertices(std::make_shared<std::vector<Engine::Mesh::Vertex>>()),
+		m_indices(std::make_shared<std::vector<Engine::Mesh::Index>>())
 	{
 		LogStream::initialize();
 
@@ -76,11 +78,11 @@ namespace Engine {
 
 		assert(mesh->HasPositions() && "Meshes require positions.");
 		assert(mesh->HasNormals() && "Meshes require normals.");
-
+		
 		m_vertices->reserve(mesh->mNumVertices);
 
 		// Extract vertices from model
-		for (size_t i = 0; i < m_vertices->capacity(); i++)
+		for (size_t i = 0; i < mesh->mNumVertices; i++)
 		{
 			Vertex vertex;
 			vertex.position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
@@ -110,10 +112,11 @@ namespace Engine {
 
 		// Extract indices from model
 		m_indices->reserve(mesh->mNumFaces);
-		for (size_t i = 0; i < m_indices->capacity(); i++)
+		for (size_t i = 0; i < mesh->mNumFaces; i++)
 		{
 			assert(mesh->mFaces[i].mNumIndices == 3 && "Must have 3 indices.");
-			m_indices->push_back({ mesh->mFaces[i].mIndices[0], mesh->mFaces[i].mIndices[1], mesh->mFaces[i].mIndices[2] });
+			aiFace& face = mesh->mFaces[i];
+				m_indices->push_back({ face.mIndices[0], face.mIndices[1], face.mIndices[2] });
 		}
 
 		m_indexBuffer.reset(IndexBuffer::create());

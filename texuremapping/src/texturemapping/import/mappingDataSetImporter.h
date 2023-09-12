@@ -9,7 +9,7 @@ namespace TextureMapping {
 
     public:
 
-        static std::vector<MappingDataSet> loadFromJSON(std::filesystem::path& folder);
+        static std::vector<MappingDataSet> loadFromJSON(const std::filesystem::path& folder);
     };
 }
 

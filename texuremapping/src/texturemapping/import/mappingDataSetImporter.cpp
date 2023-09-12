@@ -6,13 +6,13 @@
 
 namespace TextureMapping {
 
-    std::vector<MappingDataSet> MappingDataSetImporter::loadFromJSON(std::filesystem::path& folder) {
+    std::vector<MappingDataSet> MappingDataSetImporter::loadFromJSON(const std::filesystem::path& folder) {
 
         std::string ext(".json");
 
         std::vector<MappingDataSet> dataSets;
 
-        for (auto& p : std::filesystem::recursive_directory_iterator(folder))
+        for (auto& p : std::filesystem::directory_iterator(folder))
         {
             if (p.path().extension() == ext) {
                 Log::info(std::format("Importing: {}", p.path().string()));

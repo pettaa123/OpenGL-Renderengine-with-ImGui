@@ -35,9 +35,11 @@
     <ClCompile Include="src\texturemapping\mapping\meshCutter.cpp" />
     <ClCompile Include="src\texturemapping\mapping\solvers\dltSolver.cpp" />
     <ClCompile Include="src\texturemapping\mapping\solvers\solver.cpp" />
+    <ClCompile Include="src\texturemapping\mapping\textureMapper.cpp" />
     <ClCompile Include="src\texturemapping\modeling\model.cpp" />
     <ClCompile Include="src\texturemapping\modeling\texture.cpp" />
     <ClCompile Include="src\texturemapping\modeling\textureDescription.cpp" />
+    <ClCompile Include="src\texturemapping\optimization\optimizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="json\single_include\nlohmann\json.hpp" />

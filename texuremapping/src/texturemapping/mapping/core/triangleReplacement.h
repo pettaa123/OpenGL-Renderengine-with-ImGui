@@ -13,7 +13,7 @@ namespace TextureMapping{
 
         int triangleStartVertexId;
         std::vector<int> triangleArrayIndices;
-        std::vector<glm::vec3> newVertices;
+        std::vector<std::optional<Engine::Mesh::Vertex>> newVertices;
         std::vector<MappingDataSet> dataSets;
         std::vector<std::vector<glm::vec2>> newTextureCoordinates;
         std::vector<MappingDataSet> affectedDataSets;

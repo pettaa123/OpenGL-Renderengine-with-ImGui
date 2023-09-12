@@ -160,5 +160,9 @@ private:
 	cv::Mat									m_frame;
 	glm::vec3								m_squareColor = { 0.5f, 0.2f, 0.5f };
 
+	//MARKER
+	std::shared_ptr<TextureMapping::Model> m_markerModel;
+	std::shared_ptr<TextureMapping::Model> m_model;
+
 };
 

@@ -20,8 +20,7 @@ namespace TextureMapping {
 	private:
 
 		Model m_model;
-		std::vector<glm::vec3> m_modelVertices;
-		std::vector<glm::vec3> m_modelNormals;
+		std::vector<std::optional<Engine::Mesh::Vertex>>& m_modelVertices;
 		glm::vec2 m_defaultTexCoord;
 		bool m_isCancelled;
 

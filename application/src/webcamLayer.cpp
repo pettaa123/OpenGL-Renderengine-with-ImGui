@@ -11,6 +11,7 @@
 #include "baseLib/stbImage.h"
 #include "markerLib/poseEstimator.h"
 #include "texturemapping/helper/mathExtensions.h"
+#include <glm/gtx/string_cast.hpp>
 
 WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 	: Layer("WebcamLayer"), m_cameraController(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 10000.0f))
@@ -33,8 +34,9 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 	//	Log::info(std::format("x: {} , y: {}", pointBuf[i][0], pointBuf[i][1]));
 	//}
 
-	std::filesystem::path intrinsicsIPhonePath("assets/marker/iphone_intrinsics.json");
-	TextureMapping::Intrinsics intrinsicsIPhone = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsIPhonePath);
+	std::filesystem::path intrinsicsIPhoneFile("assets/mapping sample data/intrinsics.json");
+	//std::filesystem::path intrinsicsIPhoneFile("assets/marker/intrinsics/iphone_intrinsics.json");
+	TextureMapping::Intrinsics intrinsicsIPhone = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsIPhoneFile);
 
 	MarkerLib::PoseEstimator estimator;
 	std::array<std::array<float, 3>, 4> objPtsBuf{{
@@ -44,7 +46,7 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 													{100,80,0}
 													}};
 
-	glm::mat3 rvec;
+	glm::mat3 rmat;
 	glm::vec3 tvec;
 	float imgArray[4][2]
 	{
@@ -53,19 +55,66 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 		{502.313965 ,2479.42603 },
 		{2741.11938 ,2385.86646 }
 	};
-		//&pointBuf[0][0]
-	estimator.estimate(&objPtsBuf[0][0], sizeof(float) * 12, &imgArray[0][0] , pointBufLen ,glm::value_ptr(intrinsicsIPhone.toMat3()),intrinsicsIPhone.distortionCoeffs().data(), glm::value_ptr(rvec), glm::value_ptr(tvec),(int)MarkerLib::SolvePnPMethod::SOLVEPNP_ITERATIVE);
 
-	glm::mat3x4 proj = TextureMapping::MathExtension::createProjectionMatrix(rvec, tvec);
+	glm::mat3x4 projectionMatrix{ 0.1616492, -4.67145, -0.9188864, -225.4973,
+-4.550404, 0.005104297, -1.303263, 3427.303,
+0.0003606202, 0.0001024668,-0.002355226, 1 };
+
+	//glm::mat3x4 projectionMatrix{
+	//	-0.1261689, -1.773039, 1.130976, 88.56658,
+	//	-1.893113, -0.02551494, 0.9932505, 1457.578,
+	//	-0.0005472497, -6.943075E-05, 0.004378841, 1
+	//};
+
+	std::cout << glm::to_string(projectionMatrix).c_str();
+
+	//std::vector<float> reprojectionError(1);
+	//
+	//estimator.estimate(&objPtsBuf[0][0], sizeof(float) * 12, &imgArray[0][0], pointBufLen, glm::value_ptr(intrinsicsIPhone.toMat3()), intrinsicsIPhone.distortionCoeffs().data(),
+	//	glm::value_ptr(rmat), glm::value_ptr(tvec), false, (int)MarkerLib::SolvePnPMethod::SOLVEPNP_ITERATIVE, reprojectionError.data(), reprojectionError.size() * sizeof(float));
+	//
+	//glm::mat3x4 projectionMatrix = TextureMapping::MathExtension::createProjectionMatrix(rmat, tvec);
+	//
+	//for (auto& e : reprojectionError)
+	//	std::cout << e << std::endl;
+
+	std::vector<TextureMapping::MappingDataSet> dataSets = TextureMapping::MappingDataSetImporter::loadFromJSON(std::filesystem::path("assets/marker"));
+
+	//m_markerModel = std::make_shared<TextureMapping::Model>("assets/models/backpack/backpack.obj");
+	//m_markerModel = std::make_shared<TextureMapping::Model>("assets/marker/marker_test.stl");
+	m_markerModel = std::make_shared<TextureMapping::Model>("assets/models/TruTh/TruTh_Mesh Creation.1_1.stl");
+	//m_3dObject = std::make_unique<Engine::Model>("assets/models/COS.STL");
+	
+	for (TextureMapping::MappingDataSet& d : dataSets) {
+		d.projectionImage = d.alteredImage.has_value() ? d.alteredImage.value() : d.loadedImage;
+		d.performCropping();
+		d.model = m_markerModel;
+	}
+
+	auto devs = TextureMapping::OpenCLAccelerator::getDevices();
+	auto executor = TextureMapping::OpenCLAccelerator(devs[0], *m_markerModel.get());
 
 
+	TextureMapping::ImageToModelProjector projector(*m_markerModel, executor);
+	projector.projectImage(dataSets[0], 0, projectionMatrix);
+
+	std::optional<TextureMapping::MergingResult> mergingResult = projector.finish();
+	
+
+
+
+
+
+	
+
+	/*
 	//load datasets
 	std::filesystem::path dataSetsPath("assets/mapping sample data/datasets");
 	std::vector<TextureMapping::MappingDataSet> dataSets = TextureMapping::MappingDataSetImporter::loadFromJSON(dataSetsPath);
 	//load intrinsics
 	std::filesystem::path intrinsicsPath("assets/mapping sample data/intrinsics.json");
 	TextureMapping::Intrinsics intrinsics = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsPath);
-
+	
 	std::unique_ptr<TextureMapping::Model> model = std::make_unique<TextureMapping::Model>("assets/models/TruTh/TruTh_Mesh Creation.1_1.stl");
 
 	for (TextureMapping::MappingDataSet& d : dataSets) {
@@ -73,7 +122,7 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 		d.performCropping();
 		//d.model = model;
 	}
-
+	
 	TextureMapping::TextureMapper mapper;
 	std::optional<TextureMapping::MergingResult> mergingResult = mapper.project(intrinsics.toMat3(), dataSets, *model);
 
@@ -81,38 +130,67 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 
 
 
-	//TextureMapping::MeshCutter meshcutter(*model.get());
-	//meshcutter.solveOverlayingTexturesConflicts(mds);
+	TextureMapping::MeshCutter meshcutter(*model.get());
+	meshcutter.solveOverlayingTexturesConflicts(mds);
 
 	auto d = TextureMapping::OpenCLAccelerator::getDevices();
 	auto clA = TextureMapping::OpenCLAccelerator(d[0], *model.get());
 
 
-	//std::vector<glm::vec2> undistortedImagePoints = TextureMapping::Undistorter::undistortPoints(mds[0], intrinsics2);
-	//
-	//TextureMapping::DLTSolver dlt;
-	//dlt.calculateProjectionMatrix(intrinsics2.toMat3(), mds[0].modelPoints, undistortedImagePoints);
-	//
-	//std::filesystem::path imagePath("assets/mapping sample data/chessboard.png");// =ds / imageFile;
-	//
-	//std::filesystem::path intrinsicsPath("assets/mapping sample data/webcamIntrinsics.json");
-	//
-	//TextureMapping::Intrinsics intrinsics = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsPath);
+	std::vector<glm::vec2> undistortedImagePoints = TextureMapping::Undistorter::undistortPoints(mds[0], intrinsics2);
+	
+	TextureMapping::DLTSolver dlt;
+	dlt.calculateProjectionMatrix(intrinsics2.toMat3(), mds[0].modelPoints, undistortedImagePoints);
+	
+	std::filesystem::path imagePath("assets/mapping sample data/chessboard.png");// =ds / imageFile;
+	
+	std::filesystem::path intrinsicsPath("assets/mapping sample data/webcamIntrinsics.json");
+	
+	TextureMapping::Intrinsics intrinsics = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsPath);
 
-	//cv::Mat p(height, width, CV_8UC4,image.data.get());
-	//cv::Mat pCopy = p.clone();
-	//cv::imshow("distorted", pCopy);
-	//cv::waitKey(1000);
-	//clA.undistortImage(image, intrinsics);
-	//cv::Mat p2= cv::Mat(height, width, CV_8UC4, image.data.get());
-	//cv::imshow("undistorted", p2);
-	//cv::waitKey(0);
-	//auto a = TextureMapping::Accelerator::getGraphicsDevices();
+	cv::Mat p(height, width, CV_8UC4,image.data.get());
+	cv::Mat pCopy = p.clone();
+	cv::imshow("distorted", pCopy);
+	cv::waitKey(1000);
+	clA.undistortImage(image, intrinsics);
+	cv::Mat p2= cv::Mat(height, width, CV_8UC4, image.data.get());
+	cv::imshow("undistorted", p2);
+	cv::waitKey(0);
+	auto a = TextureMapping::Accelerator::getGraphicsDevices();
+	*/
 }
 
 void WebcamLayer::onAttach()
 {
+	
+	auto loadedShader = m_shaderLibrary.load("assets/shaders/model_loading.glsl");
+	loadedShader = m_shaderLibrary.load("assets/shaders/FlatColor.glsl");
 
+	m_model = std::make_shared<TextureMapping::Model> ("assets/models/TruTh/TruTh_Mesh Creation.1_1.stl");
+
+	//m_squareVA = Engine::OpenGLVertexArray::create();
+	//m_squareVA->bind();
+	////vertices with texturecoordinates
+	//float squareVertices[5 * 4] = {
+	//	-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+	//	 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+	//	 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+	//	-1.0f,  1.0f, 0.0f, 0.0f, 1.0f
+	//};
+	//std::shared_ptr<Engine::VertexBuffer> squareVB = Engine::VertexBuffer::create(glm::value_ptr(m_markerModel->getVertices()[0]), sizeof(squareVertices));
+	//squareVB->setLayout({
+	//	{ Engine::ShaderDataType::Float3, "a_Position" },
+	//	{ Engine::ShaderDataType::Float2, "a_TexCoords" }
+	//	});
+	//m_squareVA->addVertexBuffer(squareVB);
+	//
+	//std::shared_ptr<Engine::IndexBuffer> squareIB = Engine::IndexBuffer::create(glm::value_ptr(m_markerModel->get[0]), sizeof(squareIndices) / sizeof(uint32_t));
+	//m_squareVA->setIndexBuffer(squareIB);
+	//
+	//m_squareVA->unbind();
+
+
+	/*
 	m_webcam = std::make_unique<Webcam>(0, 0);
 	m_webcam->updateFrame(m_frame);
 
@@ -189,7 +267,7 @@ void WebcamLayer::onAttach()
 	//cb->getVertices();
 	m_chessboardVA->unbind();
 	loadedShader = m_shaderLibrary.load("assets/shaders/FlatColor.glsl");
-
+	*/
 }
 
 void WebcamLayer::onDetach()
@@ -199,34 +277,54 @@ void WebcamLayer::onDetach()
 
 void WebcamLayer::onUpdate(Engine::Timestep ts)
 {
-	m_cameraController.onUpdate(ts);
-
 	// Render
 	// 
+	m_cameraController.onUpdate(ts);
+
 	// background color
 	Engine::RenderCommand::setClearColor({ 0.9,0.9,0.9, 1 });
 	Engine::RenderCommand::clear();
 
 	Engine::Renderer::beginScene(m_cameraController);
 
-	auto loadedShader = m_shaderLibrary.get("webcam");;
-	m_webcam->updateFrame(m_frame);
-	m_webcamFeedTexture->setData((void*)m_frame.data, (uint32_t)m_frame.total() * (uint32_t)m_frame.elemSize());
-	m_squareVA->bind();
-	m_webcamFeedTexture->bind();
-	Engine::Renderer::submit(loadedShader, m_squareVA, glm::mat4(1.0f));
 
-	loadedShader = m_shaderLibrary.get("FlatColor");;
+
+	//////////////MAPPING
+
+	auto loadedShader = m_shaderLibrary.get("FlatColor");;
 	loadedShader->bind();
 	loadedShader->setFloat3("u_Color", m_squareColor);
 
-	glm::mat4 t = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-	Engine::Renderer::submit(loadedShader, m_chessboardVA, t);
 
-	Engine::Renderer::submit(m_shaderLibrary.get("model_loading"), m_3dObject.get());
+	Engine::Renderer::submit(m_shaderLibrary.get("FlatColor"), m_model.get());
+	//Engine::Renderer::submit(m_shaderLibrary.get("FlatColor"), m_3dObject.get());
+
+
+	////////////////////MAPPING ENDE
 
 
 	Engine::Renderer::endScene();
+
+
+
+	//auto loadedShader = m_shaderLibrary.get("webcam");;
+	//m_webcam->updateFrame(m_frame);
+	//m_webcamFeedTexture->setData((void*)m_frame.data, (uint32_t)m_frame.total() * (uint32_t)m_frame.elemSize());
+	//m_squareVA->bind();
+	//m_webcamFeedTexture->bind();
+	//Engine::Renderer::submit(loadedShader, m_squareVA, glm::mat4(1.0f));
+	//
+	//loadedShader = m_shaderLibrary.get("FlatColor");;
+	//loadedShader->bind();
+	//loadedShader->setFloat3("u_Color", m_squareColor);
+	//
+	//glm::mat4 t = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	//Engine::Renderer::submit(loadedShader, m_chessboardVA, t);
+	//
+	//Engine::Renderer::submit(m_shaderLibrary.get("model_loading"), m_3dObject.get());
+	//
+	//
+	
 }
 
 void WebcamLayer::onImGuiRender()

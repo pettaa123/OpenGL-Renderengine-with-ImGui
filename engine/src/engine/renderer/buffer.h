@@ -120,7 +120,7 @@ namespace Engine {
 
 		static VertexBuffer* create(uint32_t size = 0);
 		//static std::shared_ptr<VertexBuffer> create(uint32_t size);
-		static std::shared_ptr<VertexBuffer> create(float* vertices, uint32_t size);
+		static std::shared_ptr<VertexBuffer> create(const float* vertices, uint32_t size);
 	};
 
 	// Currently Engine only supports 32-bit index buffers

@@ -3,19 +3,22 @@
 #include <glm/gtx/norm.hpp>
 #include <ranges>
 #include <map>
+#include <set>
 #include "texturemapping/mapping/core/vertexInformation.h"
 #include "texturemapping/helper/mathExtensions.h"
 #include "texturemapping/helper/polygonHelper.h"
 #include "texturemapping/mapping/core/barycentricCoordinate.h"
 #include "texturemapping/mapping/core/ray3.h"
+#include <iostream>
+#include <chrono>
 
 namespace TextureMapping {
 
 	MeshCutter::MeshCutter(Model& model)
 		:m_model(model),
 		m_defaultTexCoord(glm::vec2(-1000, -1000)),
-		m_modelVertices(model.getVertices()),
-		m_modelNormals(model.getNormals())
+		m_modelVertices(model.vertices()),
+		m_isCancelled(false)
 	{}
 
 	// TODO: Either use "id" or "idx"
@@ -32,9 +35,9 @@ namespace TextureMapping {
 			ConcurrentBag<TriangleReplacement> triangleReplacements = new ConcurrentBag<TriangleReplacement>();
 #else
 			std::vector<TriangleReplacement> triangleReplacements;
-			MappingDataSet& dominatingSet = clonedDataSets[0];
+			MappingDataSet dominatingSet = clonedDataSets[0];
 
-			std::unordered_set<int> uniqueTriangleIds;
+			std::set<int> uniqueTriangleIds;
 
 			for (auto& mds : clonedDataSets) {
 				uniqueTriangleIds.insert(mds.texCoordsAndTriangleIds.second.begin(), mds.texCoordsAndTriangleIds.second.end());
@@ -49,8 +52,10 @@ namespace TextureMapping {
 			// For is faster than foreach
 			Parallel.For(0, uniqueTriangleIds.Count, i = > {
 #else
-			for (const int& triangleId : uniqueTriangleIds) {
-#endif
+			for (const int triangleId : uniqueTriangleIds) {
+#endif		
+				auto t1 = std::chrono::high_resolution_clock::now();
+				
 				int triangleStartVertexId = triangleId * 3;
 
 				std::vector<VertexInformation> vertexInfos;
@@ -63,7 +68,7 @@ namespace TextureMapping {
 				// "Clear" is a O(n) operation
 				std::vector<MappingDataSet> affectedSets;
 				std::vector<int> triangleArrayIndices;
-				for (MappingDataSet dataSet : clonedDataSets) {
+				for (MappingDataSet& dataSet : clonedDataSets) {
 
 					// Searching a value in a HashSet is a O(1) operation
 					// Doing this before gathering the actual index saves a lot of time
@@ -78,8 +83,6 @@ namespace TextureMapping {
 						auto itr = std::find(dataSet.texCoordsAndTriangleIds.second.begin(), dataSet.texCoordsAndTriangleIds.second.end(), triangleId);
 						if (itr != dataSet.texCoordsAndTriangleIds.second.end())
 							triangleArrayIdx = itr - dataSet.texCoordsAndTriangleIds.second.begin();
-
-						assert(triangleArrayIdx != 0);
 
 						int texId = triangleArrayIdx * 3;
 
@@ -104,15 +107,19 @@ namespace TextureMapping {
 #if PARALLEL
 					return;
 #else
+					auto t2 = std::chrono::high_resolution_clock::now();
+					/* Getting number of milliseconds as an integer. */
+					auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+					std::cout << ms_int.count() << "ms\n";
 					continue;
 #endif
 				}
 
 				for (int a = 0; a < 3; a++) {
-					VertexInformation vertexInfo = vertexInfos[a];
+					VertexInformation& vertexInfo = vertexInfos[a];
 					vertexInfo.texCoord = vertexInfo.underlayingTexCoords[domIdx];
 					vertexInfo.underlayingTexCoords.erase(vertexInfo.underlayingTexCoords.begin() + domIdx);
-					vertexInfo.vertex = m_modelVertices[triangleStartVertexId + a];
+					vertexInfo.vertex = m_modelVertices[triangleStartVertexId + a]->position;
 				}
 
 				std::vector<glm::vec2> dominatingTexCoords = {
@@ -130,7 +137,7 @@ namespace TextureMapping {
 				// CASE: Triangle is completely inside the image polygon
 				if (validCount == 3) {
 					for (size_t a = 0; a < affectedSets.size(); a++) {
-						MappingDataSet dataSet = affectedSets[a];
+						MappingDataSet& dataSet = affectedSets[a];
 						if (dataSet == dominatingSet) {
 							continue;
 						}
@@ -139,6 +146,10 @@ namespace TextureMapping {
 #if PARALLEL
 					return;
 #else
+					auto t2 = std::chrono::high_resolution_clock::now();
+					/* Getting number of milliseconds as an integer. */
+					auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+					std::cout << ms_int.count() << "ms\n";
 					continue;
 #endif
 				}
@@ -168,6 +179,10 @@ namespace TextureMapping {
 #if PARALLEL
 						return;
 #else
+						auto t2 = std::chrono::high_resolution_clock::now();
+						/* Getting number of milliseconds as an integer. */
+						auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+						std::cout << ms_int.count() << "ms\n";
 						continue;
 #endif
 					}
@@ -593,11 +608,16 @@ namespace TextureMapping {
 						}
 					}
 
+					std::vector<std::optional<Engine::Mesh::Vertex>> newVertexes;
+					for (auto& nv : newVertices) {
+						newVertexes.push_back(std::make_optional<Engine::Mesh::Vertex>(nv));
+					}
+
 					if (newVertices.size() > 0) {
 						TriangleReplacement replacement{
 							triangleStartVertexId,
 							triangleArrayIndices,
-							newVertices,
+							newVertexes,
 							clonedDataSets,
 							newTextureCoordinates,
 							affectedSets
@@ -605,6 +625,10 @@ namespace TextureMapping {
 						triangleReplacements.push_back(replacement);
 					}
 				}
+				auto t2 = std::chrono::high_resolution_clock::now();
+				/* Getting number of milliseconds as an integer. */
+				auto ms_int = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+				std::cout << ms_int.count() << "ms\n";
 #if PARALLEL
 			});
 			HandleTriangleReplacements(triangleReplacements.ToList(), dataSets);
@@ -681,14 +705,15 @@ namespace TextureMapping {
 
 		// Don't remove elements, it is a really slow operation
 		// It is sufficient to set only the first vertex to null
-		m_modelVertices.clear();
+		m_modelVertices[triangleStartVertexId].reset();
 
 		int lastTriangleId = m_modelVertices.size() / 3 - 1;
+
 		m_modelVertices.insert(m_modelVertices.end(),replacement.newVertices.begin(), replacement.newVertices.end());
 
 		// TODO: Filter out the triangles with invalid tex coords, don't add them to the datasets. Dont even add them to the newtexcoords in the first place
 		for (size_t i = 0; i < replacement.affectedDataSets.size(); i++) {
-			std::vector<glm::vec2> newTexCoords = replacement.newTextureCoordinates[i];
+			const std::vector<glm::vec2>& newTexCoords = replacement.newTextureCoordinates[i];
 			MappingDataSet dataSet = replacement.affectedDataSets[i];
 
 			int triangleArrayIdx = replacement.triangleArrayIndices[i];
@@ -708,9 +733,9 @@ namespace TextureMapping {
 	void MeshCutter::addNormals(int triangleStartVertexId, int numberOfInsertions) {
 		// All new triangles have the same normal like the one before
 		// No need to set the old normal to null like for the vertices
-		glm::vec3 normal = m_modelNormals[triangleStartVertexId];
+		glm::vec3 normal = m_modelVertices[triangleStartVertexId]->normal;
 		for (int a = 0; a < numberOfInsertions; a++) {
-			m_modelNormals.push_back(normal);
+			m_modelVertices[triangleStartVertexId+a]->normal=normal;
 		}
 	}
 
@@ -774,7 +799,7 @@ namespace TextureMapping {
 		std::vector<glm::vec2> validTextureCoordinates(output.begin(),output.end());
 		//Vector2[] validTextureCoordinates = textureCoordinates.Where(t = > PolygonHelper.IsPointInsidePolygon(imagePolygon, t)).ToArray();
 		auto output2 = textureCoordinates |
-			std::views::filter([&](const auto& t) {return std::find(validTextureCoordinates.begin(), validTextureCoordinates.end(), t) != validTextureCoordinates.end(); });
+			std::views::filter([&](const auto& t) {return std::find(validTextureCoordinates.begin(), validTextureCoordinates.end(), t) == validTextureCoordinates.end(); });
 		std::vector<glm::vec2> invalidTextureCoordinates(output2.begin(), output2.end());
 		//textureCoordinates.Except(validTextureCoordinates).ToArray();
 		std::vector<int> validIndices;
@@ -808,7 +833,7 @@ namespace TextureMapping {
 	std::vector<glm::vec3> MeshCutter::findVertices(int triangleStartVertexIdx,const std::vector<int>& indices) {
 		std::vector<glm::vec3> vertices(indices.size());
 		for (size_t i = 0; i < indices.size(); i++) {
-			vertices[i] = m_modelVertices[triangleStartVertexIdx + indices[i]];
+			vertices[i] = m_modelVertices[triangleStartVertexIdx + indices[i]]->position;
 		}
 		return vertices;
 	}

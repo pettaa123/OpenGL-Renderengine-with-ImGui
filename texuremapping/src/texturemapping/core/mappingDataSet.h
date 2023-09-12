@@ -40,7 +40,7 @@ namespace TextureMapping {
 	class MappingDataSet {
 
 	public:
-
+		//make those private members...
 		std::vector<glm::vec2> imagePoints;
 		std::vector<glm::vec3> modelPoints;
 		std::string imageFile;

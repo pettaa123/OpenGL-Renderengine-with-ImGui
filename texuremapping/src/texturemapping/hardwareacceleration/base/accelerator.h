@@ -24,17 +24,19 @@ namespace TextureMapping {
 		//std::vector<float> getDefaultTexCoords() { return m_defaultTexCoords; };
 		//int getNumberOfTriangles() { return m_numberOfTriangles; };
 
-		Accelerator(const Model& model) {
-			m_vertices = generateVertexCache(model);
-			m_defaultTexCoords = generateDefaultTextureCoordinates(model);
-			m_numberOfTriangles = m_vertices.size() / 9;
+		Accelerator(const Model& model):
+			m_vertices(model.getVertexCache()),
+			m_defaultTexCoords(generateDefaultedTextureCoordinatesCache(model)),
+			m_numberOfTriangles(model.getIndexCount())
+		{
+			assert(model.getIndexCount() == m_vertices.size() / 9);
 		}
 
 		virtual ~Accelerator() = default;
 
-		std::vector<float> m_vertices;
+		const std::vector<float> m_vertices;
 		std::vector<float> m_defaultTexCoords;
-		size_t m_numberOfTriangles;
+		const size_t m_numberOfTriangles;
 
 
 	public:
@@ -146,29 +148,11 @@ namespace TextureMapping {
 
 		// TODO: This method exists twice (also in the Projector)
 		/// Generates default texture coordinates.
-		std::vector<float> generateDefaultTextureCoordinates(const TextureMapping::Model& model) const {
-			std::vector<float> textureCoordinates(model.getVerticesCount()*2,-1000);
+		std::vector<float> generateDefaultedTextureCoordinatesCache(const TextureMapping::Model& model) const {
+			std::vector<float> textureCoordinates(model.getVertexCount()*2,-1000);
 			return textureCoordinates;
 		}
 
-		std::vector<float> generateVertexCache(const TextureMapping::Model& model) const {
-			std::vector<float> verticesAsFloats(model.getVerticesCount() * 3);
-			uint32_t idx = 0;
-			for (auto& v : model.getVertices()) {
-				verticesAsFloats[idx++] = v.x;
-				verticesAsFloats[idx++] = v.y;
-				verticesAsFloats[idx] = v.z;
-			}
 
-			/*
-			Parallel.ForEach(model.Vertices, (vertex, loopState, index) = > {
-				long idx = index * 3;
-				verticesAsFloats[idx++] = vertex.X;
-				verticesAsFloats[idx++] = vertex.Y;
-				verticesAsFloats[idx] = vertex.Z;
-			});
-			*/
-			return verticesAsFloats;
-		}
 	};
 }

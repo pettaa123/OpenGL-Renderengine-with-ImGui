@@ -40,6 +40,14 @@ namespace Engine {
 		model->draw(*shader.get());
 	}
 
+	void Renderer::submit(const std::shared_ptr<Shader>& shader, Mesh* mesh, const glm::mat4& transform)
+	{
+		shader->bind();
+		shader->setMat4("u_ViewProjection", s_sceneData->viewProjectionMatrix);
+		shader->setMat4("u_Transform", transform);
+		mesh->draw(*shader.get());
+	}
+
 	void Renderer::submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4& transform)
 	{
 		shader->bind();

@@ -9,19 +9,18 @@
 
 namespace TextureMapping {
 
+
 	class Model : public Engine::Model {
 	public:
 
 		Model(const std::string& path);
 
-		void loadVertices();
-		void loadNormals();
-		inline const std::vector<glm::vec3>& getNormals() const { return m_normals; };
-		inline const std::vector<glm::vec3> getVertices() const { return m_vertices; };
-		inline size_t getNormalsCount() const { return m_normals.size(); };
+		void init();
+		std::vector<std::optional<Engine::Mesh::Vertex>>& vertices() { return m_vertices; };
 		inline size_t getVertexCount() const { return m_vertices.size(); };
 
-		inline size_t getVerticesCount() const { return m_vertices.size(); };
+		inline const std::vector<Engine::Mesh::Index>& getIndices() const { return m_indices; };
+		inline size_t getIndexCount() const { return m_indices.size(); };
 
 		TextureDescription textureDescription;
 
@@ -29,10 +28,11 @@ namespace TextureMapping {
 			textureDescription.texture = texture;
 		}
 
-	private:
+		const std::vector<float> getVertexCache() const;
 
-		std::vector<glm::vec3> m_vertices; //combined vertex positions
-		std::vector<glm::vec3> m_normals; //combined normals
+	private:
+		std::vector<std::optional<Engine::Mesh::Vertex>> m_vertices;
+		std::vector<Engine::Mesh::Index> m_indices;
 
 		
 

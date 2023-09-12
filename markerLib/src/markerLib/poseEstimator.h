@@ -23,8 +23,9 @@ namespace MarkerLib {
 		~PoseEstimator();
 		PoseEstimator(const PoseEstimator&) = delete;
 
-		//objPts [n][3], imgPts [n][2], camMatrix float[9], distCoeffs [5], rvec, tvec, 
-		int estimate(const float* objPts, uint32_t objPtsLen,const float* imgPts, uint32_t imgPtsLen,const float* camMatrix,const float* distCoeffs, float* rvec, float* tvec, bool useExtrinsicGuess = false, int flags = 0);
+		//objPts [n][3], imgPts [n][2], camMatrix float[9], distCoeffs [5], rvec[3], tvec[3], repErrs[n] 
+		int estimate(const float* objPts,const uint32_t objPtsLen,const float* imgPts,const uint32_t imgPtsLen,const float* camMatrix,const float* distCoeffs, float* rvec, float* tvec,
+			bool useExtrinsicGuess = false,const int flags = 0, float* repErrs=nullptr,const uint32_t repErrsLer=0);
 	private:
 	// pimpl - private code is in .cpp
 

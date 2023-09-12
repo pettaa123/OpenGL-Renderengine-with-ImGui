@@ -52,6 +52,8 @@ namespace Engine {
 
 		uint32_t getVerticesCount() const { return (uint32_t)m_vertices->size(); }
 
+		const std::vector<Index>& getIndices() const { return *m_indices; }
+
 		const std::vector<Vertex>& getVertices() const { return *m_vertices; }
 
 		std::shared_ptr<VertexArray> getVertexArray() { return m_VAO;}

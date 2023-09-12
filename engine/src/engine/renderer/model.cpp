@@ -40,7 +40,7 @@ namespace Engine {
 		// check for errors
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
 		{
-			Log::error(std::format("ERROR::ASSIMP:: {0}", importer.GetErrorString()));
+			Log::error(std::format("ERROR::ASSIMP:: {0} loading file : {1}", importer.GetErrorString(),path));
 			return;
 		}
 		// retrieve the directory path of the filepath
@@ -101,13 +101,15 @@ namespace Engine {
 
 			if (mesh->HasTextureCoords(0)) {
 				vertex.texCoords = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
+				if (!glm::all(glm::greaterThan(vertex.texCoords,glm::vec2(.0f))))
+					std::cout << "error";
 			}
-
+			
 			vertices->push_back(vertex);
 		}
 
-		m_vertexBuffer.reset(VertexBuffer::create());
-		m_vertexBuffer->setData(vertices->data(), (uint32_t)vertices->size() * sizeof(Mesh::Vertex));
+		std::shared_ptr<VertexBuffer> vertexBuffer(VertexBuffer::create());
+		vertexBuffer->setData(vertices->data(), (uint32_t)vertices->size() * sizeof(Mesh::Vertex));
 
 		Engine::BufferLayout layout = {
 			{ Engine::ShaderDataType::Float3, "a_Position" },
@@ -116,18 +118,19 @@ namespace Engine {
 			{ Engine::ShaderDataType::Float3, "a_Binormal" },
 			{ Engine::ShaderDataType::Float2, "a_Texcoord" }
 		};
-		m_vertexBuffer->setLayout(layout);
+		vertexBuffer->setLayout(layout);
 
 		// now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
 		for (size_t i = 0; i < mesh->mNumFaces; i++)
 		{
-			assert(mesh->mFaces[i].mNumIndices == 3 && "Must have 3 indices.");
-			Mesh::Index index = { mesh->mFaces[i].mIndices[0], mesh->mFaces[i].mIndices[1], mesh->mFaces[i].mIndices[2] };
+			aiFace& face = mesh->mFaces[i];
+			assert(face.mNumIndices == 3 && "Must have 3 indices.");
+			Mesh::Index index = { face.mIndices[0], face.mIndices[1], face.mIndices[2] };
 			indices->push_back(index);
 		}
 
-		m_indexBuffer.reset(IndexBuffer::create());
-		m_indexBuffer->setData(indices->data(), (uint32_t)indices->size() * sizeof(Mesh::Index));
+		std::shared_ptr<IndexBuffer> indexBuffer(IndexBuffer::create());
+		indexBuffer->setData(indices->data(), (uint32_t)indices->size() * sizeof(Mesh::Index));
 
 		// process materials
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
@@ -190,7 +193,7 @@ namespace Engine {
 		*/
 		// return a mesh object created from the extracted mesh data
 
-		return Mesh(vertices,indices,m_vertexBuffer, m_indexBuffer, textures_loaded);
+		return Mesh(vertices,indices,vertexBuffer, indexBuffer, textures_loaded);
 	}
 
 

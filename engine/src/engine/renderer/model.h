@@ -51,8 +51,6 @@ namespace Engine {
 
     private:
 
-        std::shared_ptr<VertexBuffer> m_vertexBuffer;
-        std::shared_ptr<IndexBuffer> m_indexBuffer;
         std::string m_directory;
 
     protected:

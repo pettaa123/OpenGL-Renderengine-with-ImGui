@@ -30,7 +30,6 @@ namespace TextureMapping {
 		for (int i = 0; i < imagePolygonPointsInPixels.size(); i++) {
 			imagePolygonPointsInUV.push_back(glm::vec2(imagePolygonPointsInPixels[i].x / projectionImage.width, imagePolygonPointsInPixels[i].y / projectionImage.height));
 		}
-		imagePolygonPointsInUV = imagePolygonPointsInUV;
 	}
 
 	/// Prepares the image polygon.

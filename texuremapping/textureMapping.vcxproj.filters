@@ -108,6 +108,12 @@
     <ClCompile Include="src\texturemapping\mapping\core\ray3.cpp">
       <Filter>src\mapping\core</Filter>
     </ClCompile>
+    <ClCompile Include="src\texturemapping\mapping\textureMapper.cpp">
+      <Filter>src\mapping</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\optimization\optimizer.cpp">
+      <Filter>src\optimization</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\texturemapping\calibratedCamera.h">

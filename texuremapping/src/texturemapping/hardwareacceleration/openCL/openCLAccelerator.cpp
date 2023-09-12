@@ -59,17 +59,13 @@ namespace TextureMapping {
 
 		//NIMMT TCP4 anstatt modelpoints als Übergabe für die Auswahl der STL vertices in der Projection.cl
 		//float[] TCP;
-		int numberOfModelPoints = (int)dataSet.modelPoints.size();
-		const float* data = glm::value_ptr(dataSet.modelPoints[0]);
-		//to floats
-		std::vector<float> modelPoints(data, data + numberOfModelPoints * 3);
+		int modelPointsByteSize = static_cast<int>(dataSet.modelPoints.size() * sizeof(glm::vec3));
+		const float* modelPointsData = glm::value_ptr(dataSet.modelPoints[0]);
 
 
+		int polygonPointsByteSize = static_cast<int>(dataSet.imagePolygonPointsInPixels.size() * sizeof(glm::vec2));
+		const float* polygonPointsData = glm::value_ptr(dataSet.imagePolygonPointsInPixels[0]);
 
-		int numberOfPoints = (int)dataSet.imagePolygonPointsInPixels.size();
-		data = glm::value_ptr(dataSet.imagePolygonPointsInPixels[0]);
-		//to floats
-		std::vector<float> polygonPoints(data, data + numberOfModelPoints * 2);
 
 
 		std::vector<float> textureCoordinates(m_defaultTexCoords);
@@ -80,8 +76,8 @@ namespace TextureMapping {
 
 			buffers.push_back(boost::compute::buffer(m_context, m_vertices.size() * sizeof(float), CL_MEM_READ_ONLY));
 			buffers.push_back(boost::compute::buffer(m_context, projectionMatrix.size() * sizeof(float), CL_MEM_READ_ONLY));
-			buffers.push_back(boost::compute::buffer(m_context, polygonPoints.size() * sizeof(float), CL_MEM_READ_ONLY));
-			buffers.push_back(boost::compute::buffer(m_context, modelPoints.size() * sizeof(float), CL_MEM_READ_ONLY));
+			buffers.push_back(boost::compute::buffer(m_context, polygonPointsByteSize, CL_MEM_READ_ONLY));
+			buffers.push_back(boost::compute::buffer(m_context, modelPointsByteSize, CL_MEM_READ_ONLY));
 			buffers.push_back(boost::compute::buffer(m_context, textureCoordinates.size() * sizeof(float), CL_MEM_READ_WRITE));
 
 			// set the kernel arguments
@@ -89,8 +85,8 @@ namespace TextureMapping {
 			for (auto& b : buffers) {
 				m_rayCastingKernel.set_arg(a++, b);
 			}
-			m_rayCastingKernel.set_arg(a++, numberOfPoints);
-			m_rayCastingKernel.set_arg(a++, numberOfModelPoints);
+			m_rayCastingKernel.set_arg(a++, static_cast<int>(dataSet.imagePolygonPointsInPixels.size()));
+			m_rayCastingKernel.set_arg(a++, static_cast<int>(dataSet.modelPoints.size()));
 			m_rayCastingKernel.set_arg(a++, imageWidth);
 			m_rayCastingKernel.set_arg(a++, imageHeight);
 
@@ -101,8 +97,8 @@ namespace TextureMapping {
 			// write the data from to the device
 			queue.enqueue_write_buffer(buffers[0], 0, buffers[0].size(), m_vertices.data());
 			queue.enqueue_write_buffer(buffers[1], 0, buffers[1].size(), projectionMatrix.data());
-			queue.enqueue_write_buffer(buffers[2], 0, buffers[2].size(), polygonPoints.data());
-			queue.enqueue_write_buffer(buffers[3], 0, buffers[3].size(), modelPoints.data());
+			queue.enqueue_write_buffer(buffers[2], 0, buffers[2].size(), polygonPointsData);
+			queue.enqueue_write_buffer(buffers[3], 0, buffers[3].size(), modelPointsData);
 			queue.enqueue_write_buffer(buffers[4], 0, buffers[4].size(), textureCoordinates.data());
 
 			size_t global_size = m_numberOfTriangles;

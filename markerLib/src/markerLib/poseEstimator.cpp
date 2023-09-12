@@ -11,10 +11,22 @@ namespace MarkerLib {
 		//int estimate(const std::vector<cv::Point3f>& objectPoints, const std::vector<cv::Point2f>& imagePoints, const std::vector<double>& cameraMatrix, const std::vector<float>& distCoeffs, cv::Vec<float, 3>& rvec, cv::Vec<float, 3>& tvec, bool useExtrinsicGuess, int flags) {
 		int estimate(const std::vector<cv::Point3f>&objectPoints, const std::vector<cv::Point2f>&imagePoints, const cv::Mat& cameraMatrix, const std::vector<float>& distCoeffs, std::vector<float>& rvec, std::vector<float>& tvec, bool useExtrinsicGuess, int flags) {
 
-			if (!cv::solvePnP(objectPoints,imagePoints,cameraMatrix, distCoeffs,rvec,tvec,false,flags))
+			if (!cv::solvePnP(objectPoints,imagePoints,cameraMatrix, distCoeffs,rvec,tvec, useExtrinsicGuess,flags))
 				return EXIT_FAILURE;
 
 			return EXIT_SUCCESS;
+		}
+
+		float calcReprojectionError(const std::vector<cv::Point3f>& objectPoints, const std::vector<cv::Point2f>& imagePoints,  std::vector<float>& rvec, std::vector<float>& tvec, const cv::Mat& cameraMatrix, const std::vector<float>& distCoeffs) {
+			std::vector<cv::Point2f> repPts(imagePoints.size());
+			cv::projectPoints(objectPoints, rvec, tvec, cameraMatrix, distCoeffs, repPts);
+			assert(imagePoints.size() == objectPoints.size());
+			std::cout << "reprojection error x/y (px)" << std::endl;
+			for (int i = 0; i < imagePoints.size(); i++) {
+				std::cout << "pt" << i << ": " << repPts[i].x - imagePoints[i].x << " / " << repPts[i].y - imagePoints[i].y << std::endl;
+			}
+			//rmse
+			return (float)cv::norm(repPts, imagePoints, cv::NORM_L2) / sqrt(2 * repPts.size());
 		}
 	};
 
@@ -27,7 +39,7 @@ namespace MarkerLib {
 		:m_poseEstimator(std::make_unique<PoseEstimatorImpl>())
 	{}
 
-	int PoseEstimator::estimate(const float* objPts, uint32_t objPtsLen, const float* imgPts, uint32_t imgPtsLen, const float* camMatrix, const float* distCoeffs, float* rvec, float* tvec,bool useExtrinsicGuess, int flags) {
+	int PoseEstimator::estimate(const float* objPts,const uint32_t objPtsLen, const float* imgPts,const uint32_t imgPtsLen, const float* camMatrix, const float* distCoeffs, float* rmat, float* tvec,bool useExtrinsicGuess, int flags,float* repErrs,const uint32_t repErrsLen) {
 
 		uint32_t objLen = objPtsLen / 3 / sizeof(float);
 		std::vector<cv::Point3f> objectPoints(objLen);
@@ -53,15 +65,23 @@ namespace MarkerLib {
 		std::vector<float> rVec(3);
 		std::vector<float> tVec(3);
 
-		if (m_poseEstimator->estimate(objectPoints, imagePoints, K, distortionCoeffs, rVec, tVec, false, flags))
+		if (m_poseEstimator->estimate(objectPoints, imagePoints, K, distortionCoeffs, rVec, tVec, useExtrinsicGuess, flags))
 			return EXIT_FAILURE;
 
-		std::memcpy(tVec.data(), tvec, sizeof(float) * 3);
+		std::memcpy(tvec, tVec.data(), sizeof(float) * 3);
 
 		cv::Mat rotation_matrix(3, 3, CV_32F);
 		cv::Rodrigues(rVec, rotation_matrix);
 
-		std::memcpy(rotation_matrix.data, rvec, sizeof(float) * 9);
+		std::memcpy(rmat, rotation_matrix.data, sizeof(float) * 9);
+
+		//************************************************************
+		//calculate reprojection errror(s) depending of the number of projection matrix solutions
+		std::vector<float> repErrVec(1);
+		repErrVec[0]= (m_poseEstimator->calcReprojectionError(objectPoints, imagePoints, rVec, tVec, K, distortionCoeffs));
+
+		std::memcpy(repErrs, repErrVec.data() , sizeof(float));
+
 
 
 		return EXIT_SUCCESS;
