@@ -59,6 +59,18 @@ namespace Engine {
 		//setupMesh();
 	};
 
+	// constructor
+	Mesh::Mesh(std::shared_ptr<VertexBuffer> vertexBuffer) :
+		m_vertexBuffer(vertexBuffer),
+		m_indexBuffer(nullptr)
+	{
+		m_VAO = Engine::VertexArray::create();
+		m_VAO->addVertexBuffer(m_vertexBuffer);
+		// now that we have all the required data, set the vertex buffers and its attribute pointers.
+		//this was already done by setlayout?
+		setupMesh();
+	};
+
 	Mesh::Mesh(const std::string& filename)
 		: m_filePath(filename),
 		m_vertices(std::make_shared<std::vector<Engine::Mesh::Vertex>>()),
@@ -99,7 +111,7 @@ namespace Engine {
 			m_vertices->push_back(vertex);
 		}
 		m_vertexBuffer.reset(VertexBuffer::create());
-		m_vertexBuffer->setData(m_vertices->data(), (uint32_t)(m_vertices->size() * sizeof(Vertex)));
+		m_vertexBuffer->setData(m_vertices->data(),(uint32_t)(m_vertices->size()),(uint32_t)sizeof(Vertex));
 
 		Engine::BufferLayout layout = {
 			{ Engine::ShaderDataType::Float3, "a_Position" },
@@ -129,7 +141,9 @@ namespace Engine {
 
 
 	Mesh::~Mesh()
-	{}
+	{
+		
+	}
 
 
 	void Mesh::setupMesh()
@@ -137,7 +151,8 @@ namespace Engine {
 		m_VAO->bind();
 		// TODO: Sort this out
 		m_vertexBuffer->bind();
-		m_indexBuffer->bind();
+		if(m_indexBuffer.get())
+			m_indexBuffer->bind();
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, position));
@@ -177,8 +192,16 @@ namespace Engine {
 		glActiveTexture(GL_TEXTURE0);
 		// draw mesh
 		m_VAO->bind();
-		uint32_t count = m_VAO->getIndexBuffer()->getCount();
-		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
+
+		if (m_indexBuffer.get()) {
+			uint32_t count = m_VAO->getIndexBuffer()->getCount();
+			glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
+		}
+		else{
+			uint32_t count = m_vertexBuffer->getCount();
+			glDrawArrays(GL_TRIANGLES, 0, count);
+		}
+
 		glBindVertexArray(0);
 
 		// always good practice to set everything back to defaults once configured.

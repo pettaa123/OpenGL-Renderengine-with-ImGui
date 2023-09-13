@@ -152,10 +152,10 @@ namespace TextureMapping {
 
 			for (size_t i = 0; i < triangleOriginIds.size(); i++) {
 				int texIdx = (int)i * 3;
-				MappingDataSet dataSet = m_projectedDataSets[triangleOriginIds[i]];
+				MappingDataSet& dataSet = m_projectedDataSets[triangleOriginIds[i]];
 
 				for (int a = 0; a < 3; a++) {
-					glm::vec2 coordinate = modelTexCoords[texIdx + a];
+					glm::vec2& coordinate = modelTexCoords[texIdx + a];
 
 					if (isTextureCoordinate(coordinate)) {
 						// Don't use "coordinate =" here (it's a struct)

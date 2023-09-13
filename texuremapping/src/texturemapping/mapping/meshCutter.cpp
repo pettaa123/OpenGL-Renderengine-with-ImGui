@@ -20,9 +20,11 @@ namespace TextureMapping {
 	MeshCutter::MeshCutter(Model& model)
 		:m_model(model),
 		m_defaultTexCoord(glm::vec2(-1000, -1000)),
-		m_modelVertices(model.vertices()),
 		m_isCancelled(false)
-	{}
+	{
+		m_modelVertices = std::make_shared<std::vector<std::optional<Engine::Mesh::Vertex>>>(model.vertices().size());
+		std::transform(model.vertices().begin(), model.vertices().end(), m_modelVertices->begin(), [](Engine::Mesh::Vertex& v) {return std::make_optional<Engine::Mesh::Vertex>(v); });
+	}
 
 	// TODO: Either use "id" or "idx"
 	// THIS DEFINETELY NEEDS SOME PROPER REFACTORING
@@ -113,7 +115,7 @@ namespace TextureMapping {
 					VertexInformation& vertexInfo = vertexInfos[a];
 					vertexInfo.texCoord = vertexInfo.underlayingTexCoords[domIdx];
 					vertexInfo.underlayingTexCoords.erase(vertexInfo.underlayingTexCoords.begin() + domIdx);
-					vertexInfo.vertex = m_modelVertices[triangleStartVertexId + a]->position;
+					vertexInfo.vertex = (*m_modelVertices)[triangleStartVertexId + a]->position;
 				}
 
 				std::vector<glm::vec2> dominatingTexCoords = {
@@ -625,7 +627,7 @@ namespace TextureMapping {
 
 		}
 
-		int vertexCountWithNulls = static_cast<int>(m_modelVertices.size());
+		int vertexCountWithNulls = static_cast<int>(m_modelVertices->size());
 		std::vector<int> modelOriginIds(vertexCountWithNulls / 3);
 		std::vector<glm::vec2> modelTexCoords = generateDefaultTextureCoordinates(vertexCountWithNulls);
 
@@ -649,27 +651,21 @@ namespace TextureMapping {
 		}
 
 		m_model.vertices().clear();
-		m_model.vertices().reserve(vertexCountWithNulls * 3);
 		std::vector<glm::vec2> modelTexCoordsList;
-		modelTexCoordsList.reserve(vertexCountWithNulls);
 		std::vector<int> modelOriginIdsList;
-		modelOriginIdsList.reserve(vertexCountWithNulls/3);
 
 		for (int i = 0; i < vertexCountWithNulls; i += 3) {
-			std::optional<Engine::Mesh::Vertex>& vertex = m_modelVertices[i];
-			if (vertex.has_value()) {
+			if ((*m_modelVertices)[i].has_value()) {
 				for (int a = 0; a < 3; a++) {
 					int idx = i + a;
-					m_modelVertices[idx]->texCoords = modelTexCoords[idx];
-					m_model.vertices().push_back(m_modelVertices[idx]);
+					m_model.vertices().push_back(std::move(*(*m_modelVertices)[idx]));
+					m_model.vertices().back().texCoords = modelTexCoords[idx];
 					//removeme
 					modelTexCoordsList.push_back(modelTexCoords[idx]);
 				}
 				modelOriginIdsList.push_back(modelOriginIds[i / 3]);
 			}
 		}
-
-
 
 		std::pair<std::vector<glm::vec2>, std::vector<int>> result(modelTexCoordsList, modelOriginIdsList);
 		return result;
@@ -683,15 +679,15 @@ namespace TextureMapping {
 			int numberOfNewVertices = static_cast<int>(replacement.newVertices.size());
 			int triangleStartVertexId = replacement.triangleStartVertexId;
 			int numberOfNewTriangles = static_cast<int>(replacement.newVertices.size() / 3);
-			int lastTriangleId = static_cast<int>(m_modelVertices.size() / 3 - 1);
+			int lastTriangleId = static_cast<int>(m_modelVertices->size() / 3 - 1);
 			// Don't remove elements, it is a really slow operation
 			// It is sufficient to set only the first vertex to null
 
 			for (int a = 0; a < numberOfNewVertices; a++) {
-				replacement.newVertices[a]->normal = m_modelVertices[triangleStartVertexId]->normal;
+				replacement.newVertices[a]->normal = (*m_modelVertices)[triangleStartVertexId]->normal;
 			}
-			m_modelVertices[triangleStartVertexId].reset();
-			m_modelVertices.insert(m_modelVertices.end(), replacement.newVertices.begin(), replacement.newVertices.end());
+			(*m_modelVertices)[triangleStartVertexId].reset();
+			m_modelVertices->insert(m_modelVertices->end(), replacement.newVertices.begin(), replacement.newVertices.end());
 
 			// TODO: Filter out the triangles with invalid tex coords, don't add them to the datasets. Dont even add them to the newtexcoords in the first place
 			for (size_t i = 0; i < replacement.affectedDataSets.size(); i++) {
@@ -810,7 +806,7 @@ namespace TextureMapping {
 	std::vector<glm::vec3> MeshCutter::findVertices(int triangleStartVertexIdx, const std::vector<int>& indices) {
 		std::vector<glm::vec3> vertices(indices.size());
 		for (size_t i = 0; i < indices.size(); i++) {
-			vertices[i] = m_modelVertices[triangleStartVertexIdx + indices[i]]->position;
+			vertices[i] = (*m_modelVertices)[triangleStartVertexIdx + indices[i]]->position;
 		}
 		return vertices;
 	}

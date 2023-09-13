@@ -109,7 +109,7 @@ namespace Engine {
 		}
 
 		std::shared_ptr<VertexBuffer> vertexBuffer(VertexBuffer::create());
-		vertexBuffer->setData(vertices->data(), (uint32_t)vertices->size() * sizeof(Mesh::Vertex));
+		vertexBuffer->setData(vertices->data(), (uint32_t)vertices->size(), (uint32_t)sizeof(Mesh::Vertex));
 
 		Engine::BufferLayout layout = {
 			{ Engine::ShaderDataType::Float3, "a_Position" },

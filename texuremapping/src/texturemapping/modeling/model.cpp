@@ -13,9 +13,9 @@ namespace TextureMapping {
 		uint32_t idx = 0;
 
 		for (const auto& vertex : m_vertices) {
-			verticesAsFloats[idx++] = vertex->position.x;
-			verticesAsFloats[idx++] = vertex->position.y;
-			verticesAsFloats[idx++] = vertex->position.z;
+			verticesAsFloats[idx++] = vertex.position.x;
+			verticesAsFloats[idx++] = vertex.position.y;
+			verticesAsFloats[idx++] = vertex.position.z;
 		}
 		return verticesAsFloats;
 	}
@@ -31,8 +31,14 @@ namespace TextureMapping {
 			m_indices.insert(m_indices.end(), m.getIndices().begin(), m.getIndices().end());
 			auto vertexVec = m.getVertices();
 			for (const auto& vertex : vertexVec)
-				m_vertices.push_back(std::make_optional<Engine::Mesh::Vertex>(vertex));
+				m_vertices.push_back(vertex);
 		}
+
+	}
+
+	void Model::recreateMesh() {
+
+		Engine::Model::init(m_vertices);
 
 	}
 }

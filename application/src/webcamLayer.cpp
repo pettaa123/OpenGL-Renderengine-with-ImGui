@@ -85,7 +85,7 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 
 	//m_markerModel = std::make_shared<TextureMapping::Model>("assets/models/backpack/backpack.obj");
 	//m_markerModel = std::make_shared<TextureMapping::Model>("assets/marker/marker_test.stl");
-	m_markerModel = std::make_shared<TextureMapping::Model>("assets/models/TruTh/TruTh_Mesh Creation.1_1.stl");
+	m_modelTruth = std::make_shared<TextureMapping::Model>("assets/models/TruTh/TruTh_Mesh Creation.1_1.stl");
 	//m_3dObject = std::make_unique<Engine::Model>("assets/models/COS.STL");
 	
 	for (TextureMapping::MappingDataSet& d : dataSets) {
@@ -95,15 +95,17 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 	}
 
 	auto devs = TextureMapping::OpenCLAccelerator::getDevices();
-	auto executor = TextureMapping::OpenCLAccelerator(devs[0], *m_markerModel.get());
+	auto executor = TextureMapping::OpenCLAccelerator(devs[0], *m_modelTruth.get());
 
 
-	TextureMapping::ImageToModelProjector projector(*m_markerModel, executor);
+	TextureMapping::ImageToModelProjector projector(*m_modelTruth, executor);
 	for (size_t i = 0; i < dataSets.size(); i++)
 	{		
 		projector.projectImage(dataSets[i], i, projectionMatrices[i]);		
 	}
 	std::optional<TextureMapping::MergingResult> mergingResult = projector.finish();
+
+	
 
 
 
@@ -170,8 +172,6 @@ void WebcamLayer::onAttach()
 	
 	auto loadedShader = m_shaderLibrary.load("assets/shaders/model_loading.glsl");
 	loadedShader = m_shaderLibrary.load("assets/shaders/FlatColor.glsl");
-
-	m_model = std::make_shared<TextureMapping::Model> ("assets/models/TruTh/TruTh_Mesh Creation.1_1.stl");
 
 	//m_squareVA = Engine::OpenGLVertexArray::create();
 	//m_squareVA->bind();
@@ -301,8 +301,7 @@ void WebcamLayer::onUpdate(Engine::Timestep ts)
 	loadedShader->setFloat3("u_Color", m_squareColor);
 
 
-	Engine::Renderer::submit(m_shaderLibrary.get("FlatColor"), m_model.get());
-	//Engine::Renderer::submit(m_shaderLibrary.get("FlatColor"), m_3dObject.get());
+	Engine::Renderer::submit(m_shaderLibrary.get("FlatColor"), m_modelTruth.get());
 
 
 	////////////////////MAPPING ENDE

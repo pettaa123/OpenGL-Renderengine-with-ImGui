@@ -8,17 +8,19 @@ namespace Engine {
 	// VertexBuffer /////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////
 
-	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
+	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t count, uint32_t elemSize)
+		:m_count(count)
 	{
 		glCreateBuffers(1, &m_rendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
 	}
 
-	OpenGLVertexBuffer::OpenGLVertexBuffer(const float* vertices, uint32_t size)
+	OpenGLVertexBuffer::OpenGLVertexBuffer(const float* vertices,uint32_t count, uint32_t elemSize)
+		:m_count(count)
 	{
 		glCreateBuffers(1, &m_rendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
-		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, (uint32_t)(count*elemSize), vertices, GL_STATIC_DRAW);
 	}
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
@@ -36,10 +38,11 @@ namespace Engine {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void OpenGLVertexBuffer::setData(const void* data, uint32_t size)
+	void OpenGLVertexBuffer::setData(const void* data,uint32_t count, uint32_t elemSize)
 	{
+		m_count = count;
 		glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
-		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, (uint32_t)(count*elemSize), data, GL_STATIC_DRAW);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////

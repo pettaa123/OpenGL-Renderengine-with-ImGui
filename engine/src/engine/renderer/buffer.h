@@ -113,14 +113,16 @@ namespace Engine {
 		virtual void bind() const = 0;
 		virtual void unbind() const = 0;
 
-		virtual void setData(const void* data, uint32_t size) = 0;
+		virtual void setData(const void* data,uint32_t count, uint32_t elemSize) = 0;
 
 		virtual const BufferLayout& getLayout() const = 0;
 		virtual void setLayout(const BufferLayout& layout) = 0;
 
-		static VertexBuffer* create(uint32_t size = 0);
+		virtual uint32_t getCount() const = 0;
+
+		static VertexBuffer* create(uint32_t count = 0,uint32_t size = 0);
 		//static std::shared_ptr<VertexBuffer> create(uint32_t size);
-		static std::shared_ptr<VertexBuffer> create(const float* vertices, uint32_t size);
+		static std::shared_ptr<VertexBuffer> create(const float* vertices, uint32_t count, uint32_t elemSize);
 	};
 
 	// Currently Engine only supports 32-bit index buffers

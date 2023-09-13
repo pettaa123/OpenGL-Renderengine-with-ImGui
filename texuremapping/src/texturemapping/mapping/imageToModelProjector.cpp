@@ -4,7 +4,8 @@ namespace TextureMapping {
 
 	ImageToModelProjector::ImageToModelProjector(TextureMapping::Model& model, Accelerator& accelerator)
 		:m_model(model),
-		m_accelerator(accelerator)
+		m_accelerator(accelerator),
+		m_isCancelled(false)
 	{}
 
     void ImageToModelProjector::projectImage(MappingDataSet& dataSet, int originId, glm::mat3x4& projectionMatrix) {
@@ -59,6 +60,8 @@ namespace TextureMapping {
 			0x8370,//TextureWrapMode.MirroredRepeat,
 			0x8370//TextureWrapMode.MirroredRepeat
 		};
+
+		m_model.recreateMesh();
 
 		m_model.setTexture(imageTexture);
 		m_model.textureDescription.parameters = parameters;

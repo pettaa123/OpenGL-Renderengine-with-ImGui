@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "texturemapping/modeling/model.h"
 #include "texturemapping/core/mappingDataSet.h"
 #include "texturemapping/mapping/core/triangleReplacement.h"
@@ -7,6 +8,7 @@
 #include <optional>
 #include "texturemapping/mapping/core/ray2.h"
 #include "texturemapping/mapping/core/vectorResult.h"
+
 
 
 namespace TextureMapping {
@@ -19,8 +21,8 @@ namespace TextureMapping {
 	class MeshCutter {
 	private:
 
-		Model m_model;
-		std::vector<std::optional<Engine::Mesh::Vertex>>& m_modelVertices;
+		Model& m_model;
+		std::shared_ptr<std::vector<std::optional<Engine::Mesh::Vertex>>> m_modelVertices;
 		glm::vec2 m_defaultTexCoord;
 		bool m_isCancelled;
 
@@ -31,6 +33,10 @@ namespace TextureMapping {
 		/// <param name="model">The model.</param>
 		/// <param name="cancelObserver">The cancel observer.</param>
 		MeshCutter(Model& m_model);
+
+		std::shared_ptr<std::vector<std::optional<Engine::Mesh::Vertex>>> getModelVertices() {
+			return m_modelVertices;
+		}
 
 		// TODO: Either use "id" or "idx"
 		/// <summary>
