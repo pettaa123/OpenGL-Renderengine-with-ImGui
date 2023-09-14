@@ -204,11 +204,11 @@ namespace TextureMapping {
 
 							glm::vec3 invalidVertex = vectors.invalidVertices[0];
 							glm::vec3 validVertex1 = vertexInfo.vertex;
-							glm::vec3 validVertex2 = *std::find_if(vectors.validVertices.begin(), vectors.validVertices.end(), [&](glm::vec3& vv) {return glm::all(glm::notEqual(vv, validVertex1)); });
+							glm::vec3 validVertex2 = *std::find_if(vectors.validVertices.begin(), vectors.validVertices.end(), [&](glm::vec3& vv) {return glm::any(glm::notEqual(vv, validVertex1)); });
 							//glm::vec2 validVertex2 = vectors.validVertices.First(vv = > vv != validVertex1);
 
 							glm::vec2 validTex1 = vertexInfo.texCoord;
-							glm::vec2 validTex2 = *std::find_if(vectors.validTextureCoordinates.begin(), vectors.validTextureCoordinates.end(), [&](glm::vec2& vv) {return glm::all(glm::notEqual(vv, validTex1)); });
+							glm::vec2 validTex2 = *std::find_if(vectors.validTextureCoordinates.begin(), vectors.validTextureCoordinates.end(), [&](glm::vec2& vv) {return glm::any(glm::notEqual(vv, validTex1)); });
 							//glm::vec2 validTex2 = vectors.validTextureCoordinates.First(t = > t != validTex1);
 							std::vector<glm::vec2> underlayingTex3 = vertexInfos[vectors.invalidIndices[0]].underlayingTexCoords;
 
@@ -283,7 +283,15 @@ namespace TextureMapping {
 							std::vector<VertexInformation> sideVertexInfos = getVertexInformationsFromIntersection(intersections[0].sideIdx, vertexInfos);
 							glm::vec3 invalidVertex1 = sideVertexInfos[0].vertex;
 							glm::vec3 invalidVertex2 = sideVertexInfos[1].vertex;
-							glm::vec3 invalidVertex3 = *std::find_if(vectors.invalidVertices.begin(), vectors.invalidVertices.end(), [&](glm::vec3& v) {return glm::all(glm::notEqual(v, invalidVertex1)) && glm::all(glm::notEqual(v, invalidVertex2)); });
+							//glm::vec3 invalidVertex3;
+							//auto invalidVertexIt = std::find_if(vectors.invalidVertices.begin(), vectors.invalidVertices.end(), [&](glm::vec3& v) {
+							//	return glm::all(glm::notEqual(v, invalidVertex1)) && glm::o(glm::notEqual(v, invalidVertex2));
+							//	});
+							//
+							//if (invalidVertexIt != vectors.invalidVertices.end()) {
+							//	invalidVertex3 = *invalidVertexIt;
+							//}
+							glm::vec3 invalidVertex3 = *std::find_if(vectors.invalidVertices.begin(), vectors.invalidVertices.end(), [&](glm::vec3& v) {return glm::any(glm::notEqual(v, invalidVertex1)) && glm::any(glm::notEqual(v, invalidVertex2)); });
 
 							auto lambda = [&](auto& a, auto& b) { return glm::distance2(a.vertexInfo.vertex, invalidVertex1) < glm::distance2(b.vertexInfo.vertex, invalidVertex1); };
 							IntersectionResult intersection1 = *std::min_element(intersections.begin(), intersections.end(), lambda);

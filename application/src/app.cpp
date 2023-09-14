@@ -1,6 +1,6 @@
 #include <engine/core/entryPoint.h>
 #include "exampleLayer.h"
-#include "webcamLayer.h"
+#include "targetLayer.h"
 
 class App : public Engine::Application
 {
@@ -9,7 +9,8 @@ public:
 		: Engine::Application(specification)
 	{
 		//pushLayer(new ExampleLayer());
-		pushLayer(new WebcamLayer());
+		//pushLayer(new WebcamLayer());
+		pushLayer(new TargetLayer());
 	}
 
 	~App()

@@ -150,10 +150,12 @@
   <ItemGroup>
     <ClCompile Include="src\exampleLayer.cpp" />
     <ClCompile Include="src\app.cpp" />
+    <ClCompile Include="src\targetLayer.cpp" />
     <ClCompile Include="src\webcamLayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\exampleLayer.h" />
+    <ClInclude Include="src\targetLayer.h" />
     <ClInclude Include="src\webcamLayer.h" />
   </ItemGroup>
   <ItemGroup>

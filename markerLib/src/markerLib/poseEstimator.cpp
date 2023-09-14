@@ -60,25 +60,43 @@ namespace MarkerLib {
 
 		cv::Mat K(3,3,CV_32F,const_cast<float*>(camMatrix));
 
+		std::cout << K;
+
 		std::vector<float> distortionCoeffs(distCoeffs, distCoeffs + 5);		
 
-		std::vector<float> rVec(3);
-		std::vector<float> tVec(3);
+		std::vector<float> rVec_(3);
+		std::vector<float> tVec_(3);
 
-		if (m_poseEstimator->estimate(objectPoints, imagePoints, K, distortionCoeffs, rVec, tVec, useExtrinsicGuess, flags))
+		if (m_poseEstimator->estimate(objectPoints, imagePoints, K, distortionCoeffs, rVec_, tVec_, useExtrinsicGuess, flags))
 			return EXIT_FAILURE;
 
-		std::memcpy(tvec, tVec.data(), sizeof(float) * 3);
+		std::memcpy(tvec, tVec_.data(), sizeof(float) * 3);
+
+		std::cout << tvec[0];
+		std::cout << tvec[1];
+		std::cout << tvec[2];
 
 		cv::Mat rotation_matrix(3, 3, CV_32F);
-		cv::Rodrigues(rVec, rotation_matrix);
+		cv::Rodrigues(rVec_, rotation_matrix);
 
-		std::memcpy(rmat, rotation_matrix.data, sizeof(float) * 9);
+		std::cout << "r: " << rotation_matrix;
+
+		std::memcpy(rmat, (float*)rotation_matrix.data, sizeof(float) * 9);
+
+		std::cout << "0: " << ((float*)rotation_matrix.data)[0] << std::endl;
+		std::cout << "1: " << ((float*)rotation_matrix.data)[1] << std::endl;
+		std::cout << "2: " << ((float*)rotation_matrix.data)[2] << std::endl;
+		std::cout << "3: " << ((float*)rotation_matrix.data)[3] << std::endl;
+		std::cout << "4: " << ((float*)rotation_matrix.data)[4] << std::endl;
+		std::cout << "5: " << ((float*)rotation_matrix.data)[5] << std::endl;
+		std::cout << "6: " << ((float*)rotation_matrix.data)[6] << std::endl;
+		std::cout << "7: " << ((float*)rotation_matrix.data)[7] << std::endl;
+		std::cout << "8: " << ((float*)rotation_matrix.data)[8] << std::endl;
 
 		//************************************************************
 		//calculate reprojection errror(s) depending of the number of projection matrix solutions
 		std::vector<float> repErrVec(1);
-		repErrVec[0]= (m_poseEstimator->calcReprojectionError(objectPoints, imagePoints, rVec, tVec, K, distortionCoeffs));
+		repErrVec[0]= (m_poseEstimator->calcReprojectionError(objectPoints, imagePoints, rVec_, tVec_, K, distortionCoeffs));
 
 		std::memcpy(repErrs, repErrVec.data() , sizeof(float));
 

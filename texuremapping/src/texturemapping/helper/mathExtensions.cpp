@@ -6,9 +6,11 @@ namespace TextureMapping {
     glm::mat3x4 MathExtension::createProjectionMatrix(const glm::mat3& rotation_matrix, const glm::vec3& translation_vector) {
         glm::mat3x4 projection_matrix;
 
+
         projection_matrix[0] = glm::vec4(rotation_matrix[0], translation_vector.x);
         projection_matrix[1] = glm::vec4(rotation_matrix[1], translation_vector.y);
         projection_matrix[2] = glm::vec4(rotation_matrix[2], translation_vector.z);
+
 
         return projection_matrix;
     }
