@@ -43,7 +43,7 @@ namespace TextureMapping {
 		spec.width = textureDescription.texture.get()->getWidth();
 		spec.generateMips = textureDescription.texture.get()->getUseMipMaps();
 		BaseLib::STBimage& img = textureDescription.texture.get()->getImage();
-		img.write("test.png");
+
 		switch (img.channels)
 		{
 		case 3:  spec.format=Engine::ImageFormat::RGB8;
@@ -54,6 +54,11 @@ namespace TextureMapping {
 
 		texture->setData((void*)img.data.get(), (uint32_t)(img.width * img.height * img.channels));
 
+		assert(textureDescription.coordinates.size() == m_vertices.size());
+
+		for (int i = 0; i < m_vertices.size(); i++) {
+			m_vertices[i].texCoords = textureDescription.coordinates[i];
+		}
 
 		Engine::Model::init(m_vertices,texture);
 

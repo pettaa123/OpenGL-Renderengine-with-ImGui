@@ -137,7 +137,7 @@ namespace TextureMapping {
 			float widthFactor = mergingResult.widthFactor;
 			float heightFactor = mergingResult.heightFactor;
 			std::vector<glm::vec2>& modelTexCoords = m_model.textureDescription.coordinates;
-
+			
 			for (size_t i = 0; i < m_projectedDataSets.size(); i++) {
 				MappingDataSet& dataSet = m_projectedDataSets[i];
 

@@ -28,6 +28,7 @@ namespace TextureMapping {
 		TextureDescription textureDescription;
 
 		void setTexture(std::shared_ptr<Texture>& texture) {
+
 			textureDescription.texture = texture;		
 		}
 

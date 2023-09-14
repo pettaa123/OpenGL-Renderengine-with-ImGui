@@ -659,8 +659,7 @@ namespace TextureMapping {
 				for (int a = 0; a < 3; a++) {
 					int idx = i + a;
 					m_model.vertices().push_back(std::move(*(*m_modelVertices)[idx]));
-					m_model.vertices().back().texCoords = modelTexCoords[idx];
-					//removeme
+					//m_model.vertices().back().texCoords = modelTexCoords[idx];
 					modelTexCoordsList.push_back(modelTexCoords[idx]);
 				}
 				modelOriginIdsList.push_back(modelOriginIds[i / 3]);
