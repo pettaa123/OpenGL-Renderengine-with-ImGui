@@ -164,5 +164,7 @@ private:
 	std::shared_ptr<TextureMapping::Model> m_markerModel;
 	std::shared_ptr<TextureMapping::Model> m_modelTruth;
 
+	std::shared_ptr<Engine::Texture2D> m_texture;
+
 };
 

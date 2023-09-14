@@ -17,6 +17,7 @@ namespace TextureMapping {
 		int getId() { return m_id; };
 		int getWidth() { return m_width; }
 		int getheight() { return m_height; }
+		BaseLib::STBimage& getImage() { return m_image; }
 
 	private:
 		std::string m_file;

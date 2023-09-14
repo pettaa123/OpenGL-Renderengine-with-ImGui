@@ -17,11 +17,11 @@ namespace Engine {
 		: m_projectionMatrix(projectionMatrix)
 	{
 		// Sensible defaults
-		m_panSpeed = 0.0015f;
-		m_rotationSpeed = 0.002f;
-		m_zoomSpeed = 0.2f;
+		m_panSpeed = 0.005f;
+		m_rotationSpeed = 0.004f;
+		m_zoomSpeed = 0.3f;
 
-		m_position = { 0, 0, 3 };
+		m_position = { 0, 0, 1000 };
 		m_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 
 		m_focalPoint = glm::vec3(0.0f);

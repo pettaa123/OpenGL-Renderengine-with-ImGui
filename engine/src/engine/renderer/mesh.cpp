@@ -60,10 +60,12 @@ namespace Engine {
 	};
 
 	// constructor
-	Mesh::Mesh(std::shared_ptr<VertexBuffer> vertexBuffer) :
+	Mesh::Mesh(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<Texture2D> texture) :
 		m_vertexBuffer(vertexBuffer),
-		m_indexBuffer(nullptr)
+		m_indexBuffer(nullptr),
+		m_texture(texture)
 	{
+
 		m_VAO = Engine::VertexArray::create();
 		m_VAO->addVertexBuffer(m_vertexBuffer);
 		// now that we have all the required data, set the vertex buffers and its attribute pointers.
@@ -192,6 +194,9 @@ namespace Engine {
 		glActiveTexture(GL_TEXTURE0);
 		// draw mesh
 		m_VAO->bind();
+
+		if (m_texture)
+			m_texture->bind();
 
 		if (m_indexBuffer.get()) {
 			uint32_t count = m_VAO->getIndexBuffer()->getCount();

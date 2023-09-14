@@ -5,6 +5,10 @@ namespace TextureMapping {
 
 	Texture::Texture(const BaseLib::STBimage& image, bool generateMipMaps)
 		:m_image(image),
+		m_height(m_image.height),
+		m_width(m_image.width),
+		m_id(-1),
+		m_isFlipped(false),
 		m_useMipMaps(generateMipMaps)
 	{
 		Engine::TextureSpecification textureSpecs;

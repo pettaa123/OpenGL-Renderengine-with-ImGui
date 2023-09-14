@@ -38,7 +38,24 @@ namespace TextureMapping {
 
 	void Model::recreateMesh() {
 
-		Engine::Model::init(m_vertices);
+		Engine::TextureSpecification spec;
+		spec.height = textureDescription.texture.get()->getheight();
+		spec.width = textureDescription.texture.get()->getWidth();
+		spec.generateMips = textureDescription.texture.get()->getUseMipMaps();
+		BaseLib::STBimage& img = textureDescription.texture.get()->getImage();
+		img.write("test.png");
+		switch (img.channels)
+		{
+		case 3:  spec.format=Engine::ImageFormat::RGB8;
+		case 4:  spec.format = Engine::ImageFormat::RGBA8;
+		}
+
+		std::shared_ptr<Engine::Texture2D> texture(Engine::Texture2D::create(spec));
+
+		texture->setData((void*)img.data.get(), (uint32_t)(img.width * img.height * img.channels));
+
+
+		Engine::Model::init(m_vertices,texture);
 
 	}
 }

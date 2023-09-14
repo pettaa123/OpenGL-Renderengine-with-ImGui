@@ -61,8 +61,6 @@ namespace TextureMapping {
 			0x8370//TextureWrapMode.MirroredRepeat
 		};
 
-		m_model.recreateMesh();
-
 		m_model.setTexture(imageTexture);
 		m_model.textureDescription.parameters = parameters;
 

@@ -107,7 +107,7 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 
 	
 
-
+	m_modelTruth->recreateMesh();
 
 
 
@@ -172,6 +172,7 @@ void WebcamLayer::onAttach()
 	
 	auto loadedShader = m_shaderLibrary.load("assets/shaders/model_loading.glsl");
 	loadedShader = m_shaderLibrary.load("assets/shaders/FlatColor.glsl");
+	loadedShader = m_shaderLibrary.load("assets/shaders/webcam.glsl");
 
 	//m_squareVA = Engine::OpenGLVertexArray::create();
 	//m_squareVA->bind();
@@ -296,12 +297,11 @@ void WebcamLayer::onUpdate(Engine::Timestep ts)
 
 	//////////////MAPPING
 
-	auto loadedShader = m_shaderLibrary.get("FlatColor");;
+	auto loadedShader = m_shaderLibrary.get("model_loading");;
 	loadedShader->bind();
 	loadedShader->setFloat3("u_Color", m_squareColor);
 
-
-	Engine::Renderer::submit(m_shaderLibrary.get("FlatColor"), m_modelTruth.get());
+	Engine::Renderer::submit(m_shaderLibrary.get("model_loading"), m_modelTruth.get());
 
 
 	////////////////////MAPPING ENDE

@@ -43,7 +43,7 @@ namespace Engine {
 		static_assert(sizeof(Index) == 3 * sizeof(uint32_t));
 
 		Mesh(std::shared_ptr<std::vector<Vertex>> vertices, std::shared_ptr<std::vector<Index>> indices,  std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer, std::vector<std::shared_ptr<Texture2D>> textures);
-		Mesh(std::shared_ptr<VertexBuffer> vertexBuffer);
+		Mesh(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<Texture2D> texture);
 		Mesh(const std::string& filename);
 		~Mesh();
 
@@ -68,6 +68,7 @@ namespace Engine {
 		std::shared_ptr<std::vector<Index>> m_indices;
 		std::shared_ptr<VertexBuffer> m_vertexBuffer;
 		std::shared_ptr<IndexBuffer> m_indexBuffer;
+		std::shared_ptr<Texture2D> m_texture;
 
 		std::string m_filePath;
 
