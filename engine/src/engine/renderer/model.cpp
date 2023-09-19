@@ -50,6 +50,29 @@ namespace Engine {
 		processNode(scene->mRootNode, (void*)scene);
 	};
 
+	void Model::updateModelMatrix() {
+		//glm::mat4 rotation = Matrix4.CreateFromQuaternion(RotationQuaternion);
+		//Matrix4 translation = Matrix4.CreateTranslation(Position);
+		//Matrix4 scale = Matrix4.CreateScale(Size * InternalSize);
+		//ModelMatrix = scale * rotation * translation;
+		//
+		//if (_parentModel != null) {
+		//	ModelMatrix *= _parentModel.ModelMatrix.ClearScale();
+		//}
+		//
+		//foreach(Model model in AttachedModels) {
+		//	model.UpdateModelMatrix();
+		//}
+		//
+		//NormalMatrix = ModelMatrix.Inverted();
+		//NormalMatrix.Transpose();
+		//
+		//// Will be null at the beginning
+		//if (Scene != null) {
+		//	Scene.HasModelChanges = true;
+		//}
+	}
+
 	// processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
 	void Model::processNode(void* node_in, void* scene_in)
 	{

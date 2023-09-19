@@ -19,12 +19,14 @@ public:
 	virtual void onImGuiRender() override;
 	void onEvent(Engine::Event& e) override;
 private:
+	std::shared_ptr<Engine::Model>			m_camModel;
 	Engine::ShaderLibrary					m_shaderLibrary;
 	std::shared_ptr<Engine::Shader>			m_webcamShader;
 	std::shared_ptr<Engine::Shader>			m_objectShader;
 	std::shared_ptr<Engine::Texture2D>		m_webcamFeedTexture;
 	Engine::Camera							m_cameraController; //perspective camera
 	glm::vec3								m_squareColor = { 0.5f, 0.2f, 0.5f };
+	glm::vec3								m_camColor = { 0.3f, 0.3f, 0.3f };
 
 	//MARKER
 	std::shared_ptr<TextureMapping::Model> m_markerModel;

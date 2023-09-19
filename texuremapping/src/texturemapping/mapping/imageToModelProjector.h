@@ -1,4 +1,7 @@
 #pragma once
+
+#define CL_TARGET_OPENCL_VERSION 120
+
 #include <optional>
 #include "texturemapping/hardwareacceleration/base/accelerator.h"
 #include "texturemapping/modeling/model.h"

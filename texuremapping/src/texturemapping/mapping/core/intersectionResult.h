@@ -26,6 +26,9 @@ namespace TextureMapping {
 		bool operator==(const IntersectionResult& rhs) const {
 			return (sideIdx == rhs.sideIdx) && (vertexInfo == rhs.vertexInfo);
 		}
+		bool operator<(const IntersectionResult& rhs) const {
+			return (sideIdx < rhs.sideIdx) || (vertexInfo < rhs.vertexInfo);
+		}
 
 	};
 }

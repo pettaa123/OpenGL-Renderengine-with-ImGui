@@ -18,6 +18,8 @@ namespace MarkerLib {
 		MarkerFinder(const MarkerFinder&) = delete;
 		//pointBuf form [n][2]
 		int selectAndRefineCorners(const BaseLib::STBimage& stbImage, float* pointBuf, uint32_t pointBufLen);
+		BaseLib::STBimage clampImage(const BaseLib::STBimage& stbImage, uint16_t lowerBound, uint16_t upperBound);
+
 	};
 
 }

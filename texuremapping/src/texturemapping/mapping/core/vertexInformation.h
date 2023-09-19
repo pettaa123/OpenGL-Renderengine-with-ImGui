@@ -36,20 +36,14 @@ namespace TextureMapping {
 		glm::vec3 vertex;
 		glm::vec2 texCoord;
 		std::vector<glm::vec2> underlayingTexCoords;
-
+		//this class gets used to split triangles, so actually important for comparison are the vertex coordinates
 		bool operator==(const VertexInformation& rhs) const
 		{
-			return (vertexIdx == rhs.vertexIdx) &&
-				glm::all(glm::equal(vertex, rhs.vertex)) &&
-				glm::all(glm::equal(texCoord, rhs.texCoord)) &&
-				(underlayingTexCoords == rhs.underlayingTexCoords);
-				//std::equal(underlayingTexCoords.begin(), underlayingTexCoords.end(), [](auto& a, auto& b) {return glm::all(glm::equal(a, b)); });
+			return glm::all(glm::equal(vertex, rhs.vertex));
 		}
 
-		bool operator<(const VertexInformation& other) const {
-			// Define your comparison logic here
-			// For example, compare based on vertexId
-			return vertexIdx < other.vertexIdx;
+		bool operator<(const VertexInformation& rhs) const {
+			return glm::any(glm::lessThan(vertex, rhs.vertex));
 		}
 	};
 }

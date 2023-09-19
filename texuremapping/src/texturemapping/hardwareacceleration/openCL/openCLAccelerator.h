@@ -1,6 +1,6 @@
 #pragma once
 
-#define CL_TARGET_OPENCL_VERSION 220
+#define CL_TARGET_OPENCL_VERSION 120
 
 #include <algorithm>
 #include <fstream>

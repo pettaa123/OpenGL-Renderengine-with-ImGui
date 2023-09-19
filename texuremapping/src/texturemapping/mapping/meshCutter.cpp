@@ -346,19 +346,20 @@ namespace TextureMapping {
 					else {
 						// CASE: Triangle gets intersected four times
 						if (intersections.size() == 4) {
-							std::vector<std::vector<IntersectionResult>> intersectionsBySide;
-
+							
 							int c = 0;
-							auto subsetLambda = [&](const auto& i) {return i.sideIdx == c; };
-							std::vector<IntersectionResult> output;
+							auto subsetLambda = [&c](const auto& i) {return i.sideIdx == c; };
+							std::vector<IntersectionResult> output0;
 							// Use std::copy_if to filter and insert elements directly into output
-							std::copy_if(intersections.begin(), intersections.end(), std::back_inserter(output), subsetLambda);
+							std::copy_if(intersections.begin(), intersections.end(), std::back_inserter(output0), subsetLambda);
 							// Add the filtered subset to intersectionsBySide				
 							c = 1;
-							std::copy_if(intersections.begin(), intersections.end(), std::back_inserter(output), subsetLambda);
+							std::vector<IntersectionResult> output1;
+							std::copy_if(intersections.begin(), intersections.end(), std::back_inserter(output1), subsetLambda);
 							c = 2;
-							std::copy_if(intersections.begin(), intersections.end(), std::back_inserter(output), subsetLambda);
-							intersectionsBySide.emplace_back(std::move(output));
+							std::vector<IntersectionResult> output2;
+							std::copy_if(intersections.begin(), intersections.end(), std::back_inserter(output2), subsetLambda);
+							std::vector<std::vector<IntersectionResult>> intersectionsBySide{output0,output1,output2};
 
 							// CASE: One triangle vertex is inside, two are outside the image polygon
 							if (validCount == 1) {
@@ -440,7 +441,7 @@ namespace TextureMapping {
 								for (int v = 0; v < 3; v++) {
 									verticesByRelativePosition.insert({ vertexInfos[v], MathExtension::pointRelativeToSide(imageCornerTex, imagePolygon[imageCornerIdx + 1], vertexInfos[v].texCoord) });
 								}
-								int trueCount = static_cast<int>(std::count_if(verticesByRelativePosition.begin(), verticesByRelativePosition.end(), [](const std::pair<VertexInformation, bool>& p) {return p.second == true; }));
+								int trueCount = static_cast<int>(std::count_if(verticesByRelativePosition.begin(), verticesByRelativePosition.end(), [](const auto& p) {return p.second == true; }));
 								//int trueCount = verticesByRelativePosition.Count(p = > p.Value == true);
 								bool sameSideCriterion = trueCount == 2;
 								// Create a vector to store vertexInfos on the same side
@@ -455,11 +456,9 @@ namespace TextureMapping {
 
 								// Find the vertexInfo on the other side
 								VertexInformation vertexInfoOnOtherSide;
-								for (const auto& pair : verticesByRelativePosition) {
-									if (std::find(vertexInfosOnSameSide.begin(), vertexInfosOnSameSide.end(), pair.first) == vertexInfosOnSameSide.end()) {
-										vertexInfoOnOtherSide = pair.first;
-										break;
-									}
+								for (const std::pair<VertexInformation,bool>& vrp : verticesByRelativePosition) {
+									if (std::find(vertexInfosOnSameSide.begin(), vertexInfosOnSameSide.end(), vrp.first) == vertexInfosOnSameSide.end())
+										vertexInfoOnOtherSide = vrp.first;
 								}
 
 								glm::vec3 invalidVertex1 = vertexInfosOnSameSide[0].vertex;
@@ -474,14 +473,13 @@ namespace TextureMapping {
 
 								// Side 1: v2-v3
 								// Side 2: v1-v3
-								//NOT USEDauto output = intersectionsBySide
-								//NOT USED	| std::views::filter([](auto& v) {return v.size() == 2; });
-								//NOT USED//std::vector<std::vector<IntersectionResult>> intersectionsWithTwoBySide(output.begin(), output.end());
-								//std::vector<std::vector<IntersectionResult>> intersectionsWithTwoBySide = intersectionsBySide.Where(v = > v.Length == 2).ToArray();
-								auto minLambda = [&](auto& a, auto& b) {return glm::distance2(a.vertexInfo.vertex, invalidVertex1) < glm::distance2(b.vertexInfo.vertex, invalidVertex1); };
+								 
+								//IntersectionResult[][] intersectionsWithTwoBySide = intersectionsBySide.Where(v = > v.Length == 2).ToArray();
+								auto intersectionsWithTwoBySide = std::find_if(intersectionsBySide.begin(), intersectionsBySide.end(), [](auto& i) {return i.size() == 2; });
+								auto minLambda = [&invalidVertex1](auto& a, auto& b) {return glm::distance2(a.vertexInfo.vertex, invalidVertex1) < glm::distance2(b.vertexInfo.vertex, invalidVertex1); };
 								IntersectionResult intersection1 = *std::min_element(intersectionsBySide[invalidVertexSideIdx1].begin(), intersectionsBySide[invalidVertexSideIdx1].end(), minLambda);
 								//IntersectionResult intersection1 = intersectionsBySide[invalidVertexSideIdx1].MinBy(v = > vvertexInfovertex.DistanceSquaredTo(invalidVertex1));
-								auto minLambda2 = [&](auto& a, auto& b) {return glm::distance2(a.vertexInfo.vertex, invalidVertex2) < glm::distance2(b.vertexInfo.vertex, invalidVertex2); };
+								auto minLambda2 = [&invalidVertex2](auto& a, auto& b) {return glm::distance2(a.vertexInfo.vertex, invalidVertex2) < glm::distance2(b.vertexInfo.vertex, invalidVertex2); };
 								IntersectionResult intersection2 = *std::min_element(intersectionsBySide[invalidVertexSideIdx2].begin(), intersectionsBySide[invalidVertexSideIdx2].end(), minLambda2);
 								IntersectionResult intersection3 = *std::find_if(intersectionsBySide[invalidVertexSideIdx1].begin(), intersectionsBySide[invalidVertexSideIdx1].end(), [&](auto& v) {return v != intersection1; });
 								//IntersectionResult intersection3 = intersectionsBySide[invalidVertexSideIdx1].First(v = > v != intersection1);

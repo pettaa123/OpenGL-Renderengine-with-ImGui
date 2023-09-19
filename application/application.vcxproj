@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\exampleLayer.h" />
+    <ClInclude Include="src\imgpoints.h" />
     <ClInclude Include="src\targetLayer.h" />
     <ClInclude Include="src\webcamLayer.h" />
   </ItemGroup>

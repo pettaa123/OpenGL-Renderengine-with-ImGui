@@ -14,14 +14,83 @@
 #include <glm/gtx/string_cast.hpp>
 #include "texturemapping/helper/mathExtensions.h"
 
+#include <opencv2/opencv.hpp>
+
+#include "imgpoints.h"
+
+
 TargetLayer::TargetLayer()  //m_cameraController(1280.0f / 720.0f)
 	: Layer("TargetLayer"), m_cameraController(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 10000.0f))
 {
+	//calibration
 
+	std::vector < std::vector<cv::Point2f>> allImgPoints;
+
+	BaseLib::STBimage stbImage;
+
+	std::vector<cv::Point2f> boundaries{ {61000, 62300}, { 61200, 63000 }, { 61500, 63200 }, { 61500, 63200 } };
+
+	//for (int i = 0; i < 4; i++) {
+	//
+	//	std::filesystem::path markerImagePath(std::format("assets/calibration/images/{}.png", i + 1));
+	//	//std::filesystem::path markerImagePath("assets/marker/chess.jpg");
+	//	if (!stbImage.load_16(markerImagePath))
+	//		Log::error("error while loading markerImage");
+	//
+	//	//22 cols , 17 rows
+	//	//17,22
+	//	std::array<std::array<float, 2>, 22*17> pointBuf;
+	//
+	//	MarkerLib::MarkerFinder finder;
+	//	uint32_t pointBufLen = (uint32_t)(sizeof(float) * pointBuf.size() * pointBuf[0].size());
+	//
+	//	BaseLib::STBimage clamped = finder.clampImage(stbImage, boundaries[i].x, boundaries[i].y);
+	//	finder.selectAndRefineCorners(clamped, &pointBuf[0][0], pointBufLen);
+	//	for (size_t i = 0; i < pointBuf.size(); i++)
+	//	{
+	//		Log::info(std::format("x: {} , y: {}", pointBuf[i][0], pointBuf[i][1]));
+	//	}
+	//	std::vector<cv::Point2f> allPtsOneImage;
+	//	for (auto ar : pointBuf) {
+	//		allPtsOneImage.push_back(cv::Point2f(ar[0], ar[1]));
+	//	}
+	//	allImgPoints.push_back(allPtsOneImage);
+	//}
+
+	std::vector<cv::Vec3f> objPoints(17 * 22);
+	for (int i = 0; i < 17; i++) {
+		for (size_t j = 0; j < 22; j++)
+		{
+			objPoints[i * 22 + j] = cv::Vec3f(j * 8, i * 8, 0);
+		}
+	}
+
+	std::vector<std::vector<cv::Vec3f>> ALLOBJPOINTS;
+	for (int i = 0; i < 4; i++)
+		ALLOBJPOINTS.push_back(objPoints);
+
+	cv::Mat cameraMatrix;
+	std::vector<float> distortionCoeffs(5);
+
+	cv::Mat rVec_;
+	cv::Mat tVec_;
+
+	double a = cv::calibrateCamera(ALLOBJPOINTS, data::ALLIMGPOINTS, cv::Size(640, 480), cameraMatrix, distortionCoeffs, rVec_, tVec_);
+
+	std::cout << cameraMatrix;
 }
+
+
 
 void TargetLayer::onAttach()
 {
+	m_camModel = std::make_shared<Engine::Model>("assets/models/cam.stl");
+
+	auto loadedShader = m_shaderLibrary.load("assets/shaders/FlatColor.glsl");
+	loadedShader->bind();
+	loadedShader->setFloat3("u_Color", m_camColor);
+
+	loadedShader = m_shaderLibrary.load("assets/shaders/model_loading.glsl");
 
 	BaseLib::STBimage stbImage;
 	std::filesystem::path markerImagePath("assets/marker/IMG_2821.png");
@@ -49,7 +118,7 @@ void TargetLayer::onAttach()
 		{130,42.5,0},
 		{25,82.5,0},
 		{100,80,0}
- };
+	};
 
 	glm::mat3 rmat;
 	glm::vec3 tvec;
@@ -63,7 +132,7 @@ void TargetLayer::onAttach()
 
 	std::vector<float> reprojectionError(1);
 
-	estimator.estimate(&objPtsBuf[0][0], sizeof(float) * 12, &imgArray[0][0], 8* sizeof(float), glm::value_ptr(intrinsicsIPhone.toMat3()), intrinsicsIPhone.distortionCoeffs().data(),
+	estimator.estimate(&objPtsBuf[0][0], sizeof(float) * 12, &imgArray[0][0], 8 * sizeof(float), glm::value_ptr(intrinsicsIPhone.toMat3()), intrinsicsIPhone.distortionCoeffs().data(),
 		glm::value_ptr(rmat), glm::value_ptr(tvec), false, (int)MarkerLib::SolvePnPMethod::SOLVEPNP_ITERATIVE, reprojectionError.data(), reprojectionError.size() * sizeof(float));
 
 	glm::mat3x4 projectionMatrix = TextureMapping::MathExtension::createProjectionMatrix(rmat, tvec);
@@ -108,8 +177,8 @@ void TargetLayer::onAttach()
 	m_markerModel->recreateMesh();
 
 
-	
-	auto loadedShader = m_shaderLibrary.load("assets/shaders/model_loading.glsl");
+
+
 
 }
 
@@ -139,6 +208,8 @@ void TargetLayer::onUpdate(Engine::Timestep ts)
 	loadedShader->setFloat3("u_Color", m_squareColor);
 
 	Engine::Renderer::submit(m_shaderLibrary.get("model_loading"), m_markerModel.get());
+
+	Engine::Renderer::submit(m_shaderLibrary.get("FlatColor"), m_camModel.get());
 
 
 	////////////////////MAPPING ENDE

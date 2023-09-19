@@ -1,5 +1,6 @@
 #include "markerLib/markerFinder.h"
 #include <opencv2/opencv.hpp>
+#include <string.h>
 #include "markerLib/core/log.h"
 #include "markerLib/core/log.h"
 
@@ -16,6 +17,8 @@ namespace MarkerLib {
 
 		int selectAndRefineCorners(cv::Mat img, std::vector<cv::Point2f>& corners) {
 
+
+
 			assert((img.rows > 0) & (img.cols > 0) & (img.channels() > 0) && "Image failed: (stbImage.height > 0) & (stbImage.width > 0) & (stbImage.channels > 0)");
 
 
@@ -29,22 +32,25 @@ namespace MarkerLib {
 
 
 			std::vector<cv::Rect> img_rois;
+
 			//ToDo:: create as many colors as points
 			cv::Scalar colors[]{ {125,125,0,1}, {125,0,125,1},{125,255,125,1},{255,125,125,1} };
-			int scale = 2;
+			float scale = 0.5;
+			if (img.rows > 1000)
+				scale = 2;
 			cv::Mat resized;
 			cv::resize(img, resized, cv::Size(0, 0), 1.0f / scale, 1.0f / scale);
 
 			for (size_t i = 0; i < corners.size(); i++) {
-				cv::Rect roi = cv::selectROI("select marker", resized, true, true);
-
-				cv::drawMarker(resized, cv::Point(roi.x + roi.width / 2, roi.y + roi.height / 2), colors[i], cv::MARKER_TILTED_CROSS, 30, 3);
+				//cv::Rect roi = cv::selectROI("select marker", resized, true, true);
+				cv::Rect roi = img_rois[i];
+				cv::drawMarker(resized, cv::Point(roi.x + roi.width / 2, roi.y + roi.height / 2), colors[i], cv::MARKER_TILTED_CROSS, 15, 2*scale);
 				//scale roi up again
-				img_rois.push_back(cv::Rect(roi.x * scale, roi.y * scale, roi.width * scale, roi.height * scale));
+				//img_rois.push_back(cv::Rect(roi.x * scale, roi.y * scale, roi.width * scale, roi.height * scale));
 			}
-			cv::destroyWindow("select marker");
+			//cv::destroyWindow("select marker");
 
-			cv::Mat img_gray;
+			cv::Mat img_gray=img.clone();
 
 			if (img.channels() != 1)
 			{
@@ -61,12 +67,14 @@ namespace MarkerLib {
 				cv::Rect& cur_roi = img_rois[i];
 				//out_corners.push_back(cv::Point2f(roi.width/2.0f,roi.height/2.0f));
 				int winsize = cur_roi.width < cur_roi.height ? cur_roi.width : cur_roi.height;
-				winsize = winsize / 2 - 6;
+				winsize = winsize / 2 - 5;
 				cv::Mat blurred;
 				cv::GaussianBlur(img_gray(cur_roi), blurred, cv::Size(5, 5), 0);
+				cv::imshow("blurred", blurred);
+				cv::waitKey(1);
 				//get centerpoint from roi as corner guess
 				std::vector<cv::Point2f> corner{ { (float)(cur_roi.height / 2) , (float)(cur_roi.width / 2) } };
-				cv::cornerSubPix(blurred, corner, cv::Size(winsize, winsize), cv::Size(winsize / 5, winsize / 5),
+				cv::cornerSubPix(blurred, corner, cv::Size(winsize, winsize), cv::Size(winsize / 4, winsize / 4),
 					cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 1000, 0.001));
 				//assign refinement to output data
 				corners[i].x = corner[0].x + cur_roi.x;
@@ -74,11 +82,11 @@ namespace MarkerLib {
 
 				cv::Point2f& pt = corners[i];
 
-				const int r = 100;
-				cv::line(img, cv::Point(pt.x - r, pt.y - r), cv::Point(pt.x + r, pt.y + r), colors[i], 3);
-				cv::line(img, cv::Point(pt.x - r, pt.y + r), cv::Point(pt.x + r, pt.y - r), colors[i], 3);
-				cv::circle(img, pt, r, colors[i], 3);
-				cv::putText(img, cv::format("(%.1f , %.1f)", pt.x, pt.y), cv::Point(pt.x - 3.8f * r, pt.y - 1.2f * r), cv::FONT_HERSHEY_PLAIN, 5, { 0,0,0 }, 3);
+				const int r = 30*scale;
+				cv::line(img, cv::Point(pt.x - r, pt.y - r), cv::Point(pt.x + r, pt.y + r), colors[i], 2*scale);
+				cv::line(img, cv::Point(pt.x - r, pt.y + r), cv::Point(pt.x + r, pt.y - r), colors[i], 2*scale);
+				cv::circle(img, pt, r, colors[i], 2*scale);
+				//cv::putText(img, cv::format("(%.1f , %.1f)", pt.x, pt.y), cv::Point(pt.x - 3.8f * r, pt.y - 1.2f * r), cv::FONT_HERSHEY_PLAIN, 5, { 0,0,0 }, 2*scale);
 
 
 			}
@@ -87,9 +95,14 @@ namespace MarkerLib {
 				cv::Mat clone(img.clone());
 				cv::resize(clone, img, cv::Size(), 0.3f, 0.3f);
 			}
-			cv::imshow("subpixel output", img);
+			else {
+				cv::Mat clone(img.clone());
+				cv::resize(clone, img, cv::Size(), 2.0f, 2.0f);
+			}
+			static int zz = 0;
+			cv::imshow(std::format("subpixel output{}",zz++), img);
 			cv::waitKey(0);
-			cv::destroyWindow("subpixel output");
+
 
 #endif
 
@@ -446,26 +459,68 @@ namespace MarkerLib {
 
 	MarkerFinder::~MarkerFinder() = default;
 
-
-
-	int MarkerFinder::selectAndRefineCorners(const BaseLib::STBimage& stbImage, float* pointBuf, uint32_t pointBufLen) {
+	BaseLib::STBimage MarkerFinder::clampImage(const BaseLib::STBimage& stbImage, uint16_t lowerBound, uint16_t upperBound) {
+		assert(stbImage.data16.get() != nullptr);
 		int chans = 0;
-
 		if (stbImage.channels == 4)
 		{
-			chans = CV_8UC4;
+			chans = CV_16UC4;
 		}
 		else if (stbImage.channels == 3)
 		{
-			chans = CV_8UC3;
+			chans = CV_16UC3;
 		}
 		else if (stbImage.channels == 1)
 		{
-			chans = CV_8UC1;
+			chans = CV_16UC1;
 		}
-		cv::Mat img(stbImage.height, stbImage.width, chans, stbImage.data.get());
+		cv::Mat mat(stbImage.height, stbImage.width, chans, stbImage.data16.get());
+		cv::Mat out = mat.clone();
+		cv::min(cv::max(mat, lowerBound), upperBound, out);
 
+		//cv::Mat normalized;
+		//cv::normalize(out, normalized, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+		//out = normalized;
+		//cv::imshow("no2", out);
+		//cv::waitKey(0);
+
+		BaseLib::STBimage output(stbImage);
+		output.data16 = std::make_shared<uint16_t[]>(out.total() * out.elemSize());
+		std::memcpy(output.data16.get(),&out.data[0],out.total() * out.elemSize());
+
+		return output;
+	}
+
+
+	int MarkerFinder::selectAndRefineCorners(const BaseLib::STBimage& stbImage, float* pointBuf, uint32_t pointBufLen) {
+		int type = 0;
+		cv::Mat img;
+		if (stbImage.channels == 4)
+		{
+			type = CV_8UC4;
+			img = cv::Mat(stbImage.height, stbImage.width, type, stbImage.data.get());
+		}
+		else if (stbImage.channels == 3)
+		{
+			type = CV_8UC3;
+			img = cv::Mat(stbImage.height, stbImage.width, type, stbImage.data.get());
+		}
+		else if (stbImage.channels == 1)
+		{
+			type = stbImage.data16.get() != nullptr ? CV_16UC1 : CV_8UC1;
+			img = cv::Mat(stbImage.height, stbImage.width, type, stbImage.data16.get());
+		}
+
+		if (img.type() == CV_16UC1) {
+			cv::Mat normalized;
+			cv::normalize(img, normalized, 0, 255, cv::NORM_MINMAX,CV_8UC1);
+			img = normalized;
+		}
+		
 		uint32_t len = pointBufLen / 2 / sizeof(float);
+
+
+
 
 		std::vector<cv::Point2f> corners(len);
 
@@ -473,6 +528,7 @@ namespace MarkerLib {
 		if (m_markerFinder->selectAndRefineCorners(img, corners)) {
 			return EXIT_FAILURE;
 		}
+
 
 		if (corners.size() != len) {
 			Log::error("extracted points size differs from pam pointBufLen");

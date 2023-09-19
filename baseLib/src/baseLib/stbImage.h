@@ -12,8 +12,9 @@ namespace BaseLib {
 		int height=0;
 		int channels=0;
 		std::shared_ptr<uint8_t[]> data = nullptr;
-
+		std::shared_ptr<uint16_t[]> data16 = nullptr;
 		bool load(const std::filesystem::path& imagePath);
+		bool load_16(const std::filesystem::path& imagePath);
 		bool write(const std::filesystem::path& imagePath);
 	};
 }

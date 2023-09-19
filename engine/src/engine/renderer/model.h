@@ -59,5 +59,7 @@ namespace Engine {
 
         std::string m_directory;
 
+        void updateModelMatrix();
+
     };
 }
