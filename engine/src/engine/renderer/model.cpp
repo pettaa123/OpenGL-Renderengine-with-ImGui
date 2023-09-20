@@ -10,12 +10,14 @@
 #include "assimp/postprocess.h"
 
 
-
-
 namespace Engine {
 	// constructor, expects a filepath to a 3D model.
 	Model::Model(const std::string& path, bool gamma)
-		: gammaCorrection(gamma)
+		: gammaCorrection(gamma),
+		modelMatrix(glm::mat4(1.0f)),
+		size(1.0f),
+		position(glm::vec3(0.0f)),
+		rotationQuaternion(glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)))
 	{
 		loadModel(path);
 	}
@@ -51,26 +53,10 @@ namespace Engine {
 	};
 
 	void Model::updateModelMatrix() {
-		//glm::mat4 rotation = Matrix4.CreateFromQuaternion(RotationQuaternion);
-		//Matrix4 translation = Matrix4.CreateTranslation(Position);
-		//Matrix4 scale = Matrix4.CreateScale(Size * InternalSize);
-		//ModelMatrix = scale * rotation * translation;
-		//
-		//if (_parentModel != null) {
-		//	ModelMatrix *= _parentModel.ModelMatrix.ClearScale();
-		//}
-		//
-		//foreach(Model model in AttachedModels) {
-		//	model.UpdateModelMatrix();
-		//}
-		//
-		//NormalMatrix = ModelMatrix.Inverted();
-		//NormalMatrix.Transpose();
-		//
-		//// Will be null at the beginning
-		//if (Scene != null) {
-		//	Scene.HasModelChanges = true;
-		//}
+		glm::mat4 rotation = glm::mat4_cast(rotationQuaternion);
+		glm::mat4 translation = glm::translate(glm::mat4(1.f),position);
+		glm::mat4 scale = glm::scale(glm::mat4(1.f),size*glm::vec3(1.0f));
+		modelMatrix = translation * rotation * scale ;
 	}
 
 	// processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).

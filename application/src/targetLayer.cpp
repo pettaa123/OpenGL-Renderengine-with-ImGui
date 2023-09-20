@@ -22,6 +22,7 @@
 TargetLayer::TargetLayer()  //m_cameraController(1280.0f / 720.0f)
 	: Layer("TargetLayer"), m_cameraController(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 10000.0f))
 {
+	/*
 	//calibration
 
 	std::vector < std::vector<cv::Point2f>> allImgPoints;
@@ -78,23 +79,21 @@ TargetLayer::TargetLayer()  //m_cameraController(1280.0f / 720.0f)
 	double a = cv::calibrateCamera(ALLOBJPOINTS, data::ALLIMGPOINTS, cv::Size(640, 480), cameraMatrix, distortionCoeffs, rVec_, tVec_);
 
 	std::cout << cameraMatrix;
+	*/
 }
 
 
 
 void TargetLayer::onAttach()
 {
-	m_camModel = std::make_shared<Engine::Model>("assets/models/cam.stl");
+	//m_camModel = std::make_shared<Engine::Model>("assets/models/cam.stl");
 
 	auto loadedShader = m_shaderLibrary.load("assets/shaders/FlatColor.glsl");
-	loadedShader->bind();
-	loadedShader->setFloat3("u_Color", m_camColor);
-
 	loadedShader = m_shaderLibrary.load("assets/shaders/model_loading.glsl");
 
 	BaseLib::STBimage stbImage;
-	std::filesystem::path markerImagePath("assets/marker/IMG_2821.png");
-	//std::filesystem::path markerImagePath("assets/marker/chess.jpg");
+	//std::filesystem::path markerImagePath("assets/marker/IMG_2821.png");
+	std::filesystem::path markerImagePath("assets/marker/PCB - 1250 0.04hz 10% 5cyc controlled_gray.png");
 	if (!stbImage.load(markerImagePath))
 		Log::error("error while loading markerImage");
 
@@ -109,35 +108,35 @@ void TargetLayer::onAttach()
 	//	Log::info(std::format("x: {} , y: {}", pointBuf[i][0], pointBuf[i][1]));
 	//}
 
-	std::filesystem::path intrinsicsIPhoneFile("assets/marker/intrinsics/iphone_intrinsics.json");
-	TextureMapping::Intrinsics intrinsicsIPhone = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsIPhoneFile);
+	std::filesystem::path intrinsicsA700File("assets/marker/intrinsics/a700_55k_intrinsics.json");
+	TextureMapping::Intrinsics intrinsicsA700 = TextureMapping::IntrinsicsImporter::loadFromJSON(intrinsicsA700File);
 
 	MarkerLib::PoseEstimator estimator;
 	float objPtsBuf[4][3]{
-		{25,20,0},
-		{130,42.5,0},
-		{25,82.5,0},
-		{100,80,0}
+		{20.0	,25.0	,0},
+		{82.5	,25.0	,0},
+		{42.5	,130.0	,0},
+		{80.0	,100.0	,0}
 	};
 
 	glm::mat3 rmat;
 	glm::vec3 tvec;
 	float imgArray[4][2]
 	{
-		{393.524719 ,564.781433 },
-		{3684.94727 ,1260.65320 },
-		{502.313965 ,2479.42603 },
-		{2741.11938 ,2385.86646 }
+		{405.26923 , 66.26354  },
+		{ 586.9587 , 69.387184 },
+		{ 465.76837 , 372.44147},
+		{ 576.46313 , 287.07285}
 	};
 
 	std::vector<float> reprojectionError(1);
 
-	estimator.estimate(&objPtsBuf[0][0], sizeof(float) * 12, &imgArray[0][0], 8 * sizeof(float), glm::value_ptr(intrinsicsIPhone.toMat3()), intrinsicsIPhone.distortionCoeffs().data(),
+	estimator.estimate(&objPtsBuf[0][0], sizeof(float) * 12, &imgArray[0][0], 8 * sizeof(float), glm::value_ptr(intrinsicsA700.toMat3()), intrinsicsA700.distortionCoeffs().data(),
 		glm::value_ptr(rmat), glm::value_ptr(tvec), false, (int)MarkerLib::SolvePnPMethod::SOLVEPNP_ITERATIVE, reprojectionError.data(), reprojectionError.size() * sizeof(float));
 
 	glm::mat3x4 projectionMatrix = TextureMapping::MathExtension::createProjectionMatrix(rmat, tvec);
 
-	glm::mat3x4 realProjetionMatrix = TextureMapping::MathExtension::mult(intrinsicsIPhone.toMat3(), projectionMatrix);
+	glm::mat3x4 realProjetionMatrix = TextureMapping::MathExtension::mult(intrinsicsA700.toMat3(), projectionMatrix);
 
 
 
@@ -151,21 +150,21 @@ void TargetLayer::onAttach()
 
 	std::vector<TextureMapping::MappingDataSet> dataSets = TextureMapping::MappingDataSetImporter::loadFromJSON(std::filesystem::path("assets/marker"));
 
-	m_markerModel = std::make_shared<TextureMapping::Model>("assets/marker/marker_test.stl");
+	m_targetModel = std::make_shared<TextureMapping::Model>("assets/marker/20_09_2023_2pcb4.STL");
 
 
 
 	for (TextureMapping::MappingDataSet& d : dataSets) {
 		d.projectionImage = d.alteredImage.has_value() ? d.alteredImage.value() : d.loadedImage;
 		d.performCropping();
-		d.model = m_markerModel;
+		d.model = m_targetModel;
 	}
 
 	auto devs = TextureMapping::OpenCLAccelerator::getDevices();
-	auto executor = TextureMapping::OpenCLAccelerator(devs[0], *m_markerModel.get());
+	auto executor = TextureMapping::OpenCLAccelerator(devs[0], *m_targetModel.get());
 
 
-	TextureMapping::ImageToModelProjector projector(*m_markerModel, executor);
+	TextureMapping::ImageToModelProjector projector(*m_targetModel, executor);
 	for (size_t i = 0; i < dataSets.size(); i++)
 	{
 		projector.projectImage(dataSets[i], i, realProjetionMatrix);
@@ -174,11 +173,21 @@ void TargetLayer::onAttach()
 
 
 
-	m_markerModel->recreateMesh();
+	m_targetModel->recreateMesh();
+
+	//LIGHT
+	/*
+	m_lightVA = Engine::OpenGLVertexArray::create();
+	m_lightVA->bind();
+	std::shared_ptr<Engine::VertexBuffer> lightVB(Engine::VertexBuffer::create(3,sizeof(float)));
+	lightVB->setLayout({
+		{ Engine::ShaderDataType::Float3, "a_LightColor" }
+		});
+	m_lightVA->addVertexBuffer(lightVB);
 
 
-
-
+	m_lightColor = glm::vec3(0.7f, 0.7f, 0.7f);
+	*/
 
 }
 
@@ -200,16 +209,23 @@ void TargetLayer::onUpdate(Engine::Timestep ts)
 	Engine::Renderer::beginScene(m_cameraController);
 
 
-
 	//////////////MAPPING
 
-	auto loadedShader = m_shaderLibrary.get("model_loading");;
+	//auto loadedShader = m_shaderLibrary.get("FlatColor");
+	//loadedShader->bind();
+	//loadedShader->setFloat3("u_LightColor", m_lightColor);
+	//loadedShader->setFloat3("u_Color", m_camColor);
+	//loadedShader->setMat4("u_Model", m_camModel.get()->modelMatrix);
+	//Engine::Renderer::submit(m_shaderLibrary.get("FlatColor"), m_camModel.get());
+
+
+	auto loadedShader = m_shaderLibrary.get("model_loading");
 	loadedShader->bind();
-	loadedShader->setFloat3("u_Color", m_squareColor);
+	loadedShader->setFloat3("u_Color", m_targetColor);
+	loadedShader->setMat4("u_Model", m_targetModel.get()->modelMatrix);
+	Engine::Renderer::submit(m_shaderLibrary.get("model_loading"), m_targetModel.get());
 
-	Engine::Renderer::submit(m_shaderLibrary.get("model_loading"), m_markerModel.get());
 
-	Engine::Renderer::submit(m_shaderLibrary.get("FlatColor"), m_camModel.get());
 
 
 	////////////////////MAPPING ENDE
@@ -224,7 +240,12 @@ void TargetLayer::onUpdate(Engine::Timestep ts)
 void TargetLayer::onImGuiRender()
 {
 	ImGui::Begin("Settings");
-	ImGui::ColorEdit3("Square Color", glm::value_ptr(m_squareColor));
+	//ImGui::ColorEdit3("Light Color", glm::value_ptr(m_lightColor));
+	ImGui::ColorEdit3("Target Color", glm::value_ptr(m_targetColor));
+	//ImGui::ColorEdit3("Cam Color", glm::value_ptr(m_camColor));
+	//if (ImGui::InputFloat3("Cam Position", glm::value_ptr(m_camModel->position))) {
+	//	m_camModel->updateModelMatrix();
+	//}
 	ImGui::End();
 }
 

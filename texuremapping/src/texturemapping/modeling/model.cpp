@@ -46,8 +46,12 @@ namespace TextureMapping {
 
 		switch (img.channels)
 		{
-		case 3:  spec.format=Engine::ImageFormat::RGB8;
-		case 4:  spec.format = Engine::ImageFormat::RGBA8;
+		case 3: 
+			spec.format=Engine::ImageFormat::RGB8;
+			break;
+		case 4:
+			spec.format = Engine::ImageFormat::RGBA8;
+			break;
 		}
 
 		std::shared_ptr<Engine::Texture2D> texture(Engine::Texture2D::create(spec));

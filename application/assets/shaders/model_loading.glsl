@@ -6,6 +6,7 @@ layout (location = 4) in vec2 a_TexCoords;
 
 out vec2 v_TexCoords;
 
+//uniform mat4 u_Model;
 uniform mat4 u_ViewProjection;
 uniform mat4 u_Transform;
 

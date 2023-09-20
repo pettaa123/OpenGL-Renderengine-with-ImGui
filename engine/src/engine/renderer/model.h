@@ -8,7 +8,7 @@
 #include <vector>
 #include <numeric>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include <glad/glad.h> 
 
@@ -33,6 +33,13 @@ namespace Engine {
         std::vector<std::shared_ptr<Texture2D>> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
         std::string directory;
         bool gammaCorrection;
+
+        glm::mat4 modelMatrix;
+        float size;
+        glm::vec3 position;
+        glm::quat rotationQuaternion;
+
+        void updateModelMatrix();
 
 
         const std::vector<Mesh>& getMeshes() const;
@@ -59,7 +66,6 @@ namespace Engine {
 
         std::string m_directory;
 
-        void updateModelMatrix();
 
     };
 }

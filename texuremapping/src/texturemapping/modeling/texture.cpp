@@ -11,6 +11,7 @@ namespace TextureMapping {
 		m_isFlipped(false),
 		m_useMipMaps(generateMipMaps)
 	{
+
 		Engine::TextureSpecification textureSpecs;
 		if (m_image.channels == 4)
 		{
@@ -19,6 +20,10 @@ namespace TextureMapping {
 		else if (m_image.channels == 3)
 		{
 			textureSpecs.format = Engine::ImageFormat::RGB8;
+		}
+		else if (m_image.channels == 1)
+		{
+			textureSpecs.format = Engine::ImageFormat::R8;
 		}
 		textureSpecs.width = m_image.width;
 		textureSpecs.height = m_image.height;

@@ -34,19 +34,19 @@ namespace MarkerLib {
 			std::vector<cv::Rect> img_rois;
 
 			//ToDo:: create as many colors as points
-			cv::Scalar colors[]{ {125,125,0,1}, {125,0,125,1},{125,255,125,1},{255,125,125,1} };
-			float scale = 0.5;
+			cv::Scalar colors[]{ {0,0,0,1}, {0,0,0,1},{0,0,0,1},{0,0,0,1} };
+			float scale = 2;
 			if (img.rows > 1000)
-				scale = 2;
+				scale = 0.5;
 			cv::Mat resized;
-			cv::resize(img, resized, cv::Size(0, 0), 1.0f / scale, 1.0f / scale);
+			cv::resize(img, resized, cv::Size(0, 0), 1.0f * scale, 1.0f * scale);
 
 			for (size_t i = 0; i < corners.size(); i++) {
-				//cv::Rect roi = cv::selectROI("select marker", resized, true, true);
-				cv::Rect roi = img_rois[i];
+				cv::Rect roi = cv::selectROI("select marker", resized, true, true);
+				//cv::Rect roi = img_rois[i];
 				cv::drawMarker(resized, cv::Point(roi.x + roi.width / 2, roi.y + roi.height / 2), colors[i], cv::MARKER_TILTED_CROSS, 15, 2*scale);
 				//scale roi up again
-				//img_rois.push_back(cv::Rect(roi.x * scale, roi.y * scale, roi.width * scale, roi.height * scale));
+				img_rois.push_back(cv::Rect(roi.x / scale, roi.y / scale, roi.width / scale, roi.height / scale));
 			}
 			//cv::destroyWindow("select marker");
 
@@ -82,10 +82,10 @@ namespace MarkerLib {
 
 				cv::Point2f& pt = corners[i];
 
-				const int r = 30*scale;
-				cv::line(img, cv::Point(pt.x - r, pt.y - r), cv::Point(pt.x + r, pt.y + r), colors[i], 2*scale);
-				cv::line(img, cv::Point(pt.x - r, pt.y + r), cv::Point(pt.x + r, pt.y - r), colors[i], 2*scale);
-				cv::circle(img, pt, r, colors[i], 2*scale);
+				const int r = 30/scale;
+				cv::line(img, cv::Point(pt.x - r, pt.y - r), cv::Point(pt.x + r, pt.y + r), colors[i], 2/scale);
+				cv::line(img, cv::Point(pt.x - r, pt.y + r), cv::Point(pt.x + r, pt.y - r), colors[i], 2/scale);
+				cv::circle(img, pt, r, colors[i], 2/scale);
 				//cv::putText(img, cv::format("(%.1f , %.1f)", pt.x, pt.y), cv::Point(pt.x - 3.8f * r, pt.y - 1.2f * r), cv::FONT_HERSHEY_PLAIN, 5, { 0,0,0 }, 2*scale);
 
 
@@ -507,8 +507,16 @@ namespace MarkerLib {
 		}
 		else if (stbImage.channels == 1)
 		{
-			type = stbImage.data16.get() != nullptr ? CV_16UC1 : CV_8UC1;
-			img = cv::Mat(stbImage.height, stbImage.width, type, stbImage.data16.get());
+			void* imagePointer=nullptr;
+			if (stbImage.data16.get() != nullptr) {
+				type = CV_16UC1;
+				imagePointer = stbImage.data16.get();
+			}
+			else {
+				type = CV_8UC1;
+				imagePointer = stbImage.data.get();
+			}
+			img = cv::Mat(stbImage.height, stbImage.width, type, imagePointer);
 		}
 
 		if (img.type() == CV_16UC1) {
