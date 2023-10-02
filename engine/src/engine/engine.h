@@ -13,7 +13,7 @@
 #include "core/input.h"
 #include "core/keyCodes.h"
 #include "core/mouseCodes.h"
-#include "renderer/orthographicCameraController.h"
+#include "engine/renderer/orthographicCameraController.h"
 
 #include "ImGui/imGuiLayer.h"
 
@@ -25,15 +25,17 @@
 //#include "project/Project.h"
 
 // ---Renderer------------------------
-#include "renderer/renderer.h"
-#include "renderer/renderCommand.h"
+#include "engine/renderer/renderer.h"
+#include "engine/renderer/renderCommand.h"
 
-#include "renderer/buffer.h"
-#include "renderer/shader.h"
+#include "engine/renderer/buffer.h"
+#include "engine/renderer/shader.h"
 //#include "renderer/framebuffer.h"
-#include "renderer/texture.h"
-#include "renderer/vertexArray.h"
-#include "renderer/mesh.h"
-#include "renderer/model.h"
-#include "renderer/camera.h"
+#include "engine/renderer/texture.h"
+#include "engine/renderer/vertexArray.h"
+#include "engine/renderer/mesh.h"
+#include "engine/renderer/model.h"
+#include "engine/renderer/camera.h"
 // -----------------------------------
+
+//#include "engine/collisionDetection/collisionDetector.h"

@@ -12,7 +12,7 @@
 
 #include <glad/glad.h> 
 
-
+class BoundingBoxOctree;
 
 namespace Engine {
 
@@ -37,6 +37,7 @@ namespace Engine {
         glm::mat4 modelMatrix;
         float size;
         glm::vec3 position;
+        //put this into getter
         glm::quat rotationQuaternion;
 
         void updateModelMatrix();
@@ -61,6 +62,8 @@ namespace Engine {
         // the required info is returned as a Texture struct.
         // 
         //std::vector<Texture2D> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+
+        BoundingBoxOctree* boundingBoxTree;
 
     private:
 

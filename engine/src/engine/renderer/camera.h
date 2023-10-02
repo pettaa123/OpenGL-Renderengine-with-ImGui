@@ -44,6 +44,19 @@ namespace Engine {
 		const glm::vec3& getPosition() const { return m_position; }
 
 
+		/// <summary>
+		/// Unprojects the mouse coordinates.
+		/// https://dondi.lmu.build/share/cg/unproject-explained.pdf
+		/// </summary>
+		/// <param name="view">The view.</param>
+		/// <param name="projection">The projection.</param>
+		/// <param name="viewport">The viewport.</param>
+		/// <param name="mouse">The mouse.</param>
+		/// <param name="winZ">The win z.</param>
+		/// <returns></returns>
+		std::optional<glm::vec3> unproject(glm::vec2 mouse, float winZ);
+
+
 	private:
 		void mousePan(const glm::vec2& delta);
 		void mouseRotate(const glm::vec2& delta);
@@ -62,12 +75,11 @@ namespace Engine {
 
 		bool m_panning, m_rotating;
 		glm::vec2 m_initialMousePosition;
-		glm::vec3 m_initialFocalPoint, m_InitialRotation;
 
 		float m_distance;
 		float m_panSpeed, m_rotationSpeed, m_zoomSpeed;
 
-		float m_pitch, m_yaw;
+		float m_pitch, m_yaw, m_roll;
 
 		float m_z_min, m_z_max;
 

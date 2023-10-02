@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\texturemapping\calibratedCamera.cpp" />
+    <ClCompile Include="src\texturemapping\collisionDetection\collisionDetector.cpp" />
     <ClCompile Include="src\texturemapping\core\log.cpp" />
     <ClCompile Include="src\texturemapping\core\mappingDataSet.cpp" />
     <ClCompile Include="src\texturemapping\core\terminalColor.cpp" />
@@ -29,7 +30,6 @@
     <ClCompile Include="src\texturemapping\import\intrinsicsImporter.cpp" />
     <ClCompile Include="src\texturemapping\import\mappingDataSetImporter.cpp" />
     <ClCompile Include="src\texturemapping\mapping\core\ray2.cpp" />
-    <ClCompile Include="src\texturemapping\mapping\core\ray3.cpp" />
     <ClCompile Include="src\texturemapping\mapping\core\undistorter.cpp" />
     <ClCompile Include="src\texturemapping\mapping\imageToModelProjector.cpp" />
     <ClCompile Include="src\texturemapping\mapping\meshCutter.cpp" />
@@ -44,6 +44,7 @@
   <ItemGroup>
     <ClInclude Include="json\single_include\nlohmann\json.hpp" />
     <ClInclude Include="src\texturemapping\calibratedCamera.h" />
+    <ClInclude Include="src\texturemapping\collisionDetection\collisionDetector.h" />
     <ClInclude Include="src\texturemapping\core\color4.h" />
     <ClInclude Include="src\texturemapping\core\intrinsics.h" />
     <ClInclude Include="src\texturemapping\core\log.h" />
@@ -63,7 +64,6 @@
     <ClInclude Include="src\texturemapping\mapping\core\mergingResult.h" />
     <ClInclude Include="src\texturemapping\mapping\core\projectionResult.h" />
     <ClInclude Include="src\texturemapping\mapping\core\ray2.h" />
-    <ClInclude Include="src\texturemapping\mapping\core\ray3.h" />
     <ClInclude Include="src\texturemapping\mapping\core\triangleReplacement.h" />
     <ClInclude Include="src\texturemapping\mapping\core\undistorter.h" />
     <ClInclude Include="src\texturemapping\mapping\core\vectorResult.h" />

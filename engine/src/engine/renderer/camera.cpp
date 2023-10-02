@@ -6,10 +6,10 @@
 
 #include <functional>
 
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/quaternion.hpp>
 
-#define M_PI 3.14159f
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/string_cast.hpp> 
+
 
 namespace Engine {
 
@@ -21,14 +21,15 @@ namespace Engine {
 		m_rotationSpeed = 0.004f;
 		m_zoomSpeed = 0.3f;
 
-		m_position = { 0, 0, 1000 };
+		m_position = { 0, 0, -100 };
 		m_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 
 		m_focalPoint = glm::vec3(0.0f);
 		m_distance = glm::distance(m_position, m_focalPoint);
 
-		m_yaw = 0.0f;// (float)M_PI / 4.0f;
-		m_pitch = 0.0f;// M_PI//4.0f;
+		m_yaw = 0.0f;
+		m_pitch = 0.0f;
+		m_roll = 0.0f; // Initial roll angle
 
 		m_z_min = 0.01f; // min and max z-distance considered in clip space
 		m_z_max = 5.0f;
@@ -38,8 +39,54 @@ namespace Engine {
 	{
 	}
 
+	std::optional<glm::vec3> Camera::unproject(glm::vec2 mouse, float winZ) {
+
+		std::cout << glm::to_string(m_viewMatrix);
+		std::cout << glm::to_string(m_projectionMatrix);
+
+		glm::mat4 A =  m_projectionMatrix * m_viewMatrix;
+
+		A=glm::inverse(A);
+
+		int h = 1080;
+		int w = 1920;
+
+		// Transformation of normalized coordinates between -1 and 1
+
+		//glm::vec4 = {
+		//	 mouse.X / viewport.Width * 2.0f - 1.0f,
+		//	  (viewport.Height - mouse.Y) / viewport.Height * 2.0f - 1.0f,
+		//	  2.0f * winZ - 1.0f,
+		//	  1.0f
+		//};
+
+		//auto& window = Application::s_get().getWindow();
+		//auto h = window.getHeight();
+		//auto w = window.getHeight();
+
+		glm::vec4 vIn = {
+			mouse.x / w * 2.0f - 1.0f,
+			(h - mouse.y) / h * 2.0f - 1.0f,
+			2.0f * winZ - 1.0f,
+			1.0f
+		};
+
+
+		// Objects coordinates
+		glm::vec4 vOut = A * vIn;
+
+		if (vOut.w == 0) {
+			return {};
+		}
+
+		vOut /= vOut.w;
+		return glm::vec3{ vOut.x,vOut.y,vOut.z };
+	}
+
 	void Camera::onUpdate(Timestep ts)
 	{
+
+
 		if (Input::isKeyPressed(GLFW_KEY_LEFT_ALT))
 		{
 			const glm::vec2& mouse{ Input::getMouseX(), Input::getMouseY() };
@@ -57,7 +104,7 @@ namespace Engine {
 		m_position = calculatePosition();
 
 		glm::quat orientation = getOrientation();
-		m_rotation = glm::eulerAngles(orientation) * (180.0f / (float)M_PI);
+		m_rotation = glm::eulerAngles(orientation) * (glm::radians(180.0f));
 		m_viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 1)) * glm::toMat4(glm::conjugate(orientation)) * glm::translate(glm::mat4(1.0f), -m_position);
 	}
 	void Camera::onEvent(Event& e)
@@ -96,6 +143,11 @@ namespace Engine {
 		float yawSign = getUpDirection().y < 0 ? -1.0f : 1.0f;
 		m_yaw += yawSign * delta.x * m_rotationSpeed;
 		m_pitch += delta.y * m_rotationSpeed;
+		// Ensure pitch stays within bounds to prevent camera flipping
+		if (m_pitch > glm::radians(90.0f) - glm::radians(0.5f))
+			m_pitch = glm::radians(90.0f) - glm::radians(0.5f);
+		if (m_pitch < -glm::radians(90.0f) - glm::radians(0.5f))
+			m_pitch = -glm::radians(90.0f) - glm::radians(0.5f);
 	}
 
 	void Camera::mouseZoom(float delta)
@@ -107,6 +159,7 @@ namespace Engine {
 			m_distance = 1.0f;
 		}
 	}
+
 
 	glm::vec3 Camera::getUpDirection()
 	{

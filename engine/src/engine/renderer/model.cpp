@@ -17,7 +17,8 @@ namespace Engine {
 		modelMatrix(glm::mat4(1.0f)),
 		size(1.0f),
 		position(glm::vec3(0.0f)),
-		rotationQuaternion(glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)))
+		rotationQuaternion(glm::identity<glm::quat>()),
+		boundingBoxTree(nullptr)
 	{
 		loadModel(path);
 	}

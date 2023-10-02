@@ -4,12 +4,12 @@
 #include "texturemapping/texturemapping.h"
 #include <vector>
 #include <functional>
-
+#include <glm/vec3.hpp>
 
 class TargetLayer : public Engine::Layer
 {
 public:
-	TargetLayer();
+	TargetLayer(int width, int height);
 	virtual ~TargetLayer() = default;
 
 	virtual void onAttach() override;
@@ -40,6 +40,9 @@ private:
 
 
 	std::shared_ptr<Engine::Texture2D> m_texture;
+
+	std::vector<glm::vec3> m_measurements;
+
 
 };
 

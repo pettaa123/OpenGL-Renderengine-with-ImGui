@@ -1,6 +1,7 @@
 #include <engine/core/entryPoint.h>
 #include "exampleLayer.h"
 #include "targetLayer.h"
+#include "webcamLayer.h"
 
 class App : public Engine::Application
 {
@@ -10,7 +11,7 @@ public:
 	{
 		//pushLayer(new ExampleLayer());
 		//pushLayer(new WebcamLayer());
-		pushLayer(new TargetLayer());
+		pushLayer(new TargetLayer(this->getWindow().getWidth(),this->getWindow().getHeight()));
 	}
 
 	~App()

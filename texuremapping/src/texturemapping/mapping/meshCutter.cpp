@@ -8,7 +8,6 @@
 #include "texturemapping/helper/mathExtensions.h"
 #include "texturemapping/helper/polygonHelper.h"
 #include "texturemapping/mapping/core/barycentricCoordinate.h"
-#include "texturemapping/mapping/core/ray3.h"
 #include <iostream>
 #include <chrono>
 #include <algorithm>
@@ -16,6 +15,11 @@
 //#define PARALLEL
 
 namespace TextureMapping {
+
+	struct Ray3 {
+		glm::vec3 origin;
+		glm::vec3 direction;
+	};
 
 	MeshCutter::MeshCutter(Model& model)
 		:m_model(model),
@@ -748,7 +752,7 @@ namespace TextureMapping {
 				if (intersectionPoint.has_value()) {
 					float sideLength = glm::length(triangleRay.getDirection());
 					float relativeCoordinate = glm::length(triangleRay.getOrigin() - *intersectionPoint) / sideLength;
-					glm::vec3 vertex = triangleSides[i].getOrigin() + triangleSides[i].getDirection() * relativeCoordinate;
+					glm::vec3 vertex = triangleSides[i].origin + triangleSides[i].direction * relativeCoordinate;
 
 					std::vector<glm::vec2> underlayingTexCoords(underlayingRays.size());
 					for (int b = 0; b < numberOfUnderlaying; b++) {

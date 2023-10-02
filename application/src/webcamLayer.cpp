@@ -18,7 +18,7 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 {
 
 	BaseLib::STBimage stbImage;
-	std::filesystem::path markerImagePath("assets/marker/IMG_2821.jpg");
+	std::filesystem::path markerImagePath("assets/marker/PCB - 1000 0.05hz 7% 5cyc controlled_gray.png");
 	//std::filesystem::path markerImagePath("assets/marker/chess.jpg");
 	if (!stbImage.load(markerImagePath))
 		Log::error("error while loading markerImage");
@@ -28,11 +28,12 @@ WebcamLayer::WebcamLayer()  //m_cameraController(1280.0f / 720.0f)
 
 	MarkerLib::MarkerFinder finder;
 	uint32_t pointBufLen = (uint32_t)(sizeof(float) * pointBuf.size() * pointBuf[0].size());
-	//finder.selectAndRefineCorners(stbImage, &pointBuf[0][0],pointBufLen);
-	//for (size_t i = 0; i < pointBuf.size(); i++)
-	//{
-	//	Log::info(std::format("x: {} , y: {}", pointBuf[i][0], pointBuf[i][1]));
-	//}
+
+	finder.selectAndRefineCorners(stbImage, &pointBuf[0][0],pointBufLen);
+	for (size_t i = 0; i < pointBuf.size(); i++)
+	{
+		Log::info(std::format("x: {} , y: {}", pointBuf[i][0], pointBuf[i][1]));
+	}
 
 	std::filesystem::path intrinsicsIPhoneFile("assets/mapping sample data/intrinsics.json");
 	//std::filesystem::path intrinsicsIPhoneFile("assets/marker/intrinsics/iphone_intrinsics.json");

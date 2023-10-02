@@ -49,6 +49,9 @@
     <Filter Include="src\optimization">
       <UniqueIdentifier>{1be58aba-e2b6-46a3-92cb-913250598340}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\collisionDetection">
+      <UniqueIdentifier>{d897f41e-46aa-4344-918f-05ea3484563b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\texturemapping\calibratedCamera.cpp">
@@ -105,14 +108,14 @@
     <ClCompile Include="src\texturemapping\hardwareacceleration\base\accelerator.cpp">
       <Filter>src\hardwareacceleration\base</Filter>
     </ClCompile>
-    <ClCompile Include="src\texturemapping\mapping\core\ray3.cpp">
-      <Filter>src\mapping\core</Filter>
-    </ClCompile>
     <ClCompile Include="src\texturemapping\mapping\textureMapper.cpp">
       <Filter>src\mapping</Filter>
     </ClCompile>
     <ClCompile Include="src\texturemapping\optimization\optimizer.cpp">
       <Filter>src\optimization</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texturemapping\collisionDetection\collisionDetector.cpp">
+      <Filter>src\collisionDetection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -230,8 +233,8 @@
     <ClInclude Include="src\texturemapping\optimization\optimizer.h">
       <Filter>src\optimization</Filter>
     </ClInclude>
-    <ClInclude Include="src\texturemapping\mapping\core\ray3.h">
-      <Filter>src\mapping\core</Filter>
+    <ClInclude Include="src\texturemapping\collisionDetection\collisionDetector.h">
+      <Filter>src\collisionDetection</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -6,6 +6,12 @@
 
 
 namespace MarkerLib {
+
+	struct IterStruct {
+		cv::Mat* mat;
+		cv::Point2f& corner;
+	};
+
 	//implementation
 	class MarkerFinder::MarkerFinderImpl
 	{
@@ -13,6 +19,36 @@ namespace MarkerLib {
 
 		MarkerFinderImpl()
 		{
+		}
+
+		static void pamsIteration(int notUsed, void* userData){
+			int winSize = cv::getTrackbarPos("winSizeTB", "pams window");
+			int sigma =		cv::getTrackbarPos("sigmaTB", "pams window");
+			int zeroZone =	cv::getTrackbarPos("zeroZoneTB", "pams window");
+			if (winSize < 3 || sigma < 3 || zeroZone >winSize)
+				return;
+			IterStruct iterStruct = *(IterStruct*)userData;
+			cv::Mat winSizeMat = (*iterStruct.mat).clone();
+			cv::Mat blurred;
+			sigma = sigma % 2 == 1 ? sigma : sigma += 1;
+			cv::GaussianBlur(winSizeMat, blurred, cv::Size(sigma, sigma), 0);
+
+			//get centerpoint from roi as corner guess
+			std::vector<cv::Point2f> corner{ { (float)(winSizeMat.rows / 2) , (float)(winSizeMat.cols / 2) } };
+			winSize = winSize % 2 == 1 ? winSize : winSize += 1;
+			cv::cornerSubPix(blurred, corner, cv::Size(winSize, winSize), cv::Size(zeroZone, zeroZone),
+				cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 1000, 0.001));
+			if (corner.empty())
+				return;
+			iterStruct.corner = corner[0];
+			//display refinement
+
+			cv::drawMarker(winSizeMat, corner[0], 0, 1);
+			cv::Mat upScaled;
+			cv::resize(winSizeMat, upScaled, cv::Size(), 4, 4, cv::INTER_CUBIC);
+
+			cv::imshow("pams window", upScaled);
+			std::cout << "x " << corner[0].x << "y " << corner[0].y << std::endl;
 		}
 
 		int selectAndRefineCorners(cv::Mat img, std::vector<cv::Point2f>& corners) {
@@ -44,13 +80,13 @@ namespace MarkerLib {
 			for (size_t i = 0; i < corners.size(); i++) {
 				cv::Rect roi = cv::selectROI("select marker", resized, true, true);
 				//cv::Rect roi = img_rois[i];
-				cv::drawMarker(resized, cv::Point(roi.x + roi.width / 2, roi.y + roi.height / 2), colors[i], cv::MARKER_TILTED_CROSS, 15, 2*scale);
+				cv::drawMarker(resized, cv::Point(roi.x + roi.width / 2, roi.y + roi.height / 2), colors[i], cv::MARKER_TILTED_CROSS, 15, 2 * scale);
 				//scale roi up again
 				img_rois.push_back(cv::Rect(roi.x / scale, roi.y / scale, roi.width / scale, roi.height / scale));
 			}
 			//cv::destroyWindow("select marker");
 
-			cv::Mat img_gray=img.clone();
+			cv::Mat img_gray = img.clone();
 
 			if (img.channels() != 1)
 			{
@@ -63,33 +99,53 @@ namespace MarkerLib {
 				}
 			}
 
+			cv::namedWindow("pams window");
+			cv::resizeWindow("pams window", 1000, 600);
+			cv::Point2f refinedCorner;
+			IterStruct iterStruct{ nullptr,refinedCorner };
+			//iterate parameters
+			int maxWinSize = 30;
+			int winSize = 0;
+			int sigma = 0;
+			int zeroZone = 0;
+			cv::createTrackbar("winSizeTB", "pams window", &winSize, maxWinSize, &pamsIteration, &iterStruct);
+			cv::createTrackbar("sigmaTB", "pams window", &sigma, maxWinSize, &pamsIteration, &iterStruct);
+			cv::createTrackbar("zeroZoneTB", "pams window", &zeroZone, maxWinSize, &pamsIteration, &iterStruct);
+
 			for (size_t i = 0; i < corners.size(); i++) {
 				cv::Rect& cur_roi = img_rois[i];
+
 				//out_corners.push_back(cv::Point2f(roi.width/2.0f,roi.height/2.0f));
-				int winsize = cur_roi.width < cur_roi.height ? cur_roi.width : cur_roi.height;
-				winsize = winsize / 2 - 5;
-				cv::Mat blurred;
-				cv::GaussianBlur(img_gray(cur_roi), blurred, cv::Size(5, 5), 0);
-				cv::imshow("blurred", blurred);
-				cv::waitKey(1);
-				//get centerpoint from roi as corner guess
-				std::vector<cv::Point2f> corner{ { (float)(cur_roi.height / 2) , (float)(cur_roi.width / 2) } };
-				cv::cornerSubPix(blurred, corner, cv::Size(winsize, winsize), cv::Size(winsize / 4, winsize / 4),
-					cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 1000, 0.001));
+				int maxWinSize = cur_roi.width < cur_roi.height ? cur_roi.width : cur_roi.height;
+				maxWinSize = maxWinSize / 2 - 5;
+				cv::setTrackbarMax("winSizeTB", "pams window", maxWinSize);
+				cv::Mat winSizeMat = img_gray(cur_roi).clone();
+				iterStruct.mat = &winSizeMat;
+
+				cv::setTrackbarPos("winSizeTB", "pams window", maxWinSize);
+				cv::setTrackbarPos("sigmaTB", "pams window", 3);
+				cv::setTrackbarPos("zeroZoneTB", "pams window", 1);
+
+				cv::Mat upScaled;
+				cv::resize(winSizeMat, upScaled, cv::Size(), 4, 4, cv::INTER_CUBIC);
+				cv::imshow("pams window", upScaled);
+				cv::resizeWindow("pams window", 1000, 300);
+				cv::waitKey(0);
+
+				
 				//assign refinement to output data
-				corners[i].x = corner[0].x + cur_roi.x;
-				corners[i].y = corner[0].y + cur_roi.y;
+				corners[i].x = iterStruct.corner.x + cur_roi.x;
+				corners[i].y = iterStruct.corner.y + cur_roi.y;
 
 				cv::Point2f& pt = corners[i];
 
-				const int r = 30/scale;
-				cv::line(img, cv::Point(pt.x - r, pt.y - r), cv::Point(pt.x + r, pt.y + r), colors[i], 2/scale);
-				cv::line(img, cv::Point(pt.x - r, pt.y + r), cv::Point(pt.x + r, pt.y - r), colors[i], 2/scale);
-				cv::circle(img, pt, r, colors[i], 2/scale);
+				const int r = 30 / scale;
+				cv::line(img, cv::Point(pt.x - r, pt.y - r), cv::Point(pt.x + r, pt.y + r), colors[i], 2 / scale);
+				cv::line(img, cv::Point(pt.x - r, pt.y + r), cv::Point(pt.x + r, pt.y - r), colors[i], 2 / scale);
+				cv::circle(img, pt, r, colors[i], 2 / scale);
 				//cv::putText(img, cv::format("(%.1f , %.1f)", pt.x, pt.y), cv::Point(pt.x - 3.8f * r, pt.y - 1.2f * r), cv::FONT_HERSHEY_PLAIN, 5, { 0,0,0 }, 2*scale);
-
-
 			}
+
 #ifdef _DEBUG
 			if (img.rows > 1000) {
 				cv::Mat clone(img.clone());
@@ -100,15 +156,15 @@ namespace MarkerLib {
 				cv::resize(clone, img, cv::Size(), 2.0f, 2.0f);
 			}
 			static int zz = 0;
-			cv::imshow(std::format("subpixel output{}",zz++), img);
+			cv::imshow(std::format("subpixel output{}", zz++), img);
 			cv::waitKey(0);
-
-
 #endif
 
 			return EXIT_SUCCESS;
 
 		}
+
+
 		//COMPUTE FAST HISTOGRAM GRADIENT
 		template<typename ArrayContainer>
 		void icvGradientOfHistogram256(const ArrayContainer& piHist, ArrayContainer& piHistGrad)
@@ -486,7 +542,7 @@ namespace MarkerLib {
 
 		BaseLib::STBimage output(stbImage);
 		output.data16 = std::make_shared<uint16_t[]>(out.total() * out.elemSize());
-		std::memcpy(output.data16.get(),&out.data[0],out.total() * out.elemSize());
+		std::memcpy(output.data16.get(), &out.data[0], out.total() * out.elemSize());
 
 		return output;
 	}
@@ -507,7 +563,7 @@ namespace MarkerLib {
 		}
 		else if (stbImage.channels == 1)
 		{
-			void* imagePointer=nullptr;
+			void* imagePointer = nullptr;
 			if (stbImage.data16.get() != nullptr) {
 				type = CV_16UC1;
 				imagePointer = stbImage.data16.get();
@@ -521,10 +577,10 @@ namespace MarkerLib {
 
 		if (img.type() == CV_16UC1) {
 			cv::Mat normalized;
-			cv::normalize(img, normalized, 0, 255, cv::NORM_MINMAX,CV_8UC1);
+			cv::normalize(img, normalized, 0, 255, cv::NORM_MINMAX, CV_8UC1);
 			img = normalized;
 		}
-		
+
 		uint32_t len = pointBufLen / 2 / sizeof(float);
 
 

@@ -36,8 +36,9 @@ namespace Engine {
 	{
 		shader->bind();
 		shader->setMat4("u_ModelMatrix", model->modelMatrix);
-		shader->setMat4("u_ViewProjection", s_sceneData->viewProjectionMatrix);
+		shader->setMat4("u_ViewProjection",  s_sceneData->viewProjectionMatrix);
 		shader->setMat4("u_Transform", transform);
+		//make this a draw call in renderCommand
 		model->draw(*shader.get());
 	}
 
@@ -46,6 +47,7 @@ namespace Engine {
 		shader->bind();
 		shader->setMat4("u_ViewProjection", s_sceneData->viewProjectionMatrix);
 		shader->setMat4("u_Transform", transform);
+		//make this a draw call in renderCommand
 		mesh->draw(*shader.get());
 	}
 

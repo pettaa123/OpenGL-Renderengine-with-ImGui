@@ -15,13 +15,14 @@
 #include "texturemapping/helper/mathExtensions.h"
 
 #include <opencv2/opencv.hpp>
-
+#include "texturemapping/collisionDetection/collisionDetector.h"
 #include "imgpoints.h"
 
 
-TargetLayer::TargetLayer()  //m_cameraController(1280.0f / 720.0f)
-	: Layer("TargetLayer"), m_cameraController(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 10000.0f))
+TargetLayer::TargetLayer(int windowWidth, int windowHeight)  //m_cameraController(1280.0f / 720.0f)
+	: Layer("TargetLayer"), m_cameraController(glm::perspectiveFov(glm::radians(45.0f), (float)windowWidth, (float)windowHeight, 0.1f, 1000.0f))
 {
+
 	/*
 	//calibration
 
@@ -93,7 +94,7 @@ void TargetLayer::onAttach()
 
 	BaseLib::STBimage stbImage;
 	//std::filesystem::path markerImagePath("assets/marker/IMG_2821.png");
-	std::filesystem::path markerImagePath("assets/marker/PCB - 1250 0.04hz 10% 5cyc controlled_gray.png");
+	std::filesystem::path markerImagePath("assets/marker/PCB - 1000 0.05hz 7% 5cyc controlled_gray_normalized_contrast.png");
 	if (!stbImage.load(markerImagePath))
 		Log::error("error while loading markerImage");
 
@@ -123,10 +124,10 @@ void TargetLayer::onAttach()
 	glm::vec3 tvec;
 	float imgArray[4][2]
 	{
-		{405.26923 , 66.26354  },
-		{ 586.9587 , 69.387184 },
-		{ 465.76837 , 372.44147},
-		{ 576.46313 , 287.07285}
+		{406.2907 , 66.98355 },
+		{ 587.5158 , 70.09467 },
+		{ 467.0 , 372.3199},
+		{ 577.40186 , 287.34146}
 
 	};
 
@@ -160,18 +161,19 @@ void TargetLayer::onAttach()
 
 	std::vector<TextureMapping::MappingDataSet> dataSets = TextureMapping::MappingDataSetImporter::loadFromJSON(std::filesystem::path("assets/marker"));
 
-	m_targetModel = std::make_shared<TextureMapping::Model>("assets/marker/20_09_2023_2pcb4.STL");
+	m_targetModel = std::make_shared<TextureMapping::Model>("assets/marker/20_09_2023_2pcb4_qirt.STL");
 
-
+	auto devs = TextureMapping::OpenCLAccelerator::getDevices();
+	auto executor = TextureMapping::OpenCLAccelerator(devs[0], *m_targetModel.get());
 
 	for (TextureMapping::MappingDataSet& d : dataSets) {
+		executor.undistortImage(d.loadedImage, intrinsicsA700);
 		d.projectionImage = d.alteredImage.has_value() ? d.alteredImage.value() : d.loadedImage;
 		d.performCropping();
 		d.model = m_targetModel;
 	}
 
-	auto devs = TextureMapping::OpenCLAccelerator::getDevices();
-	auto executor = TextureMapping::OpenCLAccelerator(devs[0], *m_targetModel.get());
+
 
 
 	TextureMapping::ImageToModelProjector projector(*m_targetModel, executor);
@@ -208,6 +210,7 @@ void TargetLayer::onDetach()
 
 void TargetLayer::onUpdate(Engine::Timestep ts)
 {
+		
 	// Render
 	// 
 	m_cameraController.onUpdate(ts);
@@ -249,17 +252,63 @@ void TargetLayer::onUpdate(Engine::Timestep ts)
 
 void TargetLayer::onImGuiRender()
 {
-	ImGui::Begin("Settings");
-	ImGui::ColorEdit3("Light Color", glm::value_ptr(m_lightColor));
-	ImGui::ColorEdit3("Target Color", glm::value_ptr(m_targetColor));
-	ImGui::ColorEdit3("Cam Color", glm::value_ptr(m_camColor));
-	if (ImGui::InputFloat3("Cam Position", glm::value_ptr(m_camModel->position))) {
-		m_camModel->updateModelMatrix();
+	ImGui::Begin("Measurements");
+	//MEASUREMENTS
+	if (ImGui::BeginTable("Picked Points", 3))
+	{
+		for (int row = 0; row < m_measurements.size(); row++)
+		{
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text(std::format("{}", m_measurements[row].x).c_str(), row, 0);
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text(std::format("{}", m_measurements[row].y).c_str(), row, 1);
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text(std::format("{}", m_measurements[row].z).c_str(), row, 2);
+		}
+		ImGui::EndTable();
 	}
 	ImGui::End();
+
+	//ImGui::Begin("Settings");
+	//ImGui::ColorEdit3("Light Color", glm::value_ptr(m_lightColor));
+	//ImGui::ColorEdit3("Target Color", glm::value_ptr(m_targetColor));
+	//ImGui::ColorEdit3("Cam Color", glm::value_ptr(m_camColor));
+	//if (ImGui::InputFloat3("Cam Position", glm::value_ptr(m_camModel->position))) {
+	//	m_camModel->updateModelMatrix();
+	//}
+	//ImGui::End();
 }
 
 void TargetLayer::onEvent(Engine::Event& e)
 {
+	if (Engine::Input::isKeyPressed(Engine::Key::LeftControl)) {
+		if (Engine::Input::isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+			glm::vec2 mouse = { Engine::Input::getMouseX(),Engine::Input::getMouseY() };
+			glm::vec3 position = m_cameraController.getPosition();
+			glm::vec3 direction = m_cameraController.getForwardDirection();
+
+
+			//glm::mat4 view = m_cameraController.getViewMatrix();
+			//std::optional < glm::vec3> posAtNearPlane = glm::unProject(glm::vec3{ Engine::Input::getMouseX() ,Engine::Input::getMouseY(),0 }, view, m_cameraController.getProjectionMatrix(), glm::vec4{ 0,0,1920,1080 });
+			//std::optional < glm::vec3> posAtFarPlane = glm::unProject(glm::vec3{ Engine::Input::getMouseX() ,Engine::Input::getMouseY(),1 }, view, m_cameraController.getProjectionMatrix(), glm::vec4{ 0,0,1920,1080 });
+			std::optional < glm::vec3> posAtNearPlane = m_cameraController.unproject(mouse, 0);
+			std::optional < glm::vec3> posAtFarPlane = m_cameraController.unproject(mouse, 1);
+
+			if (posAtNearPlane.has_value() && posAtFarPlane.has_value()) {
+				position = posAtNearPlane.value();
+				// No need for normalization, the raycasting algorithm also works without it
+				direction = posAtFarPlane.value() - position;
+			}
+
+			//bool transformHitPoint = !mainModel.AttachedModels.Contains(_intersectionModel);
+			bool transformHitPoint = false;
+			std::optional<glm::vec3> hitPoint = TextureMapping::CollisionDetector::getModelIntersection(m_targetModel.get(), position, direction, true, transformHitPoint);
+			if (hitPoint.has_value())
+				m_measurements.push_back(hitPoint.value());
+			e.handled = true;
+		}
+	}
+
 	m_cameraController.onEvent(e);
 }
