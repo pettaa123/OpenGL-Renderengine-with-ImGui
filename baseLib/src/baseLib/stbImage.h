@@ -11,10 +11,13 @@ namespace BaseLib {
 		int width=0;
 		int height=0;
 		int channels=0;
-		std::shared_ptr<uint8_t[]> data = nullptr;
-		std::shared_ptr<uint16_t[]> data16 = nullptr;
-		bool load(const std::filesystem::path& imagePath);
-		bool load_16(const std::filesystem::path& imagePath);
-		bool write(const std::filesystem::path& imagePath);
+		std::unique_ptr<uint8_t[]> dataU8 = nullptr;
+		std::unique_ptr<uint16_t[]> dataU16 = nullptr;
+		std::unique_ptr<float_t[]> dataSGL = nullptr;
+		std::unique_ptr<double_t[]> dataDBL = nullptr;
+
+		bool load_U8(const std::filesystem::path& imagePath);
+		bool load_U16(const std::filesystem::path& imagePath);
+		bool write_U8(const std::filesystem::path& imagePath);
 	};
 }

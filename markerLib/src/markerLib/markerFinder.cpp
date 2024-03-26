@@ -53,8 +53,6 @@ namespace MarkerLib {
 
 		int selectAndRefineCorners(cv::Mat img, std::vector<cv::Point2f>& corners) {
 
-
-
 			assert((img.rows > 0) & (img.cols > 0) & (img.channels() > 0) && "Image failed: (stbImage.height > 0) & (stbImage.width > 0) & (stbImage.channels > 0)");
 
 
@@ -515,8 +513,51 @@ namespace MarkerLib {
 
 	MarkerFinder::~MarkerFinder() = default;
 
+	cv::Mat matFromSTBimage(const BaseLib::STBimage& stbImage) {
+		int type = 0;
+		cv::Mat img;
+		if (stbImage.channels == 4)
+		{
+			type = CV_8UC4;
+			img = cv::Mat(stbImage.height, stbImage.width, type, stbImage.dataU8.get());
+		}
+		else if (stbImage.channels == 3)
+		{
+			type = CV_8UC3;
+			img = cv::Mat(stbImage.height, stbImage.width, type, stbImage.dataU8.get());
+		}
+		else if (stbImage.channels == 1)
+		{
+			void* imagePointer = nullptr;
+			if (stbImage.dataU16.get() != nullptr) {
+				type = CV_16UC1;
+				imagePointer = stbImage.dataU16.get();
+			}
+			else if (stbImage.dataU8.get() != nullptr) {
+				type = CV_8UC1;
+				imagePointer = stbImage.dataU8.get();
+			}
+			else if (stbImage.dataSGL.get() != nullptr) {
+				type = CV_32FC1;
+				imagePointer = stbImage.dataSGL.get();
+			}
+			else if (stbImage.dataDBL.get() != nullptr) {
+				type = CV_64FC1;
+				imagePointer = stbImage.dataDBL.get();
+			}
+			img = cv::Mat(stbImage.height, stbImage.width, type, imagePointer);
+		}
+
+		if (img.type() == CV_16UC1) {
+			cv::Mat normalized;
+			cv::normalize(img, normalized, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+			img = normalized;
+		}
+		return img;
+	}
+
 	BaseLib::STBimage MarkerFinder::clampImage(const BaseLib::STBimage& stbImage, uint16_t lowerBound, uint16_t upperBound) {
-		assert(stbImage.data16.get() != nullptr);
+		assert(stbImage.dataU16.get() != nullptr);
 		int chans = 0;
 		if (stbImage.channels == 4)
 		{
@@ -530,7 +571,7 @@ namespace MarkerLib {
 		{
 			chans = CV_16UC1;
 		}
-		cv::Mat mat(stbImage.height, stbImage.width, chans, stbImage.data16.get());
+		cv::Mat mat(stbImage.height, stbImage.width, chans, stbImage.dataU16.get());
 		cv::Mat out = mat.clone();
 		cv::min(cv::max(mat, lowerBound), upperBound, out);
 
@@ -540,50 +581,39 @@ namespace MarkerLib {
 		//cv::imshow("no2", out);
 		//cv::waitKey(0);
 
-		BaseLib::STBimage output(stbImage);
-		output.data16 = std::make_shared<uint16_t[]>(out.total() * out.elemSize());
-		std::memcpy(output.data16.get(), &out.data[0], out.total() * out.elemSize());
+		BaseLib::STBimage output;
+		output.name = stbImage.name;
+		output.channels = stbImage.channels;
+		output.width = stbImage.width;
+		output.height = stbImage.height;
+		output.dataU16 = std::make_unique<uint16_t[]>(out.total() * out.elemSize());
+		std::memcpy(output.dataU16.get(), &out.data[0], out.total() * out.elemSize());
 
 		return output;
 	}
 
+	int MarkerFinder::refineCorner(const BaseLib::STBimage& stbImage, float* pointX, float* pointY, int32_t winSize, int32_t zeroZone, int32_t maxIterations, double epsilon) {
+		cv::Mat img = matFromSTBimage(stbImage);
+		//cv::normalize(img, img, 1.0, 0, cv::NORM_MINMAX);
+		std::vector<cv::Point2f> corner{ { *pointX , *pointY } };
+		winSize = winSize % 2 == 1 ? winSize : winSize += 1;
+		winSize = winSize % 2 == 1 ? winSize : winSize += 1;
+		cv::cornerSubPix(img, corner, cv::Size(winSize, winSize), cv::Size(zeroZone, zeroZone),
+			cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, maxIterations, epsilon));
+		if (corner.empty())
+			return EXIT_FAILURE;
+		*pointX = corner[0].x;
+		*pointY = corner[0].y;
+
+		return EXIT_SUCCESS;
+	}
+
 
 	int MarkerFinder::selectAndRefineCorners(const BaseLib::STBimage& stbImage, float* pointBuf, uint32_t pointBufLen) {
-		int type = 0;
-		cv::Mat img;
-		if (stbImage.channels == 4)
-		{
-			type = CV_8UC4;
-			img = cv::Mat(stbImage.height, stbImage.width, type, stbImage.data.get());
-		}
-		else if (stbImage.channels == 3)
-		{
-			type = CV_8UC3;
-			img = cv::Mat(stbImage.height, stbImage.width, type, stbImage.data.get());
-		}
-		else if (stbImage.channels == 1)
-		{
-			void* imagePointer = nullptr;
-			if (stbImage.data16.get() != nullptr) {
-				type = CV_16UC1;
-				imagePointer = stbImage.data16.get();
-			}
-			else {
-				type = CV_8UC1;
-				imagePointer = stbImage.data.get();
-			}
-			img = cv::Mat(stbImage.height, stbImage.width, type, imagePointer);
-		}
-
-		if (img.type() == CV_16UC1) {
-			cv::Mat normalized;
-			cv::normalize(img, normalized, 0, 255, cv::NORM_MINMAX, CV_8UC1);
-			img = normalized;
-		}
+		
+		cv::Mat img = matFromSTBimage(stbImage);
 
 		uint32_t len = pointBufLen / 2 / sizeof(float);
-
-
 
 
 		std::vector<cv::Point2f> corners(len);
