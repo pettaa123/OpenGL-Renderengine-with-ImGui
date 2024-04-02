@@ -95,7 +95,7 @@ void TargetLayer::onAttach()
 	BaseLib::STBimage stbImage;
 	//std::filesystem::path markerImagePath("assets/marker/IMG_2821.png");
 	std::filesystem::path markerImagePath("assets/marker/PCB - 1000 0.05hz 7% 5cyc controlled_gray_normalized_contrast.png");
-	if (!stbImage.load(markerImagePath))
+	if (!stbImage.load_U16(markerImagePath))
 		Log::error("error while loading markerImage");
 
 	//2 cols , 4 rows
