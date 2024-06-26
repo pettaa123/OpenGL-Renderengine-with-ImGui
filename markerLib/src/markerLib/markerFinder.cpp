@@ -592,12 +592,20 @@ namespace MarkerLib {
 		return output;
 	}
 
+	/*
+	winSize Half of the side length of the search window. For example, if winSize=Size(5,5) ,
+	then a (5*2+1) * (5*2+1) = 11 * 11 search window is used.
+
+	zeroZone Half of the size of the dead region in the middle of the search zone over which
+	the summation in the formula below is not done. It is used sometimes to avoid possible
+	singularities of the autocorrelation matrix. The value of (-1,-1) indicates that there is no such
+	a size.
+	*/
+
 	int MarkerFinder::refineCorner(const BaseLib::STBimage& stbImage, float* pointX, float* pointY, int32_t winSize, int32_t zeroZone, int32_t maxIterations, double epsilon) {
 		cv::Mat img = matFromSTBimage(stbImage);
 		//cv::normalize(img, img, 1.0, 0, cv::NORM_MINMAX);
 		std::vector<cv::Point2f> corner{ { *pointX , *pointY } };
-		winSize = winSize % 2 == 1 ? winSize : winSize += 1;
-		winSize = winSize % 2 == 1 ? winSize : winSize += 1;
 		cv::cornerSubPix(img, corner, cv::Size(winSize, winSize), cv::Size(zeroZone, zeroZone),
 			cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, maxIterations, epsilon));
 		if (corner.empty())
